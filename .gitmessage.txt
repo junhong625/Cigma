@@ -1,4 +1,4 @@
-# [issue key] [FE/BE/CM/AI/DB]:[type] 제목
+# [issue key] [FE/BE/CM/AI/DB]:[type] 제목 [#in-progress/#done]
 ##### Subject 50 characters ################# -> |
 
 # Body Message
