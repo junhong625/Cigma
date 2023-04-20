@@ -2,7 +2,7 @@
 import React from "react";
 import "../../styles/pages/LoginPage.scss";
 import InputAtom from "../atoms/InputAtom";
-import Button from "../atoms/Button";
+import ButtonAtom from "../atoms/ButtonAtom";
 
 const LoginPage = () => {
   return (
@@ -15,7 +15,7 @@ const LoginPage = () => {
           <input type="checkbox" id="autoLogin" />
           <label htmlFor="autoLogin">자동로그인</label>
         </div>
-        <Button buttonName={"로그인"} />
+        <ButtonAtom buttonName={"로그인"} />
         <div className="go-signup">
           <p>계정이 필요하신가요?</p>
           <p style={{ color: "#5f6f90", fontWeight: "bold" }}>가입하기</p>

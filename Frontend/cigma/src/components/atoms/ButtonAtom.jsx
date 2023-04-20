@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/atoms/Button.scss";
+import "../../styles/atoms/ButtonAtom.scss";
 
 const Button = ({ onclick, buttonName }) => {
   return (
