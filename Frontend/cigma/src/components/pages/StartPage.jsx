@@ -6,6 +6,7 @@ function StartPage() {
         <div className="navigation-container">
             <NavBar />
             <div>start</div>
+            <div>온보딩첫페이지</div>
         </div>
     );
 }
