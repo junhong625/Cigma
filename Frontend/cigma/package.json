@@ -1,4 +1,5 @@
 {
+  "main": "./dist/main.cjs",
   "name": "cigma",
   "private": true,
   "version": "0.0.0",
@@ -6,7 +7,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "esbuild-cjs": "esbuild main.js --format=cjs --outfile=./dist/main.cjs",
+    "electron": "npm run esbuild-cjs && electron .",
+    "electron:build": "npm run esbuild-cjs && electron-packager --out=release ."
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -14,12 +18,15 @@
     "sass": "^1.62.0",
     "y-monaco": "^0.1.4",
     "y-webrtc": "^10.2.5",
-    "yjs": "^13.5.52"
+    "yjs": "^13.5.52",
+    "zustand": "^4.3.7"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "@vitejs/plugin-react": "^3.1.0",
+    "electron": "^24.1.2",
+    "electron-packager": "^17.1.1",
     "vite": "^4.2.0"
   }
 }
