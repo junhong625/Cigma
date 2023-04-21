@@ -1,6 +1,6 @@
 import React from "react";
 import "../../styles/atoms/NavLogo.scss";
-import logo from "../../assets/logo.svg";
+import logo from "../../assets/CigmaLogo.png";
 import NavItem from "./NavItem";
 
 /**
@@ -11,7 +11,6 @@ function NavLogo() {
   return (
     <div className="logo">
       <img src={logo} />
-      <NavItem itemText={"Cigma"} />
     </div>
   );
 }

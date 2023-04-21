@@ -1,11 +1,15 @@
 import React from "react";
 import "../../styles/atoms/ButtonAtom.scss";
 
-const Button = ({ onclick, buttonName }) => {
+/**
+ *
+ * @returns onClick(클릭시함수), buttonName(버튼에 들어갈 이름)
+ */
+const ButtonAtom = ({ onClick, buttonName }) => {
   return (
-    <button className="login-button" onClick={onclick}>
+    <button className="login-button" onClick={onClick}>
       {buttonName}
     </button>
   );
 };
-export default Button;
+export default ButtonAtom;
