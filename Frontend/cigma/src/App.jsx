@@ -3,11 +3,12 @@
 // import viteLogo from '/vite.svg'
 import "./App.css";
 import LoginPage from "./components/pages/LoginPage";
+import SignUpPage from "./components/pages/SignupPage";
 
 function App() {
   return (
     <div>
-      <LoginPage />
+      <SignUpPage />
     </div>
   );
 }
