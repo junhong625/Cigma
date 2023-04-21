@@ -8,8 +8,15 @@ import SignUpPage from "./components/pages/SignupPage";
 
 function App() {
   return (
-    <div>
-      <LoginPage />
+    <div className="App">
+      <BrowserRouter>
+        <Routes>
+          <Route path="/projects" element={<ProjectPage />}>
+            <Route path="/projects" element={<ProjectList />} />
+            <Route path="/projects/trashcan" element={<TrashList />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }

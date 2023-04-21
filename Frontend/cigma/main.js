@@ -13,7 +13,7 @@ function createWindow() {
     win.loadURL('http://localhost:5173');
     
     // 개발자 도구 열기
-    // win.webContents.openDevTools()
+    win.webContents.openDevTools()
 }
 
 app.whenReady().then(() => {
