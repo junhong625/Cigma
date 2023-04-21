@@ -1,11 +1,10 @@
 import React from "react";
 import { useState } from "react";
 import { Transition } from "react-transition-group";
+import { Outlet } from "react-router-dom";
 import ModalPortal from "../organisms/Portal";
 import ModalFrame from "../organisms/ModalFrame";
-import IconText from "../atoms/IconText";
 import SideBar from "../organisms/SideBar";
-import { FaBeer } from 'react-icons/fa';
 import styles from "../../styles/pages/ProjectPages.module.scss";
 
 
@@ -22,11 +21,16 @@ function ProjectPage() {
     setModalOn(false);
   };
 
+  // 유저가 갖고 있는 팀 리스트 호출 (현재는 임시데이터)
+  const teamList = ["My Projects", "Team 1", "Team 2", "Team 3", "Team 4", "Team 5", "아주긴팀이름이나온다면? 계속 늘어나겟쬬?"]
+
+  // 현재 팀 리스트
+  const [selectedTeam, setSelectedTeam] = useState(teamList[0])
+
   return (
     <div className={styles.ContainerA}>
-      <SideBar />
-      <button onClick={openModal}> 모달 </button>
-      <IconText icon={<FaBeer />} text={"메뉴이름"} />
+      <SideBar openModal={openModal} teamList={teamList} setSelectedTeam={setSelectedTeam} selectedTeam={selectedTeam} />
+      <Outlet context={[openModal, selectedTeam]} />
       <ModalPortal>
         <Transition unmountOnExit in={modalOn} timeout={500}>
           {(state) => (
