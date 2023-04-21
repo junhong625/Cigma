@@ -1,0 +1,77 @@
+.topContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 200px;
+  gap: 10px;
+}
+
+.bottomContainer {
+  flex: 1;
+  gap: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sideBarContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
+  height: calc(100vh - 32px);
+  background-color: #222222;
+  color: white;
+  overflow: hidden;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 10%;
+  font-size: 20px;
+}
+
+.closeTeams {
+  display: none;
+}
+
+.dropDown {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: all .5s ease-in;
+}
+
+.activate {
+  background-color: #7D7D7D;
+  border-radius: 10px;
+  margin-left: 10px;
+}
+
+.menu {
+  transition: all .3s ease;
+  text-decoration: none;
+  color: white;
+}
+
+.menuActivate {
+  background-color: #7D7D7D;
+  border-radius: 50px;
+  padding-left: 1rem;
+}
+
+.teamButton {
+  display: block;
+  text-align: start;
+  padding-left: 1.5rem;
+  border-radius: 10px;
+  transition: all .3s ease;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
