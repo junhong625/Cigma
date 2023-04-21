@@ -22,15 +22,15 @@ function ProjectPage() {
   };
 
   // 유저가 갖고 있는 팀 리스트 호출 (현재는 임시데이터)
-  const teamList = ["My Projects", "Team 1", "Team 2", "Team 3", "Team 4", "Team 5", "아주긴팀이름이나온다면? 계속 늘어나겟쬬?"]
+  const teamList = ["My Projects", "Team 1", "Team 2", "Team 3", "Team 4", "Team 5", "아주긴팀이름이나온다면? 계속 늘어나겟쬬?", "Team 1", "Team 2", "Team 3", "Team 4", "Team 5", "아주긴팀이름이나온다면? 계속 늘어나겟쬬?", "Team 1", "Team 2", "Team 3", "Team 4", "Team 5", "아주긴팀이름이나온다면? 계속 늘어나겟쬬?", "Team 1", "Team 2", "Team 3", "Team 4", "Team 5", "아주긴팀이름이나온다면? 계속 늘어나겟쬬?"]
 
   // 현재 팀 리스트
-  const [selectedTeam, setSelectedTeam] = useState(teamList[0])
+  const [selectedTeam, setSelectedTeam] = useState(0)
 
   return (
     <div className={styles.ContainerA}>
       <SideBar openModal={openModal} teamList={teamList} setSelectedTeam={setSelectedTeam} selectedTeam={selectedTeam} />
-      <Outlet context={[openModal, selectedTeam]} />
+      <Outlet context={[openModal, teamList[selectedTeam]]} />
       <ModalPortal>
         <Transition unmountOnExit in={modalOn} timeout={500}>
           {(state) => (

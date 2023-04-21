@@ -20,12 +20,14 @@ function SideBar({ openModal, teamList, setSelectedTeam, selectedTeam }) {
   }
 
   const [openTeams, setOpenTeams] = useState(false)
+  const [firstClick, setFirstClick] = useState(false)
   const changeTeamArc = () => {
+    setFirstClick(true)
     setOpenTeams(!openTeams)
   }
 
   const changeTeam = (index) => {
-    setSelectedTeam(teamList[index])
+    setSelectedTeam(index)
     navigate('/projects')
   }
 
@@ -42,12 +44,12 @@ function SideBar({ openModal, teamList, setSelectedTeam, selectedTeam }) {
           <IconText icon={<BsFillFileEarmarkCodeFill />} text={"Projects"} />
         </div>
 
-        <div className={`${styles.dropDown} ${openTeams ? "" : `${styles.closeTeams}`}`}>
+        <div className={`${styles.dropDown} ${firstClick ? openTeams ? `${styles.openTeams}` : `${styles.closeTeams}` : ""}`}>
           {teamList.map((team, index) => (
             <div
               key={team + index}
               onClick={() => { changeTeam(index) }}
-              className={`${styles.teamButton} ${selectedTeam === team && pathname === "/projects" ? `${styles.activate}` : ""}`}>{team}</div>
+              className={`${styles.teamButton} ${selectedTeam === index && pathname === "/projects" ? `${styles.activate}` : ""}`}>{team}</div>
           ))}
           <div onClick={openModal} className={styles.teamButton}> + Create Team </div>
         </div>
@@ -57,11 +59,11 @@ function SideBar({ openModal, teamList, setSelectedTeam, selectedTeam }) {
           className={`${styles.menu} ${pathname === "/projects/trashcan" ? `${styles.menuActivate}` : ""}`}>
           <IconText icon={<FaTrashAlt />} text={"Trash Can"} />
         </div>
-        <a href="/docs" target="_blank" >
-          <div className={styles.menu}>
+        <div className={styles.menu}>
+          <a href="/docs" target="_blank" style={{ textDecoration: "none", color: "white" }} >
             <IconText icon={<FaBook />} text={"Docs"} />
-          </div>
-        </a>
+          </a>
+        </div>
 
 
       </div>
@@ -71,7 +73,7 @@ function SideBar({ openModal, teamList, setSelectedTeam, selectedTeam }) {
         {/* 유저 프로필 이미지를 불러와야 함 */}
         <IconText icon={<FaUserAlt />} text={"Profile"} />
       </div>
-    </div>
+    </div >
   )
 }
 
