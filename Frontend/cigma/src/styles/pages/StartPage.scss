@@ -1,0 +1,14 @@
+.navigation-container {
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+}
+
+.image-container {
+    height: 40vh;
+    position: relative;
+    width: 100vw;
+    background-size: cover;
+    background-image: url('../../assets/startThumbnail.png');
+    z-index: -1;
+}
