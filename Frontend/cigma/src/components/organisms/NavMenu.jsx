@@ -12,7 +12,7 @@ function NavMenu() {
             <NavLink to="/download">
                 <NavItem itemText={'Download'} />
             </NavLink>
-            <NavLink to="/tutorials" target="_blank">
+            <NavLink to="/guide" target="_blank">
                 <NavItem itemText={'Docs'} />
             </NavLink>
             <NavItem itemText={'Github'}></NavItem>

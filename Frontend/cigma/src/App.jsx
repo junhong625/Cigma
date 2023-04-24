@@ -12,7 +12,7 @@ function App() {
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<StartPage />}></Route>
-                    <Route path="/tutorials" element={<DocsPage />}></Route>
+                    <Route path="/guide" element={<DocsPage />}></Route>
                     <Route path="/projects" element={<ProjectPage />}>
                         <Route path="/projects" element={<ProjectList />} />
                         <Route path="/projects/trashcan" element={<TrashList />} />
