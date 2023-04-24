@@ -1,26 +1,59 @@
-.topContainer {
+.blockContainer {
   display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 200px;
-}
-
-.bottomContainer {
-  flex: 1;
-  gap: 10px;
-  display: flex;
-  flex-direction: column;
+  background-color: #222222;
+  padding: 0.5rem;
 }
 
 .sideBarContainer {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 16px;
-  height: calc(100vh - 32px);
-  background-color: #222222;
   color: white;
   overflow: hidden;
+  justify-content: space-between;
+}
+@media (max-width: 958px) {
+  .topContainer {
+    display: flex;
+    flex-direction: column;
+    width: 50px;
+    max-height: 75%;
+    transition: all 0.35s ease-out;
+  }
+  .noTitle,
+  .noArrow {
+    opacity: 0;
+    transition: opacity .35s ease-out;
+  }
+  .activate,
+  .teamButton:hover,
+  .menu:hover {
+    background-color: #414141;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+}
+
+@media (min-width: 958px) {
+  .topContainer {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    max-height: 75%;
+    transition: all 0.35s ease-out;
+  }
+  .activate,
+  .teamButton:hover,
+  .menu:hover {
+    background-color: #414141;
+    border-radius: 10px;
+    padding-left: 1rem !important;
+    cursor: pointer;
+  }
+}
+
+.bottomContainer {
+  display: flex;
+  flex-direction: column;
 }
 
 .logo {
@@ -29,16 +62,17 @@
   justify-content: start;
   gap: 10%;
   font-size: 20px;
-  margin-bottom: 20px;
+  padding: 10px;
+  cursor: pointer;
 }
 
 .openTeams {
-  animation: dropup 1s ease-out;
+  animation: dropup 0.35s ease-out;
   animation-fill-mode: forwards;
 }
 
 .closeTeams {
-  animation: dropdown 1s ease-out;
+  animation: dropdown 0.2s ease-out;
   animation-fill-mode: forwards;
 }
 
@@ -62,14 +96,13 @@
   }
 }
 
-
 .dropDown {
   height: 0;
-  max-height: 60vh;
   overflow-y: scroll;
-
+  margin-left: 16px;
   &::-webkit-scrollbar {
     width: 5px;
+    height: 1rem;
   }
 
   &::-webkit-scrollbar-corner {
@@ -77,9 +110,9 @@
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: #D9D9D9;
+    background-color: #d9d9d9;
     border-radius: 1rem;
-    opacity: .3;
+    opacity: 0.3;
   }
 
   &::-webkit-scrollbar-track {
@@ -87,44 +120,44 @@
   }
 }
 
-
-.activate,
-.teamButton:hover,
-.menu:hover {
-  background-color: #7D7D7D;
-  border-radius: 10px;
-  padding-left: 1.5rem;
-}
-
 .menu {
-  transition: all .3s ease;
+  transition: all 0.35s ease;
   text-decoration: none;
   color: white;
-  margin-top: 10px;
   margin-bottom: 10px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 5px;
 }
 
 .menuActivate {
-  background-color: #7D7D7D;
+  background-color: #414141;
   border-radius: 10px;
-  padding-left: 1.5rem;
 }
 
 .teamButton {
   display: block;
   text-align: start;
-  margin-left: 1rem;
-  padding-left: .5rem;
   border-radius: 10px;
-  transition: all .3s ease;
-  width: 75%;
+  transition: all 0.35s ease;
+  width: calc(100% - 24px);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin-top: 10px;
   padding: 5px;
 
   &:hover {
-    cursor: pointer;
+    padding-left: 15px;
   }
+}
+
+.openContainer {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  max-height: 75%;
+  transition: all 0.35s ease-out;
 }
