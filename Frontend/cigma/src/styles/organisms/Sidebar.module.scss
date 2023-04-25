@@ -1,27 +1,59 @@
-.topContainer {
+.blockContainer {
   display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 200px;
-  gap: 10px;
-}
-
-.bottomContainer {
-  flex: 1;
-  gap: 10px;
-  display: flex;
-  flex-direction: column;
+  background-color: #222222;
+  padding: 0.5rem;
 }
 
 .sideBarContainer {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 16px;
-  height: calc(100vh - 32px);
-  background-color: #222222;
   color: white;
   overflow: hidden;
+  justify-content: space-between;
+}
+@media (max-width: 958px) {
+  .topContainer {
+    display: flex;
+    flex-direction: column;
+    width: 50px;
+    max-height: 75%;
+    transition: all 0.35s ease-out;
+  }
+  .noTitle,
+  .noArrow {
+    opacity: 0;
+    transition: opacity .35s ease-out;
+  }
+  .activate,
+  .teamButton:hover,
+  .menu:hover {
+    background-color: #414141;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+}
+
+@media (min-width: 958px) {
+  .topContainer {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    max-height: 75%;
+    transition: all 0.35s ease-out;
+  }
+  .activate,
+  .teamButton:hover,
+  .menu:hover {
+    background-color: #414141;
+    border-radius: 10px;
+    padding-left: 1rem !important;
+    cursor: pointer;
+  }
+}
+
+.bottomContainer {
+  display: flex;
+  flex-direction: column;
 }
 
 .logo {
@@ -30,48 +62,102 @@
   justify-content: start;
   gap: 10%;
   font-size: 20px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.openTeams {
+  animation: dropup 0.35s ease-out;
+  animation-fill-mode: forwards;
 }
 
 .closeTeams {
-  display: none;
+  animation: dropdown 0.2s ease-out;
+  animation-fill-mode: forwards;
+}
+
+@keyframes dropdown {
+  0% {
+    height: 100%;
+  }
+
+  100% {
+    height: 0;
+  }
+}
+
+@keyframes dropup {
+  0% {
+    height: 0;
+  }
+
+  100% {
+    height: 100%;
+  }
 }
 
 .dropDown {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  transition: all .5s ease-in;
-}
+  height: 0;
+  overflow-y: scroll;
+  margin-left: 16px;
+  &::-webkit-scrollbar {
+    width: 5px;
+    height: 1rem;
+  }
 
-.activate {
-  background-color: #7D7D7D;
-  border-radius: 10px;
-  margin-left: 10px;
+  &::-webkit-scrollbar-corner {
+    display: none;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #d9d9d9;
+    border-radius: 1rem;
+    opacity: 0.3;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #222222;
+  }
 }
 
 .menu {
-  transition: all .3s ease;
+  transition: all 0.35s ease;
   text-decoration: none;
   color: white;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 5px;
 }
 
 .menuActivate {
-  background-color: #7D7D7D;
-  border-radius: 50px;
-  padding-left: 1rem;
+  background-color: #414141;
+  border-radius: 10px;
 }
 
 .teamButton {
   display: block;
   text-align: start;
-  padding-left: 1.5rem;
   border-radius: 10px;
-  transition: all .3s ease;
+  transition: all 0.35s ease;
+  width: calc(100% - 24px);
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  overflow: hidden;
+  padding: 5px;
 
   &:hover {
-    cursor: pointer;
+    padding-left: 15px;
   }
+}
+
+.openContainer {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  max-height: 75%;
+  transition: all 0.35s ease-out;
 }
