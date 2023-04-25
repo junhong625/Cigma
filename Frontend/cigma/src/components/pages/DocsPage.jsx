@@ -1,14 +1,12 @@
 import React from 'react';
 import styles from '../../styles/pages/DocsPage.module.scss';
 import DocsMenu from '../organisms/DocsMenu';
+import { Outlet } from 'react-router-dom';
 function DocsPage() {
     return (
         <div className={styles.container}>
             <DocsMenu />
-            <div className={styles.docs}>
-                <div>aaa</div>
-                <div>bbb</div>
-            </div>
+            <Outlet />
         </div>
     );
 }

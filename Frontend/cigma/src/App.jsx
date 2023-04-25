@@ -6,13 +6,23 @@ import ProjectList from './components/organisms/ProjectList';
 import TrashList from './components/organisms/TrashList';
 import StartPage from './components/pages/StartPage';
 import DocsPage from './components/pages/DocsPage';
+import DocsContainer from './components/organisms/DocsContainer';
 function App() {
     return (
         <div className="App">
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<StartPage />}></Route>
-                    <Route path="/guide" element={<DocsPage />}></Route>
+                    <Route path="/docs" element={<DocsPage />}>
+                        <Route
+                            path="/docs/intro"
+                            element={<DocsContainer containerText={'hehe'} />}
+                        />
+                        <Route
+                            path="/docs/setting"
+                            element={<DocsContainer containerText={'aaa'} />}
+                        />
+                    </Route>
                     <Route path="/projects" element={<ProjectPage />}>
                         <Route path="/projects" element={<ProjectList />} />
                         <Route path="/projects/trashcan" element={<TrashList />} />
