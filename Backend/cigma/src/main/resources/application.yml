@@ -33,20 +33,20 @@ spring:
         show-sql: false
 
 # log level ??
-logging:
-  level:
-    org:
-      # security log level ??
-      springframework:
-        security: DEBUG
-      # hibernate log level ??
-      hibernate:
-        SQL: DEBUG
-      # ???? ???? ??.
-      # AWS
-    com:
-      amazonaws:
-        util:
-          EC2MetadataUtils: ERROR
-  file:
-    path: logs
+#logging:
+#  level:
+#    org:
+#      # security log level ??
+#      springframework:
+#        security: DEBUG
+#      # hibernate log level ??
+#      hibernate:
+#        SQL: DEBUG
+#      # ???? ???? ??.
+#      # AWS
+#    com:
+#      amazonaws:
+#        util:
+#          EC2MetadataUtils: ERROR
+#  file:
+#    path: logs
