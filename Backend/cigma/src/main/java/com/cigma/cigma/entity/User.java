@@ -1,4 +1,4 @@
-package com.cigma.cigma.user;
+package com.cigma.cigma.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

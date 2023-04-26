@@ -1,3 +1,8 @@
+# SERVER
+server:
+  servlet:
+    context-path: /api
+
 # DB
 spring:
 #  mvc:
@@ -31,14 +36,17 @@ spring:
         format_sql: true
         #
         show-sql: false
+  autoconfigure:
+    exclude:
+      org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 
 # log level ??
-#logging:
-#  level:
-#    org:
-#      # security log level ??
-#      springframework:
-#        security: DEBUG
+logging:
+  level:
+    org:
+      # security log level ??
+      springframework:
+        security: DEBUG
 #      # hibernate log level ??
 #      hibernate:
 #        SQL: DEBUG
@@ -48,5 +56,10 @@ spring:
 #      amazonaws:
 #        util:
 #          EC2MetadataUtils: ERROR
-#  file:
-#    path: logs
+
+# jwt 관련
+jwt:
+  header: Authorization
+  secret: Y2lnbWEtc3ByaW5nLWJvb3Qtand0LXNlY3JldC1rZXktY2lnbWEtc3ByaW5nLWJvb3Qtand0LXNlY3JldC1rZXktYnktYWpoCg==
+  access-token-validity-in-seconds: 86400
+  refresh-token-validity-in-seconds: 8640000
