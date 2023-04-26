@@ -1,9 +1,10 @@
+
 //import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
-import ProjectPage from './components/pages/ProjectPages';
-import ProjectList from './components/organisms/ProjectList';
-import TrashList from './components/organisms/TrashList';
+import ProjectPage from "./components/pages/ProjectPage";
+import ProjectListOrganism from "./components/organisms/ProjectListOrganism";
+import TrashListOrganism from "./components/organisms/TrashListOrganism";
 import StartPage from './components/pages/StartPage';
 import DocsPage from './components/pages/DocsPage';
 import DocsContainer from './components/organisms/DocsContainer';
@@ -28,8 +29,8 @@ function App() {
                         />
                     </Route>
                     <Route path="/projects" element={<ProjectPage />}>
-                        <Route path="/projects" element={<ProjectList />} />
-                        <Route path="/projects/trashcan" element={<TrashList />} />
+                        <Route path="/projects" element={<ProjectListOrganism />} />
+                        <Route path="/projects/trashcan" element={<TrashListOrganism />} />
                     </Route>
                 </Routes>
             </BrowserRouter>

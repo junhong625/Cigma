@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import IconText from "../atoms/IconText";
+import React, { useRef, useState } from "react";
+import IconTextAtom from "../atoms/IconTextAtom";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BsFillFileEarmarkCodeFill } from "react-icons/bs";
 import { FaTrashAlt } from "react-icons/fa";
 import { FaBook } from "react-icons/fa";
 import { FaUserAlt } from "react-icons/fa";
 import { AiOutlineLogout } from "react-icons/ai";
-import styles from "../../styles/organisms/SideBar.module.scss";
+import styles from "../../styles/organisms/SideBarOrganism.module.scss";
 
-function SideBar({ openModal, teamList, setSelectedTeam, selectedTeam }) {
+function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
   const navigate = useNavigate();
   const location = useLocation();
   const pathname = location.pathname;
@@ -24,6 +24,18 @@ function SideBar({ openModal, teamList, setSelectedTeam, selectedTeam }) {
 
   const [openTeams, setOpenTeams] = useState(false);
   const [firstClick, setFirstClick] = useState(false);
+  const [onCreate, setOnCreate] = useState(false);
+  const newTeamName = useRef("");
+  const pressEnter = (event) => {
+    if (event.key === "Enter") {
+      // Enter 키를 누르면 새로운 팀을 생성한다 (API)
+      // setTeamList([...teamList, newTeamName.current]);
+
+      // 그 후 입력값 초기화
+      newTeamName.current = "";
+    }
+  };
+
   const changeTeamArc = () => {
     setFirstClick(true);
     setOpenTeams(!openTeams);
@@ -64,7 +76,7 @@ function SideBar({ openModal, teamList, setSelectedTeam, selectedTeam }) {
                 : ""
             }`}
           >
-            <IconText
+            <IconTextAtom
               icon={<BsFillFileEarmarkCodeFill />}
               text={"Projects"}
               openTeams={openTeams}
@@ -102,9 +114,18 @@ function SideBar({ openModal, teamList, setSelectedTeam, selectedTeam }) {
                 {team}
               </div>
             ))}
-            <div onClick={openModal} className={styles.teamButton}>
-              + Create Team
-            </div>
+            {onCreate ? (
+              <input type="text" ref={newTeamName} onKeyDown={pressEnter} />
+            ) : (
+              <div
+                onClick={() => {
+                  setOnCreate(true);
+                }}
+                className={styles.teamButton}
+              >
+                + Create Team
+              </div>
+            )}
           </div>
 
           <div
@@ -115,7 +136,7 @@ function SideBar({ openModal, teamList, setSelectedTeam, selectedTeam }) {
               pathname === "/projects/trashcan" ? `${styles.menuActivate}` : ""
             }`}
           >
-            <IconText
+            <IconTextAtom
               icon={<FaTrashAlt />}
               text={"Trash Can"}
               openTeams={openTeams}
@@ -127,7 +148,11 @@ function SideBar({ openModal, teamList, setSelectedTeam, selectedTeam }) {
               target="_blank"
               style={{ textDecoration: "none", color: "white" }}
             >
-              <IconText icon={<FaBook />} text={"Docs"} openTeams={openTeams} />
+              <IconTextAtom
+                icon={<FaBook />}
+                text={"Docs"}
+                openTeams={openTeams}
+              />
             </a>
           </div>
         </div>
@@ -137,7 +162,7 @@ function SideBar({ openModal, teamList, setSelectedTeam, selectedTeam }) {
             className={styles.menu}
             // onclick 시 확인 후(?) 로그아웃 후 메인 페이지로 돌아감 or 프로그램 종료?
           >
-            <IconText
+            <IconTextAtom
               icon={<AiOutlineLogout />}
               text={"Log Out"}
               openTeams={openTeams}
@@ -150,7 +175,7 @@ function SideBar({ openModal, teamList, setSelectedTeam, selectedTeam }) {
             }}
           >
             {/* 유저 프로필 이미지를 불러와야 함 */}
-            <IconText
+            <IconTextAtom
               icon={<FaUserAlt />}
               text={"Profile"}
               openTeams={openTeams}

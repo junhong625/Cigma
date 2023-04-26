@@ -1,0 +1,16 @@
+.projectTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.thumbnail {
+  width: 100%;
+  cursor: pointer;
+}
+
+.iconWrapper {
+  display: flex;
+  cursor: pointer;
+  gap: 10px;
+}
