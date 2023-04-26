@@ -8,7 +8,7 @@ const generateCodeEditor = (top, left) => ({
   height: 500,
 });
 
-const initialState = [];
+const initialState = [generateCodeEditor(1000, 1000)];
 
 const codeEditorSlice = createSlice({
   name: "codeEditor",
@@ -46,7 +46,7 @@ const codeEditorSlice = createSlice({
   },
 });
 
-// export const selectAllCodeEditor = (state) => state.workbench.present.canvas;
+export const selectAllCodeEditor = (state) => state.workbench.codeEditor;
 
 // export const selectCanvasLength = (state) =>
 //   state.workbench.present.canvas.length;
