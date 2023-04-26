@@ -13,6 +13,8 @@
     "@monaco-editor/react": "^4.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^4.8.0",
+    "sass": "^1.62.1",
     "y-monaco": "^0.1.4",
     "y-websocket": "^1.5.0",
     "yjs": "^13.6.0"
