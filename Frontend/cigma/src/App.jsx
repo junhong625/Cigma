@@ -4,6 +4,10 @@ import "./App.css";
 import ProjectPage from "./components/pages/ProjectPage";
 import ProjectListOrganism from "./components/organisms/ProjectListOrganism";
 import TrashListOrganism from "./components/organisms/TrashListOrganism";
+import LoadingAtom from "./components/atoms/LoadingAtom";
+import LoginPage from "./components/pages/LoginPage";
+import SignUpPage from "./components/pages/SignupPage";
+
 function App() {
   return (
     <div className="App">
