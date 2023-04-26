@@ -11,8 +11,15 @@ header {
   width: 100vw;
   background-color: $black-800;
   max-height: fit-content;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
 }
 
 .workspaceDiv {
   background-color: white;
+  height: 100%;
 }

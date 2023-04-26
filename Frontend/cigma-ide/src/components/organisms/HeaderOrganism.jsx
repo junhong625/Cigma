@@ -1,6 +1,6 @@
 import React from "react";
 import HeaderBtnAtom from "../atoms/HeaderBtnAtom";
-import { BsFillTerminalFill } from "react-icons/bs";
+import { BsFillTerminalFill, BsFillPlusSquareFill } from "react-icons/bs";
 
 import styles from "../../styles/organisms/HeaderOrganism.module.scss";
 /*
@@ -12,7 +12,7 @@ import styles from "../../styles/organisms/HeaderOrganism.module.scss";
 
 const HeaderOrganism = () => {
   return (
-    <div className={styles.headerDiv}>
+    <>
       <div className={styles.headerLeftDiv}>
         <img
           className={styles.logo}
@@ -20,7 +20,11 @@ const HeaderOrganism = () => {
           alt="thisislogo"
         />
         {/* plugin 추가 */}
-        <HeaderBtnAtom>
+        <HeaderBtnAtom
+          onClick={() => {
+            // handle click Event
+          }}
+        >
           <BsFillTerminalFill color="white" />
         </HeaderBtnAtom>
         <HeaderBtnAtom>
@@ -31,11 +35,12 @@ const HeaderOrganism = () => {
         </HeaderBtnAtom>
       </div>
       <div className={styles.headerRightDiv}>
+        <button className={styles.shareBtn}>share</button>
         <HeaderBtnAtom>
-          <BsFillTerminalFill color="white" />
+          <BsFillPlusSquareFill color="white" />
         </HeaderBtnAtom>
       </div>
-    </div>
+    </>
   );
 };
 

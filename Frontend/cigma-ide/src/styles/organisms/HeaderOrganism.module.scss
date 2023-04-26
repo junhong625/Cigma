@@ -1,3 +1,5 @@
+@import "../commonColor.scss";
+
 .logo {
   margin: 0.5rem 1rem;
 }
@@ -23,4 +25,22 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
+}
+
+.shareBtn {
+  background-color: $primary-600;
+  border-radius: 15px;
+  padding: 5px 8px;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  border: none;
+  outline: none;
+  &:hover {
+    background-color: $primary-300;
+  }
+  &:focus {
+    outline: none;
+  }
+  // padding: auto 10px;
 }

@@ -11,7 +11,7 @@ const HeaderBtnAtom = (props, { onClick }) => {
       }`}
       onClick={() => {
         setFocused(!focused);
-        onClick();
+        onClick;
       }}
     >
       {props.children}

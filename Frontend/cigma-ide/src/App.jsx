@@ -1,4 +1,5 @@
 import styles from "./App.module.scss";
+import EditorOrganism from "./components/organisms/EditorOrganism";
 import HeaderOrganism from "./components/organisms/HeaderOrganism";
 
 function App() {
@@ -7,7 +8,9 @@ function App() {
       <header>
         <HeaderOrganism />
       </header>
-      <div className={styles.workspaceDiv}></div>
+      <div className={styles.workspaceDiv}>
+        <EditorOrganism />
+      </div>
     </div>
   );
 }
