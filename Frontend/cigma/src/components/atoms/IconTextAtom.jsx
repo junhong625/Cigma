@@ -1,7 +1,8 @@
 import React from "react";
-import styles from "../../styles/atoms/IconText.module.scss";
+import styles from "../../styles/atoms/IconTextAtom.module.scss";
 
-function IconText({ icon, text, openTeams = true }) {
+// Sidebar에 사용하는 아이콘 + 문자를 위한 atom
+function IconTextAtom({ icon, text, openTeams = true }) {
   return (
     <div className={`${styles.rowFlex} ${openTeams ? styles.gap : ""}`}>
       <div className={openTeams ? styles.icon : styles.bigIcon}>{icon}</div>
@@ -10,4 +11,4 @@ function IconText({ icon, text, openTeams = true }) {
   );
 }
 
-export default IconText;
+export default IconTextAtom;

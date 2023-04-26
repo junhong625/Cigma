@@ -2,10 +2,10 @@ import React from "react";
 import { useState } from "react";
 import { Transition } from "react-transition-group";
 import { Outlet } from "react-router-dom";
-import ModalPortal from "../organisms/Portal";
-import ModalFrame from "../organisms/ModalFrame";
-import SideBar from "../organisms/SideBar";
-import styles from "../../styles/pages/ProjectPages.module.scss";
+import ModalPortal from "../atoms/PortalAtom";
+import ModalFrameOrganism from "../organisms/ModalFrameOrganism";
+import SideBarOrganism from "../organisms/SideBarOrganism";
+import styles from "../../styles/pages/ProjectPage.module.scss";
 
 function ProjectPage() {
   //모달 표시를 위한 함수 및 변수
@@ -20,7 +20,7 @@ function ProjectPage() {
   };
 
   // 유저가 갖고 있는 팀 리스트 호출 (현재는 임시데이터)
-  const teamList = [
+  const [teamList, setTeamList] = useState([
     "My Projects",
     "Team 1",
     "Team 2",
@@ -38,23 +38,31 @@ function ProjectPage() {
     "Team 13",
     "Team 14",
     "Team 15",
-  ];
+  ]);
 
   // 현재 팀 리스트
   const [selectedTeam, setSelectedTeam] = useState(0);
+  const [nowContent, setNowContent] = useState(0);
 
   return (
     <div className={styles.ContainerA}>
-      <SideBar
-        openModal={openModal}
+      <SideBarOrganism
+        setTeamList={setTeamList}
         teamList={teamList}
         setSelectedTeam={setSelectedTeam}
         selectedTeam={selectedTeam}
+        setNowContent={setNowContent}
       />
-      <Outlet context={[openModal, teamList[selectedTeam]]} />
+      <Outlet context={[openModal, teamList[selectedTeam], setNowContent]} />
       <ModalPortal>
         <Transition unmountOnExit in={modalOn} timeout={500}>
-          {(state) => <ModalFrame show={state} closeModal={closeModal} />}
+          {(state) => (
+            <ModalFrameOrganism
+              show={state}
+              closeModal={closeModal}
+              nowContent={nowContent}
+            />
+          )}
         </Transition>
       </ModalPortal>
     </div>

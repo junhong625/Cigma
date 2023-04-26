@@ -42,14 +42,8 @@
   align-content: space-between;
 }
 
-.projectTitle {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
 // 노트북 화면 절반 이상
-@media (min-width: 958px) {
+@media (min-width: 959px) {
   .project {
     display: flex;
     flex-direction: column;
@@ -57,6 +51,7 @@
     width: 30%;
     margin-top: 30px;
     font-size: 20px;
+    transition: all 0.35s ease-out;
   }
 }
 
@@ -68,11 +63,7 @@
     gap: 15px;
     width: 100%;
     margin-top: 30px;
-    font-size: 25px;
+    font-size: 30px;
+    transition: all 0.35s ease-out;
   }
-}
-
-.thumbnail {
-  width: 100%;
-  cursor: pointer;
 }
