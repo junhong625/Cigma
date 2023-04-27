@@ -24,6 +24,7 @@ const codeEditorSlice = createSlice({
     },
     // 코드에디터 추가
     showCodeEditor: (state, { payload: { top, left } }) => {
+      console.log("working");
       const newCodeEditor = {
         ...generateCodeEditor(top, left),
         canvasName: `canvas_${state.length}`,

@@ -1,8 +1,9 @@
 import "./App.css";
-import WorkSpacePage from "./components/pages/WorkSpacePage";
+import WorkBenchPage from "./components/pages/WorkBenchPage";
+// import WorkSpacePage from "./components/pages/WorkSpacePage";
 
 function App() {
-  return <WorkSpacePage />;
+  return <WorkBenchPage />;
 }
 
 export default App;
