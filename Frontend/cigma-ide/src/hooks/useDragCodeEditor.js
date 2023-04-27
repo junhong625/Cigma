@@ -12,6 +12,7 @@ import {
 import {
   selectCurrentScale,
   selectCurrentCodeEditorIndex,
+  selectIsDragScrolling,
 } from "../store/toolSlice";
 import computeSnapPosition from "../tools/computeSnapPosition";
 
@@ -23,9 +24,10 @@ function useDragCodeEditor(codeEditorIndex, artBoardRef, canvasRef) {
   const currentScale = useSelector(selectCurrentScale);
   const codeEditors = useSelector(selectAllCodeEditor);
   const workingCanvasIndex = useSelector(selectCurrentCodeEditorIndex);
+  const isDragScrolling = useSelector(selectIsDragScrolling);
 
   useEffect(() => {
-    if (!canvasRef.current || !artBoardRef.current) return;
+    if (!canvasRef.current || !artBoardRef.current || isDragScrolling) return;
 
     const artBoard = artBoardRef.current;
     const canvas = canvasRef.current;
@@ -261,6 +263,7 @@ function useDragCodeEditor(codeEditorIndex, artBoardRef, canvasRef) {
     artBoardRef,
     codeEditors,
     workingCanvasIndex,
+    isDragScrolling,
   ]);
 }
 
