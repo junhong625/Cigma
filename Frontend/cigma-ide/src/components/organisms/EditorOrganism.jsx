@@ -11,6 +11,7 @@ const EditorOrganism = () => {
   return (
     <>
       <Editor
+        width={"50vw"}
         theme="dark"
         language="javascript"
         value={code}

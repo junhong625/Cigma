@@ -2,14 +2,13 @@
 
 .iconBtn {
   display: flex;
-  height: max-content;
+  height: 50px;
   justify-content: center;
   align-items: center;
   padding: 0 1rem;
   background-color: $black-800;
   border: none;
   border-radius: 0;
-  height: 60px;
 
   &:hover {
     background-color: $black-400;
@@ -22,8 +21,8 @@
 .focus {
   outline: none;
   box-shadow: none;
-  border-bottom: 6px solid $tertiary-400;
-  margin-bottom: -6px;
+  border-bottom: 5px solid $tertiary-400;
+  margin-bottom: -5px;
 }
 .notFocus {
   outline: none;

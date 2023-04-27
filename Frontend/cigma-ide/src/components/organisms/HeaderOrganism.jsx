@@ -1,6 +1,11 @@
 import React from "react";
 import HeaderBtnAtom from "../atoms/HeaderBtnAtom";
-import { BsFillTerminalFill, BsFillPlusSquareFill } from "react-icons/bs";
+import {
+  BsFillTerminalFill,
+  BsFillPlayFill,
+  BsFillFileEarmarkTextFill,
+  BsFileFontFill,
+} from "react-icons/bs";
 
 import styles from "../../styles/organisms/HeaderOrganism.module.scss";
 /*
@@ -25,19 +30,20 @@ const HeaderOrganism = () => {
             // handle click Event
           }}
         >
-          <BsFillTerminalFill color="white" />
+          <BsFillFileEarmarkTextFill color="white" size={24} />
         </HeaderBtnAtom>
         <HeaderBtnAtom>
-          <BsFillTerminalFill color="white" />
+          <BsFileFontFill color="white" size={24} />
         </HeaderBtnAtom>
         <HeaderBtnAtom>
-          <BsFillTerminalFill color="white" />
+          <BsFillTerminalFill color="white" size={24} />
         </HeaderBtnAtom>
       </div>
+      <div className={styles.headerMiddleDiv}>Project Name</div>
       <div className={styles.headerRightDiv}>
         <button className={styles.shareBtn}>share</button>
         <HeaderBtnAtom>
-          <BsFillPlusSquareFill color="white" />
+          <BsFillPlayFill color="white" size={24} />
         </HeaderBtnAtom>
       </div>
     </>
