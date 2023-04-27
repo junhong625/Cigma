@@ -2,10 +2,10 @@ import React, { useRef, useState } from "react";
 import IconTextAtom from "../atoms/IconTextAtom";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BsFillFileEarmarkCodeFill } from "react-icons/bs";
-import { FaTrashAlt } from "react-icons/fa";
-import { FaBook } from "react-icons/fa";
-import { FaUserAlt } from "react-icons/fa";
-import { AiOutlineLogout } from "react-icons/ai";
+import { BsTrashFill } from "react-icons/bs";
+import { BsJournalBookmarkFill } from "react-icons/bs";
+import { BsPersonFill } from "react-icons/bs";
+import { BsBoxArrowRight } from "react-icons/bs";
 import styles from "../../styles/organisms/SideBarOrganism.module.scss";
 
 function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
@@ -137,7 +137,7 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
             }`}
           >
             <IconTextAtom
-              icon={<FaTrashAlt />}
+              icon={<BsTrashFill />}
               text={"Trash Can"}
               openTeams={openTeams}
             />
@@ -149,7 +149,7 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
               style={{ textDecoration: "none", color: "white" }}
             >
               <IconTextAtom
-                icon={<FaBook />}
+                icon={<BsJournalBookmarkFill />}
                 text={"Docs"}
                 openTeams={openTeams}
               />
@@ -163,7 +163,7 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
             // onclick 시 확인 후(?) 로그아웃 후 메인 페이지로 돌아감 or 프로그램 종료?
           >
             <IconTextAtom
-              icon={<AiOutlineLogout />}
+              icon={<BsBoxArrowRight />}
               text={"Log Out"}
               openTeams={openTeams}
             />
@@ -176,7 +176,7 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
           >
             {/* 유저 프로필 이미지를 불러와야 함 */}
             <IconTextAtom
-              icon={<FaUserAlt />}
+              icon={<BsPersonFill />}
               text={"Profile"}
               openTeams={openTeams}
             />

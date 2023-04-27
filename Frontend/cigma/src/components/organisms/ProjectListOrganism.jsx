@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { useOutletContext } from "react-router-dom";
-import { FaUserPlus } from "react-icons/fa";
-import { FaFileMedical } from "react-icons/fa";
+import { BsPersonFillAdd } from "react-icons/bs";
+import { BsFillFilePlusFill } from "react-icons/bs";
 import ProjectThumbNail from "../atoms/ProjectThumbNailAtom";
 import styles from "../../styles/organisms/ProjectListOrganism.module.scss";
 
@@ -54,7 +54,7 @@ function ProjectListOrganism() {
             }}
             className={styles.iconWrapper}
           >
-            <FaUserPlus />
+            <BsPersonFillAdd />
           </div>
           <div
             className={styles.iconWrapper}
@@ -62,7 +62,7 @@ function ProjectListOrganism() {
               CreateProject();
             }}
           >
-            <FaFileMedical />
+            <BsFillFilePlusFill />
           </div>
         </div>
       </div>
