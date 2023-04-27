@@ -12,14 +12,14 @@
   "dependencies": {
     "@minoru/react-dnd-treeview": "^3.4.4",
     "@monaco-editor/react": "^4.5.0",
-    "@types/node": "^18.16.1",
-    "file-system-utils": "^0.0.1",
+    "@reduxjs/toolkit": "^1.9.5",
     "react": "^18.2.0",
     "react-dnd": "^16.0.1",
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",
+    "react-redux": "^8.0.5",
+    "redux-undo": "^1.0.1",
     "sass": "^1.62.1",
-    "vite-plugin-fs": "^1.0.0-beta.6",
     "y-monaco": "^0.1.4",
     "y-websocket": "^1.5.0",
     "yjs": "^13.6.0"
