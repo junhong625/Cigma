@@ -56,7 +56,12 @@ const WorkSpacePage = () => {
     <div ref={boardRef} className={styles["artboard-wrapper"]}>
       <div className={styles.artboard} ref={innerBoardRef}>
         {codeEditors.map((codeEditor, i) => (
-          <CodeEditor {...codeEditor} codeEditorIndex={i} key={i} />
+          <CodeEditor
+            {...codeEditor}
+            codeEditorIndex={i}
+            key={i}
+            artBoardRef={innerBoardRef}
+          />
         ))}
       </div>
     </div>

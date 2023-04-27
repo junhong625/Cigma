@@ -10,6 +10,7 @@ const initialState = {
   selectedShapeIndexes: [],
   currentTool: tools.SELECTOR,
   tools: [tools.SELECTOR, tools.TEXT, tools.CodeEditor],
+  workingCodeEditorIndex: 0,
 };
 
 const toolSlice = createSlice({
@@ -47,6 +48,9 @@ const toolSlice = createSlice({
     setCurrentTool: (state, { payload }) => {
       state.currentTool = payload;
     },
+    setCodeEditorIndex: (state, { payload }) => {
+      state.workingCodeEditorIndex = payload;
+    },
   },
 });
 
@@ -59,6 +63,9 @@ export const selectCurrentTool = (state) => state.tool.currentTool;
 
 export const selectIsDragScrolling = (state) => state.tool.isDragScrolling;
 
+export const selectCurrentCodeEditorIndex = (state) =>
+  state.tool.workingCodeEditorIndex;
+
 export const {
   activeSelctor,
   deactivateSelector,
@@ -69,6 +76,7 @@ export const {
   setCurrentScale,
   emptySelectedShapeIndexes,
   setCurrentTool,
+  setCodeEditorIndex,
 } = toolSlice.actions;
 
 export default toolSlice.reducer;
