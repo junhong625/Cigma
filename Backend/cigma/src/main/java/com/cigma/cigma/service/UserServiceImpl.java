@@ -39,6 +39,10 @@ public class UserServiceImpl implements UserService{
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(userLoginRequest.getUserEmail(), userLoginRequest.getUserPass());
         log.info("login controller ===================================================================================");
+        log.info(userLoginRequest.getUserEmail());
+        log.info(userLoginRequest.getUserPass());
+        log.info(authenticationToken.getPrincipal().toString());
+        log.info(authenticationToken.getCredentials().toString());
         try {
             // authenticationToken을 사용하여 Authentication 객체를 생성하기 위해 authenticate 메소드를 실행할 때
             // CustomUserDetailService에 loadUserByUsername 메소드가 실행되고, authentication 에 해당 정보 저장.

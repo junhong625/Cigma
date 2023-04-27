@@ -37,7 +37,7 @@ public class UserController {
     ====================================
      */
     @PostMapping()
-    public ResponseEntity<Object> signUp(@ModelAttribute UserCreateRequest userCreateRequest) {
+    public ResponseEntity<Object> signUp(@RequestBody UserCreateRequest userCreateRequest) {
         try {
             return ResponseHandler.generateResponse(true, "회원가입 성공", HttpStatus.CREATED, userService.signUp(userCreateRequest));
         } catch (Exception e) {
@@ -61,7 +61,7 @@ public class UserController {
     ====================================
      */
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@ModelAttribute UserLoginRequest userLoginRequest) {
+    public ResponseEntity<Object> login(@RequestBody UserLoginRequest userLoginRequest) {
         try {
             return ResponseHandler.generateResponse(true, "로그인 성공", HttpStatus.OK, userService.login(userLoginRequest));
         } catch (Exception e) {
