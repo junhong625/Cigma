@@ -17,8 +17,6 @@ function App() {
         <HeaderOrganism />
       </header>
       <div className={styles.workspaceDiv}>
-        <EditorOrganism />
-        <EditorOrganism />
       </div>
     </div>
   );
