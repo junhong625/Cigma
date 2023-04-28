@@ -1,11 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import IconTextAtom from "../atoms/IconTextAtom";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BsFillFileEarmarkCodeFill } from "react-icons/bs";
-import { FaTrashAlt } from "react-icons/fa";
-import { FaBook } from "react-icons/fa";
-import { FaUserAlt } from "react-icons/fa";
-import { AiOutlineLogout } from "react-icons/ai";
+import { BsTrashFill } from "react-icons/bs";
+import { BsJournalBookmarkFill } from "react-icons/bs";
+import { BsPersonFill } from "react-icons/bs";
+import { BsBoxArrowRight } from "react-icons/bs";
 import styles from "../../styles/organisms/SideBarOrganism.module.scss";
 
 function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
@@ -25,14 +25,20 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
   const [openTeams, setOpenTeams] = useState(false);
   const [firstClick, setFirstClick] = useState(false);
   const [onCreate, setOnCreate] = useState(false);
-  const newTeamName = useRef("");
+  const newTeamName = useRef();
   const pressEnter = (event) => {
     if (event.key === "Enter") {
-      // Enter 키를 누르면 새로운 팀을 생성한다 (API)
-      // setTeamList([...teamList, newTeamName.current]);
-
+      // 새로운 팀을 생성하는 코드 (API)
+      // 요금제에 따른 생성 갯수 제한?
+      // 이하는 임시 코드
+      if (newTeamName.current.value === "") {
+        setOnCreate(false);
+        return;
+      }
+      setTeamList([...teamList, newTeamName.current.value]);
       // 그 후 입력값 초기화
-      newTeamName.current = "";
+      newTeamName.current.value = "";
+      setOnCreate(false);
     }
   };
 
@@ -45,6 +51,12 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
     setSelectedTeam(index);
     navigate("/projects");
   };
+
+  useEffect(() => {
+    if (onCreate) {
+      newTeamName.current.focus();
+    }
+  }, [onCreate]);
 
   return (
     <div className={styles.blockContainer}>
@@ -115,7 +127,16 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
               </div>
             ))}
             {onCreate ? (
-              <input type="text" ref={newTeamName} onKeyDown={pressEnter} />
+              <input
+                type="text"
+                ref={newTeamName}
+                onKeyDown={pressEnter}
+                className={styles.newTeam}
+                onBlur={() => {
+                  setOnCreate(false);
+                  newTeamName.current.value = "";
+                }}
+              />
             ) : (
               <div
                 onClick={() => {
@@ -137,8 +158,8 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
             }`}
           >
             <IconTextAtom
-              icon={<FaTrashAlt />}
-              text={"Trash Can"}
+              icon={<BsTrashFill />}
+              text={"Recycle Bin"}
               openTeams={openTeams}
             />
           </div>
@@ -149,7 +170,7 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
               style={{ textDecoration: "none", color: "white" }}
             >
               <IconTextAtom
-                icon={<FaBook />}
+                icon={<BsJournalBookmarkFill />}
                 text={"Docs"}
                 openTeams={openTeams}
               />
@@ -163,7 +184,7 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
             // onclick 시 확인 후(?) 로그아웃 후 메인 페이지로 돌아감 or 프로그램 종료?
           >
             <IconTextAtom
-              icon={<AiOutlineLogout />}
+              icon={<BsBoxArrowRight />}
               text={"Log Out"}
               openTeams={openTeams}
             />
@@ -176,7 +197,7 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
           >
             {/* 유저 프로필 이미지를 불러와야 함 */}
             <IconTextAtom
-              icon={<FaUserAlt />}
+              icon={<BsPersonFill />}
               text={"Profile"}
               openTeams={openTeams}
             />

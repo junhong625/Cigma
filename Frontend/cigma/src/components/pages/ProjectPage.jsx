@@ -19,6 +19,15 @@ function ProjectPage() {
     setModalOn(false);
   };
 
+  // 모달 확인 문구를 변경하기 위한 변수
+  const [toDo, setToDo] = useState();
+  // 모달 실행 함수를 변경하기 위한 변수
+  const [propFunction, setPropFunction] = useState(() => {
+    return () => {
+      console.log("Initial Function");
+    };
+  });
+
   // 유저가 갖고 있는 팀 리스트 호출 (현재는 임시데이터)
   const [teamList, setTeamList] = useState([
     "My Projects",
@@ -53,7 +62,15 @@ function ProjectPage() {
         selectedTeam={selectedTeam}
         setNowContent={setNowContent}
       />
-      <Outlet context={[openModal, teamList[selectedTeam], setNowContent]} />
+      <Outlet
+        context={[
+          openModal,
+          teamList[selectedTeam],
+          setNowContent,
+          setToDo,
+          setPropFunction,
+        ]}
+      />
       <ModalPortal>
         <Transition unmountOnExit in={modalOn} timeout={500}>
           {(state) => (
@@ -61,6 +78,8 @@ function ProjectPage() {
               show={state}
               closeModal={closeModal}
               nowContent={nowContent}
+              propFunction={propFunction}
+              toDo={toDo}
             />
           )}
         </Transition>

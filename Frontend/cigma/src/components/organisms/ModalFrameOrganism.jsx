@@ -2,11 +2,16 @@ import React, { useEffect, useState } from "react";
 import styles from "../../styles/organisms/ModalFrameOrganism.module.scss";
 import UserSearchOrganism from "./UserSearchOrganism";
 import CreateProjectOrganism from "./CreateProjectOrganism";
-import CreateTeamOrganism from "./CreateTeamOrganism";
+import ConfirmOrganism from "./ConfirmOrganism";
 
 // 모달의 배경 부분
-function ModalFrameOrganism({ show, closeModal, nowContent }) {
-
+function ModalFrameOrganism({
+  show,
+  closeModal,
+  nowContent,
+  propFunction,
+  toDo,
+}) {
   //Transition이 반환하는 show 값에 따른 애니메이션용 class 탈부착
   const fadeAnimation = [
     show === "entering"
@@ -48,7 +53,11 @@ function ModalFrameOrganism({ show, closeModal, nowContent }) {
             onClick={(e) => e.stopPropagation()}
           >
             {modalContent === 0 && (
-              <CreateTeamOrganism closeModal={closeModal} />
+              <ConfirmOrganism
+                closeModal={closeModal}
+                toDo={toDo}
+                propFunction={propFunction}
+              />
             )}
             {modalContent === 1 && (
               <UserSearchOrganism closeModal={closeModal} />
