@@ -1,8 +1,8 @@
 version: "3.7"
-volumes:
-  cigma:
-    external: true
-    name: cigma
+#volumes:
+#  cigma:
+#    external: true
+#    name: cigma
 services:
   database:
     image: mysql:8.0.30
