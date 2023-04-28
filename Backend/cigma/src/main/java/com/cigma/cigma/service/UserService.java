@@ -11,4 +11,7 @@ public interface UserService {
 
     // 로그인
     UserLoginResponse login(UserLoginRequest userLoginRequest);
+
+    // 로그아웃
+    void logout(String accessToken);
 }

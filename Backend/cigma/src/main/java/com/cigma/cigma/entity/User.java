@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -34,6 +35,12 @@ public class User {
 //    유저 비밀번호 : not null
     @Column(name = "user_pass", nullable = false)
     private String userPass;
+
+//    유저 역할
+//    무료 계정: 0, 유료 계정: 1, 관리자 계정: 2
+    @Column(name = "is_admin", columnDefinition = "TINYINT", length = 1, insertable = false)
+    @ColumnDefault("0")
+    private int isAdmin;
 
 //    생성 시간
     @CreationTimestamp

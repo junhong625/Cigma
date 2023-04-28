@@ -1,10 +1,12 @@
 package com.cigma.cigma.dto.request;
 
 import com.cigma.cigma.entity.User;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Data
+@AllArgsConstructor
 public class UserCreateRequest {
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private String userEmail;

@@ -1,5 +1,6 @@
 # SERVER
 server:
+  port: 9090
   servlet:
     context-path: /api
 
@@ -39,6 +40,11 @@ spring:
   autoconfigure:
     exclude:
       org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+  ## redis 설정
+  redis:
+    host: localhost
+    port: 6379
+    password: ssafy8cigmapass
 
 # log level ??
 logging:
@@ -61,5 +67,5 @@ logging:
 jwt:
   header: Authorization
   secret: Y2lnbWEtc3ByaW5nLWJvb3Qtand0LXNlY3JldC1rZXktY2lnbWEtc3ByaW5nLWJvb3Qtand0LXNlY3JldC1rZXktYnktYWpoCg==
-  access-token-validity-in-seconds: 86400
-  refresh-token-validity-in-seconds: 8640000
+  access-token-validity-in-seconds: 1800000 # accessToken 유효시간 30분
+  refresh-token-validity-in-seconds: 1209600000 # refreshToken 유효시간 2주
