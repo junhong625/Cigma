@@ -1,0 +1,39 @@
+version: "3.7"
+volumes:
+  ssafytime_db:
+    external: true
+    name: cigma
+services:
+  database:
+    image: mysql:8.0.30
+    environment:
+      MYSQL_DATABASE: cigma
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_ROOT_PASSWORD: ssafy
+      TZ: Asia/Seoul
+
+    volumes:
+      - cigma:/var/lib/mysql
+
+    ports:
+      - 3306:3306
+
+    command:
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
+
+    restart: always
+
+  application:
+      build: .
+      ports:
+        - 9090:9090
+      restart: always
+
+  redis:
+    hostname: redis
+    container_name: redis
+    image: redis
+    command: redis-server --requirepass 'auth ssafy8cigmapass' --port 6379
+    ports:
+      - 6379:6379
