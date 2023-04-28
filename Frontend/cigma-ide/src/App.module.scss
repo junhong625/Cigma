@@ -3,8 +3,6 @@
 .app {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  width: 100vw;
 }
 
 header {
@@ -12,7 +10,6 @@ header {
   width: 100vw;
   background-color: $black-800;
   max-height: fit-content;
-  margin-bottom: 10px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -20,8 +17,5 @@ header {
 }
 
 .workspaceDiv {
-  display: flex;
-  flex-direction: row;
   background-color: white;
-  height: 100%;
 }

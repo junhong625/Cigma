@@ -3,7 +3,6 @@ import styles from "./App.module.scss";
 
 import EditorOrganism from "./components/organisms/EditorOrganism";
 import HeaderOrganism from "./components/organisms/HeaderOrganism";
-import FileTreeOrganism from "./components/organisms/FileTreeOrganism";
 import WorkBenchPage from "./components/pages/WorkBenchPage";
 import initYjsDoc from "./store/initYjsDoc";
 
@@ -19,7 +18,6 @@ function App() {
         <HeaderOrganism />
       </header>
       <div className={styles.workspaceDiv}>
-        <FileTreeOrganism />
         <WorkBenchPage />
       </div>
     </div>
