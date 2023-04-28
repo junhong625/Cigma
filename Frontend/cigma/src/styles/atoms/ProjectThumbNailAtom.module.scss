@@ -2,6 +2,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  > div:first-child {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 .thumbnail {
@@ -14,4 +19,26 @@
   display: flex;
   cursor: pointer;
   gap: 10px;
+}
+
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.newName {
+  width: 70%;
+  border-radius: 5px;
+  height: 24px;
+  font-size: 20px;
+  float: left;
+}
+
+.button {
+  transition: color 0.15s ease;
+  &:hover {
+    cursor: pointer;
+    color: #a1a1a1;
+  }
 }

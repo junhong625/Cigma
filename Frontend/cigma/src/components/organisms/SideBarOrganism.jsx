@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import IconTextAtom from "../atoms/IconTextAtom";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BsFillFileEarmarkCodeFill } from "react-icons/bs";
@@ -25,14 +25,20 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
   const [openTeams, setOpenTeams] = useState(false);
   const [firstClick, setFirstClick] = useState(false);
   const [onCreate, setOnCreate] = useState(false);
-  const newTeamName = useRef("");
+  const newTeamName = useRef();
   const pressEnter = (event) => {
     if (event.key === "Enter") {
-      // Enter 키를 누르면 새로운 팀을 생성한다 (API)
-      // setTeamList([...teamList, newTeamName.current]);
-
+      // 새로운 팀을 생성하는 코드 (API)
+      // 요금제에 따른 생성 갯수 제한?
+      // 이하는 임시 코드
+      if (newTeamName.current.value === "") {
+        setOnCreate(false);
+        return;
+      }
+      setTeamList([...teamList, newTeamName.current.value]);
       // 그 후 입력값 초기화
-      newTeamName.current = "";
+      newTeamName.current.value = "";
+      setOnCreate(false);
     }
   };
 
@@ -45,6 +51,12 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
     setSelectedTeam(index);
     navigate("/projects");
   };
+
+  useEffect(() => {
+    if (onCreate) {
+      newTeamName.current.focus();
+    }
+  }, [onCreate]);
 
   return (
     <div className={styles.blockContainer}>
@@ -115,7 +127,16 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
               </div>
             ))}
             {onCreate ? (
-              <input type="text" ref={newTeamName} onKeyDown={pressEnter} />
+              <input
+                type="text"
+                ref={newTeamName}
+                onKeyDown={pressEnter}
+                className={styles.newTeam}
+                onBlur={() => {
+                  setOnCreate(false);
+                  newTeamName.current.value = "";
+                }}
+              />
             ) : (
               <div
                 onClick={() => {
@@ -138,7 +159,7 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
           >
             <IconTextAtom
               icon={<BsTrashFill />}
-              text={"Trash Can"}
+              text={"Recycle Bin"}
               openTeams={openTeams}
             />
           </div>

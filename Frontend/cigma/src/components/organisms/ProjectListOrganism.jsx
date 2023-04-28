@@ -6,8 +6,9 @@ import ProjectThumbNail from "../atoms/ProjectThumbNailAtom";
 import styles from "../../styles/organisms/ProjectListOrganism.module.scss";
 
 function ProjectListOrganism() {
-  const [openModal, team, setNowContent] = useOutletContext();
-  // contenxt[1] === 해당 프로젝트를 가져온 팀 명.
+  const [openModal, team, setNowContent, setToDo, setPropFunction] =
+    useOutletContext();
+  // team=== 해당 프로젝트를 가져온 팀 명.
   // API상 필요한 정보를 context에 담아 가져올 것.
   // API 호출을 통해 해당 팀의 프로젝트를 리스트로 가져왔다고 가정
   const projects = [
@@ -48,14 +49,19 @@ function ProjectListOrganism() {
       <div className={styles.title}>
         {team}
         <div className={styles.iconWrapper}>
-          <div
-            onClick={() => {
-              UserSearch();
-            }}
-            className={styles.iconWrapper}
-          >
-            <BsPersonFillAdd />
-          </div>
+          {team === "My Projects" ? (
+            ""
+          ) : (
+            <div
+              onClick={() => {
+                UserSearch();
+              }}
+              className={styles.iconWrapper}
+            >
+              <BsPersonFillAdd />
+            </div>
+          )}
+
           <div
             className={styles.iconWrapper}
             onClick={() => {
@@ -70,7 +76,14 @@ function ProjectListOrganism() {
       <div className={styles.projectContainer}>
         {projects.map((project, index) => (
           <div key={"project" + index} className={styles.project}>
-            <ProjectThumbNail name={project.name} img={project.thumbnail} />
+            <ProjectThumbNail
+              name={project.name}
+              img={project.thumbnail}
+              openModal={openModal}
+              setNowContent={setNowContent}
+              setToDo={setToDo}
+              setPropFunction={setPropFunction}
+            />
           </div>
         ))}
       </div>
