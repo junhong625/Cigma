@@ -2,6 +2,7 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import defaultTextSlice from "./defaultTextSlice";
 import codeEditorSlice from "./codeEditorSlice";
 import toolSlice from "./toolSlice";
+import textSlice from "./textSlice";
 // import undoable from "redux-undo";
 
 // const MAXIMUN_UNDO_COUNT = 100;
@@ -9,6 +10,7 @@ import toolSlice from "./toolSlice";
 const workbench = combineReducers({
   defaultText: defaultTextSlice,
   codeEditor: codeEditorSlice,
+  textEditor: textSlice,
 });
 
 // 뒤로가기

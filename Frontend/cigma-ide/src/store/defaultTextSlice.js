@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+// 스타일 관련
 const initialState = {
   // 텍스트 컬러
   color: "#2e2e2e",
@@ -14,11 +15,11 @@ const defaultTextSlice = createSlice({
   initialState,
   reducers: {
     // Text 스타일 로드
-    loadText: (_, { payload }) => {
+    loadDefaultText: (_, { payload }) => {
       return payload;
     },
     // 상태 초기화
-    resetText: () => initialState,
+    resetDefaultText: () => initialState,
     // 색상 변경
     setDefaultColor: (state, { payload }) => {
       state.color = payload;
@@ -43,8 +44,8 @@ export const selectDefaultFontSize = (state) =>
   state.workbench.defaultText.fontSize;
 
 export const {
-  loadText,
-  resetText,
+  loadDefaultText,
+  resetDefaultText,
   setDefaultColor,
   setDefaultThickness,
   setDefaultFontSize,
