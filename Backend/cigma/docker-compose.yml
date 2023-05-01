@@ -11,17 +11,13 @@ services:
       MYSQL_ROOT_HOST: "%"
       MYSQL_ROOT_PASSWORD: ssafy
       TZ: Asia/Seoul
-
     volumes:
       - ./mysql/data:/var/lib/mysql
-
     ports:
       - 3306:3306
-
     command:
       - "--character-set-server=utf8mb4"
       - "--collation-server=utf8mb4_unicode_ci"
-
     restart: always
 
   application:
@@ -29,6 +25,8 @@ services:
       ports:
         - 9090:9090
       restart: always
+      depends_on:
+        - database
 
   redis:
     hostname: redis
