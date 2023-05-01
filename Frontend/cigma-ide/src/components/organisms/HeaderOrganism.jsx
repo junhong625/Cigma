@@ -15,7 +15,7 @@ import styles from "../../styles/organisms/HeaderOrganism.module.scss";
 하는 것 이 좋아보임
 */
 
-const HeaderOrganism = () => {
+const HeaderOrganism = (props) => {
   return (
     <>
       <div className={styles.headerLeftDiv}>
@@ -27,7 +27,7 @@ const HeaderOrganism = () => {
         {/* plugin 추가 */}
         <HeaderBtnAtom
           onClick={() => {
-            // handle click Event
+            props.setHandleFileBar(!props.handleFileBar);
           }}
         >
           <BsFillFileEarmarkTextFill color="white" size={24} />
