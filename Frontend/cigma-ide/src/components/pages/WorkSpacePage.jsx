@@ -9,7 +9,7 @@ import { emptySelectedShapeIndexes } from "../../store/toolSlice";
 import useDrawCodeEditor from "../../hooks/useDrawCodeEditor";
 let isFirstRender = true;
 
-const WorkSpacePage = () => {
+const WorkSpacePage = (props) => {
   const dispatch = useDispatch();
   const codeEditors = useSelector(selectAllCodeEditor);
   const boardRef = useRef();
@@ -51,6 +51,15 @@ const WorkSpacePage = () => {
 
     return () => artboard.removeEventListener("mousedown", resetSelection);
   }, [dispatch]);
+
+  // 왼쪽 사이드바 출력 on off 시 화면 스크롤을 통해 위치 유지
+  useEffect(() => {
+    if (props.handleFileBar === true) {
+      boardRef.current.scrollLeft += props.widthLeft;
+    } else {
+      boardRef.current.scrollLeft -= props.widthLeft;
+    }
+  }, [props.handleFileBar]);
 
   return (
     <div ref={boardRef} className={styles["artboard-wrapper"]}>

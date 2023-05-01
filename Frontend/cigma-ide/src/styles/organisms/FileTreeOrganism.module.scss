@@ -1,21 +1,15 @@
 .app {
   height: calc(100vh - 60px);
-  width: 250px;
-  position: absolute;
-  top: 60px;
-  left: 0;
-  background-color: #2e2e2e;
   color: #efefef;
-  z-index: 999;
 }
 
 .treeRoot {
-  height: 100%;
   margin: 0;
   padding: 0 20px 0 20px;
 
   li {
     list-style-type: none;
+    width: 100%;
   }
 
   * {
@@ -42,4 +36,15 @@
 .dropTarget {
   border-radius: 5px;
   background-color: #727272;
+}
+
+.buttonWapper {
+  display: flex;
+  justify-content: space-around;
+}
+
+.hidden {
+  opacity: 0;
+  width: 0 !important;
+  pointer-events: none;
 }
