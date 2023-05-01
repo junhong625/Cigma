@@ -1,7 +1,5 @@
 // default signaling server for y-webrtc
 
-import ws from "ws";
-import http from "http";
 import * as map from "lib0/map";
 
 const wsReadyStateConnecting = 0;
@@ -10,15 +8,6 @@ const wsReadyStateClosing = 2; // eslint-disable-line
 const wsReadyStateClosed = 3; // eslint-disable-line
 
 const pingTimeout = 30000;
-
-const port = process.env.PORT || 4444;
-// @ts-ignore
-const wss = new ws.Server({ noServer: true });
-
-const server = http.createServer((request, response) => {
-  response.writeHead(200, { "Content-Type": "text/plain" });
-  response.end("okay");
-});
 
 /**
  * Map froms topic-name to set of subscribed clients.
@@ -134,19 +123,6 @@ const onconnection = (conn) => {
     }
   );
 };
-wss.on("connection", onconnection);
 
-server.on("upgrade", (request, socket, head) => {
-  // You may check auth of request here..
-  /**
-   * @param {any} ws
-   */
-  const handleAuth = (ws) => {
-    wss.emit("connection", ws, request);
-  };
-  wss.handleUpgrade(request, socket, head, handleAuth);
-});
-
-server.listen(port);
-
-console.log("Signaling server running on localhost:", port);
+// module.exports = onconnection;
+export { onconnection };

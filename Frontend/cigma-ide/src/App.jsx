@@ -7,7 +7,7 @@ import WorkBenchPage from "./components/pages/WorkBenchPage";
 import initYjsDoc from "./store/initYjsDoc";
 
 function App() {
-  const doc = useRef(initYjsDoc("ws://localhost:1234/", "monacoTest"));
+  const doc = useRef(initYjsDoc("ws://localhost:4444/", "monacoTest"));
   if (doc.current.ydoc !== null) {
     const editorList = useRef(doc.current.ydoc.getMap("editorList"));
   }
