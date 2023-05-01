@@ -24,6 +24,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -42,6 +44,11 @@ public class UserServiceImpl implements UserService{
         checkDuplicateMemberEmail(userCreateRequest.getUserEmail());
         // 등록되지 않은 이메일일 경우 회원가입 진행
         return new UserCreateResponse(userRepository.save(userCreateRequest.toEntity()));
+    }
+
+    @Override
+    public Optional<User> findByUserEmail(String userEmail) {
+        return userRepository.findByUserEmail(userEmail);
     }
 
     @Override

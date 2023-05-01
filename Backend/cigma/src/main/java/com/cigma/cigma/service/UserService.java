@@ -5,8 +5,10 @@ import com.cigma.cigma.dto.request.UserLoginRequest;
 import com.cigma.cigma.dto.response.UserCreateResponse;
 import com.cigma.cigma.dto.response.UserGetResponse;
 import com.cigma.cigma.dto.response.UserLoginResponse;
+import com.cigma.cigma.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 public interface UserService {
     // 회원가입
@@ -22,4 +24,6 @@ public interface UserService {
     void delete(HttpServletRequest request) throws Exception;
 
     UserGetResponse getUser();
+
+    Optional<User> findByUserEmail(String userEmail);
 }
