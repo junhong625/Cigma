@@ -35,7 +35,7 @@ public class UserController {
     성공 : {userIdx : ?,
            userEmail : ???,
            userName : ???}
-    실패 : {data : null}
+    실패 : {isSuccess : false}
 
     ====================================
      */
@@ -59,7 +59,7 @@ public class UserController {
 
     성공 : {accessToken : ???,
            refreshToken : ???}
-    실패 : {data : null}
+    실패 : {isSuccess : false}
 
     ====================================
      */
@@ -73,6 +73,20 @@ public class UserController {
         }
     }
 
+    /*
+    로그아웃
+    ============ header ============
+
+    Authorization : bearer {accessToken}
+    Refresh : bearer {refreshToken}
+
+    ============= response =============
+
+    성공 : {isSuccess : true}
+    실패 : {isSuccess : false}
+
+    ====================================
+     */
     @PostMapping("/logout")
     public ResponseEntity<Object> logout(HttpServletRequest request) {
         try {
@@ -83,6 +97,20 @@ public class UserController {
         }
     }
 
+    /*
+    회원탈퇴
+    ============ header ============
+
+    Authorization : bearer {accessToken}
+    Refresh : bearer {refreshToken}
+
+    ============= response =============
+
+    성공 : {isSuccess : true}
+    실패 : {isSuccess : false}
+
+    ====================================
+     */
     @DeleteMapping("/delete")
     public ResponseEntity<?> delete(HttpServletRequest request) {
         try {
@@ -90,6 +118,29 @@ public class UserController {
             return ResponseHandler.generateResponse(true, "회원탈퇴 완료", HttpStatus.OK, null);
         } catch (Exception e) {
             return ResponseHandler.generateResponse(false, "유효하지 않은 accessToken 입니다.", HttpStatus.BAD_REQUEST, null);
+        }
+    }
+
+    /*
+    회원조회
+    ============ header ============
+
+    Authorization : bearer {accessToken}
+    Refresh : bearer {refreshToken}
+
+    ============= response =============
+
+    성공 : {isSuccess : true}
+    실패 : {isSuccess : false}
+
+    ====================================
+     */
+    @GetMapping()
+    public ResponseEntity<?> getUser() {
+        try {
+            return ResponseHandler.generateResponse(true, "조회 성공", HttpStatus.OK, userService.getUser());
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse(false, "조회 실패", HttpStatus.BAD_REQUEST, null);
         }
     }
 }

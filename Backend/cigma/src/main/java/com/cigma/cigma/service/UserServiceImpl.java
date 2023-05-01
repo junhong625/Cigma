@@ -2,7 +2,9 @@ package com.cigma.cigma.service;
 
 import com.cigma.cigma.common.SecurityUtils;
 import com.cigma.cigma.dto.request.UserLoginRequest;
+import com.cigma.cigma.dto.response.UserGetResponse;
 import com.cigma.cigma.dto.response.UserLoginResponse;
+import com.cigma.cigma.entity.User;
 import com.cigma.cigma.jwt.Token;
 import com.cigma.cigma.jwt.TokenProvider;
 import com.cigma.cigma.jwt.UserPrincipal;
@@ -19,7 +21,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,11 +38,8 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserCreateResponse signUp(UserCreateRequest userCreateRequest) {
-
-        // email(아이디) 유일성 검사
-        if (userRepository.findByUserEmail(userCreateRequest.getUserEmail()).isPresent()) {
-            throw new RuntimeException("이미 등록된 email 입니다.");
-        }
+        // email 유효성 검사
+        checkDuplicateMemberEmail(userCreateRequest.getUserEmail());
         // 등록되지 않은 이메일일 경우 회원가입 진행
         return new UserCreateResponse(userRepository.save(userCreateRequest.toEntity()));
     }
@@ -90,8 +88,7 @@ public class UserServiceImpl implements UserService{
             }
             log.info("로그아웃 성공");
             String accessToken = request.getHeader(jwtProperties.getHeader()).substring(7);
-            Long expiration = tokenProvider.getExpiration(accessToken);
-            redisTemplate.opsForValue().set(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);
+            registBlacklist(accessToken);
         } catch (Exception e){
             log.info("비정상적인 접근");
             throw new Exception("유효하지 않은 token입니다.");
@@ -99,15 +96,42 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public UserGetResponse getUser() {
+        UserPrincipal userPrincipal = SecurityUtils.getUserPrincipal();
+        Long userIdx = userPrincipal.getUserIdx();
+        return new UserGetResponse(userRepository.findById(userIdx).get());
+    }
+
+    @Override
     public void delete(HttpServletRequest request) throws Exception {
-        log.info("계정 삭제 시작");
+        log.info("유저 삭제 시작");
         try {
             UserPrincipal userPrincipal = SecurityUtils.getUserPrincipal();
             log.info("사용자 정보 불러오기");
+            // 유저 정보 db에서 삭제
             userRepository.deleteById(userPrincipal.getUserIdx());
-            redisTemplate.delete(request.getHeader(jwtProperties.getHeader()).substring(7));
+            log.info("유저 삭제");
+            // accessToken 블랙리스트에 등록
+            String accessToken = request.getHeader(jwtProperties.getHeader()).substring(7);
+            registBlacklist(accessToken);
+            log.info("블랙리스트 등록");
+            // redis에서 refreshToken 삭제
+            redisTemplate.delete(userPrincipal.getUserIdx().toString());
+            log.info("유저 토큰 제거");
         } catch (Exception e) {
             throw new Exception("유효하지 않은 token 입니다.");
         }
+    }
+
+    // email(아이디) 유일성 검사
+    public void checkDuplicateMemberEmail(String email) {
+        if (userRepository.findByUserEmail(email).isPresent()) {
+            throw new RuntimeException("이미 등록된 email 입니다.");
+        }
+    }
+
+    public void registBlacklist(String token) {
+        Long expiration = tokenProvider.getExpiration(token);
+        redisTemplate.opsForValue().set(token, "blacklist", expiration, TimeUnit.MILLISECONDS);
     }
 }
