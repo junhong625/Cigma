@@ -3,13 +3,15 @@ package com.cigma.cigma.controller;
 import com.cigma.cigma.dto.request.UserLoginRequest;
 import com.cigma.cigma.handler.ResponseHandler;
 import com.cigma.cigma.dto.request.UserCreateRequest;
-import com.cigma.cigma.service.UserService;
+import com.cigma.cigma.properties.JwtProperties;
 import com.cigma.cigma.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/user")
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserServiceImpl userService;
+    private final JwtProperties jwtProperties;
 
     /*
     회원가입
@@ -32,7 +35,7 @@ public class UserController {
     성공 : {userIdx : ?,
            userEmail : ???,
            userName : ???}
-    실패 : {data : null}
+    실패 : {isSuccess : false}
 
     ====================================
      */
@@ -56,7 +59,7 @@ public class UserController {
 
     성공 : {accessToken : ???,
            refreshToken : ???}
-    실패 : {data : null}
+    실패 : {isSuccess : false}
 
     ====================================
      */
@@ -66,6 +69,77 @@ public class UserController {
             return ResponseHandler.generateResponse(true, "로그인 성공", HttpStatus.OK, userService.login(userLoginRequest));
         } catch (Exception e) {
             return ResponseHandler.generateResponse(false, "존재하지 않는 이메일이거나 비밀번호가 틀렸습니다.", HttpStatus.BAD_REQUEST, null);
+        }
+    }
+
+    /*
+    로그아웃
+    ============ header ============
+
+    Authorization : bearer {accessToken}
+    Refresh : bearer {refreshToken}
+
+    ============= response =============
+
+    성공 : {isSuccess : true}
+    실패 : {isSuccess : false}
+
+    ====================================
+     */
+    @PostMapping("/logout")
+    public ResponseEntity<Object> logout(HttpServletRequest request) {
+        try {
+            userService.logout(request);
+            return ResponseHandler.generateResponse(true, "로그아웃", HttpStatus.OK, null);
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse(false, "유효하지 않은 accessToken입니다.", HttpStatus.BAD_REQUEST, null);
+        }
+    }
+
+    /*
+    회원탈퇴
+    ============ header ============
+
+    Authorization : bearer {accessToken}
+    Refresh : bearer {refreshToken}
+
+    ============= response =============
+
+    성공 : {isSuccess : true}
+    실패 : {isSuccess : false}
+
+    ====================================
+     */
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> delete(HttpServletRequest request) {
+        try {
+            userService.delete(request);
+            return ResponseHandler.generateResponse(true, "회원탈퇴 완료", HttpStatus.OK, null);
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse(false, "유효하지 않은 accessToken 입니다.", HttpStatus.BAD_REQUEST, null);
+        }
+    }
+
+    /*
+    회원조회
+    ============ header ============
+
+    Authorization : bearer {accessToken}
+    Refresh : bearer {refreshToken}
+
+    ============= response =============
+
+    성공 : {isSuccess : true}
+    실패 : {isSuccess : false}
+
+    ====================================
+     */
+    @GetMapping()
+    public ResponseEntity<?> getUser() {
+        try {
+            return ResponseHandler.generateResponse(true, "조회 성공", HttpStatus.OK, userService.getUser());
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse(false, "조회 실패", HttpStatus.BAD_REQUEST, null);
         }
     }
 }

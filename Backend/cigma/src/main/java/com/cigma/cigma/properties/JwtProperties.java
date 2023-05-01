@@ -3,22 +3,13 @@ package com.cigma.cigma.properties;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 
 @Getter
-@Configuration
-@ConfigurationProperties(prefix = "jwt")
+@Setter
+@ConfigurationProperties(prefix = "jwt") // application.yml에서 jwt로 시작하는 property 가져오기
 public class JwtProperties {
-
-    private final Auth auth = new Auth();
-
-    @Getter
-    @Setter
-    public static class Auth {
-        private String tokenSecret;
-        private long accessTokenValidityInSeconds;
-        private long refreshTokenValidityInSeconds;
-    }
-
-
+    private String secret;
+    private String header;
+    private long accessTokenValidityInSeconds;
+    private long refreshTokenValidityInSeconds;
 }

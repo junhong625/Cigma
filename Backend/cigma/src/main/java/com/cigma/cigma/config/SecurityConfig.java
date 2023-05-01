@@ -2,10 +2,10 @@ package com.cigma.cigma.config;
 
 import com.cigma.cigma.jwt.JwtAccessDeniedHandler;
 import com.cigma.cigma.jwt.JwtAuthenticationEntryPoint;
-import com.cigma.cigma.jwt.JwtSecurityConfig;
 import com.cigma.cigma.jwt.TokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableGlobalMethodSecurity(prePostEnabled = true) // @PreAuthorize 어노테이션을 메소드 단위로 추가하기 위해 사용
 public class SecurityConfig extends WebSecurityConfigurerAdapter { // 추가적인 설정을 위해 extends
     private final TokenProvider tokenProvider;
+    private final RedisTemplate redisTemplate;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
@@ -26,13 +27,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // 추가적�
     public SecurityConfig(
             TokenProvider tokenProvider,
             JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
+            RedisTemplate redisTemplate,
             JwtAccessDeniedHandler jwtAccessDeniedHandler
     ) {
         this.tokenProvider = tokenProvider;
+        this.redisTemplate = redisTemplate;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
         this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
     }
 
+    // 비밀번호 암호화를 위한 Encoder
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -63,8 +67,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // 추가적�
 
                 // JwtSecurity Config 적용
                 .and()
-                .apply(new JwtSecurityConfig(tokenProvider));
-
-//        super.configure(http);
+                .apply(new JwtSecurityConfig(tokenProvider, redisTemplate));
     }
 }
