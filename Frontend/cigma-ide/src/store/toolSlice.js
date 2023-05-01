@@ -66,6 +66,9 @@ export const selectIsDragScrolling = (state) => state.tool.isDragScrolling;
 export const selectCurrentCodeEditorIndex = (state) =>
   state.tool.workingCodeEditorIndex;
 
+export const selectIsSelectorActivated = (state) =>
+  state.tool.isSelectorActivated;
+
 export const {
   activeSelctor,
   deactivateSelector,

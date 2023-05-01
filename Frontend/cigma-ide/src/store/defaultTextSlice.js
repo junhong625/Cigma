@@ -34,6 +34,14 @@ const defaultTextSlice = createSlice({
   },
 });
 
+export const selectDefaultColor = (state) => state.workbench.defaultText.color;
+
+export const selectDefaultThickness = (state) =>
+  state.workbench.defaultText.thickness;
+
+export const selectDefaultFontSize = (state) =>
+  state.workbench.defaultText.fontSize;
+
 export const {
   loadText,
   resetText,
