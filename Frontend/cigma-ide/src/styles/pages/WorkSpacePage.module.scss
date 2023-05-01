@@ -3,16 +3,30 @@
 .artboard-wrapper {
   width: calc(100%);
   height: calc(100vh - 60px);
-  overflow: scroll;
-}
+  overflow: overlay;
 
-.artboard-wrapper::-webkit-scrollbar {
-  display: none;
+  &::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+  }
+  &::-webkit-scrollbar-corner {
+    display: none;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: hsla(0, 0%, 40%, 0.39);
+    border-radius: 5px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
 }
 
 .artboard {
   @include artboardSize;
   background-color: $object-artboard-bg;
-  position: relative;
   transform-origin: 0 0;
+}
+
+.wide {
+  transform: 100 0;
 }
