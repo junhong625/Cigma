@@ -16,7 +16,7 @@ import { setCurrentTool } from "../../store/toolSlice";
 하는 것 이 좋아보임
 */
 
-const HeaderOrganism = () => {
+const HeaderOrganism = (props) => {
   const dispatch = useDispatch();
   return (
     <>
@@ -29,17 +29,12 @@ const HeaderOrganism = () => {
         {/* plugin 추가 */}
         <HeaderBtnAtom
           onClick={() => {
-            // handle click Event
+            props.setHandleFileBar(!props.handleFileBar);
           }}
         >
           <BsFillFileEarmarkTextFill color="white" size={24} />
         </HeaderBtnAtom>
-        <HeaderBtnAtom
-          onClick={() => {
-            dispatch(setCurrentTool("text"));
-            console.log("working");
-          }}
-        >
+        <HeaderBtnAtom onClick={() => dispatch(setCurrentTool("text"))}>
           <BsFileFontFill color="white" size={24} />
         </HeaderBtnAtom>
         <HeaderBtnAtom>

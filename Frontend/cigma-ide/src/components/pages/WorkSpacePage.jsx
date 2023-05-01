@@ -12,7 +12,7 @@ import { selectAllTextEditor } from "../../store/textSlice";
 import TextEditior from "../organisms/TextEditior";
 let isFirstRender = true;
 
-const WorkSpacePage = () => {
+const WorkSpacePage = (props) => {
   const dispatch = useDispatch();
   const codeEditors = useSelector(selectAllCodeEditor);
   const textEditors = useSelector(selectAllTextEditor);
@@ -38,7 +38,7 @@ const WorkSpacePage = () => {
     boardRef.current.scrollTop = top - 100;
     boardRef.current.scrollLeft =
       left - boardRef.current.clientWidth / 2 + width / 2;
-  }, [codeEditors]);
+  }, [codeEditors, textEditors]);
 
   /**
    * @todo innerBoardRef관련 useEffect?
@@ -57,6 +57,15 @@ const WorkSpacePage = () => {
 
     return () => artboard.removeEventListener("mousedown", resetSelection);
   }, [dispatch]);
+
+  // 왼쪽 사이드바 출력 on off 시 화면 스크롤을 통해 위치 유지
+  useEffect(() => {
+    if (props.handleFileBar === true) {
+      boardRef.current.scrollLeft += props.widthLeft;
+    } else {
+      boardRef.current.scrollLeft -= props.widthLeft;
+    }
+  }, [props.handleFileBar]);
 
   return (
     <div ref={boardRef} className={styles["artboard-wrapper"]}>

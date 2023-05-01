@@ -69,8 +69,6 @@ const useDrawText = (elementRef) => {
       dispatch(setInputFieldFocused());
       dispatch(setCurrentTool("selector"));
 
-      previewText.addEventListener("blur", handBlur, { once: true });
-
       const handBlur = () => {
         if (!previewText.innerText) {
           dispatch(setInputFieldBlurred());
@@ -94,6 +92,8 @@ const useDrawText = (elementRef) => {
         previewText.remove();
         form.remove();
       };
+
+      previewText.addEventListener("blur", handBlur, { once: true });
 
       // let lastAnimationFrame;
 
@@ -122,7 +122,6 @@ const useDrawText = (elementRef) => {
       // };
     };
 
-    element.style.cursor = "text";
     element.addEventListener("mousedown", handleClickText);
 
     return () => element.removeEventListener("mousedown", handleClickText);

@@ -20,7 +20,7 @@ const toolSlice = createSlice({
     deactivateSelector: (state) => {
       state.isSelectorActivated = false;
     },
-    activateSelctor: (state) => {
+    activateSelector: (state) => {
       state.isSelectorActivated = true;
     },
     setInputFieldFocused: (state) => {
@@ -70,7 +70,7 @@ export const selectIsSelectorActivated = (state) =>
   state.tool.isSelectorActivated;
 
 export const {
-  activateSelctor,
+  activateSelector,
   deactivateSelector,
   setInputFieldFocused,
   setInputFieldBlurred,

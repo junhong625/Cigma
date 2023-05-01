@@ -5,29 +5,30 @@ import {
 } from "../../store/defaultTextSlice";
 import { useEffect, useRef, useState } from "react";
 import {
+  deactivateSelector,
   setInputFieldBlurred,
   setInputFieldFocused,
 } from "../../store/toolSlice";
 import { modifyText } from "../../store/textSlice";
-import { activateSelctor } from "../../store/toolSlice";
+import { activateSelector } from "../../store/toolSlice";
 import style from "../../styles/organisms/TextEditor.module.scss";
-import { SHAPE_TEXT_STYLES } from "../../constants/styles";
+// import { SHAPE_TEXT_STYLES } from "../../constants/styles";
+import useDragText from "../../hooks/useDragText";
 
 const TextEditior = ({ textIndex, artBoardRef, ...textEditor }) => {
   const dispatch = useDispatch();
 
   const defaultColor = useSelector(selectDefaultColor);
   const defaultFontSize = useSelector(selectDefaultFontSize);
-
   const textRef = useRef();
-  const inputRef = useRef();
+
+  useDragText(textRef, artBoardRef, textIndex);
 
   const [isDoubleClicked, setIsDoubleClicked] = useState(false);
-
   const handleBlur = (event) => {
     const newText = {
       // 택스트 내용
-      text: inputRef.textContent,
+      text: event.target.textContent,
       // 색상
       color: defaultColor,
       // 폰트사이즈
@@ -41,14 +42,19 @@ const TextEditior = ({ textIndex, artBoardRef, ...textEditor }) => {
     };
     setIsDoubleClicked(false);
     dispatch(modifyText(newText));
-    dispatch(activateSelctor());
+    dispatch(activateSelector());
     dispatch(setInputFieldBlurred());
   };
 
-  useEffect(() => {
-    if (!inputRef.current) return;
-    inputRef.current.focus();
-  }, [inputRef, isDoubleClicked]);
+  const handleMouseEnter = () => {
+    // deactivate 처리
+    dispatch(deactivateSelector());
+  };
+
+  const handleMouseLeave = () => {
+    dispatch(activateSelector());
+    console.log("out");
+  };
 
   useEffect(() => {
     if (!textRef.current) return;
@@ -63,11 +69,11 @@ const TextEditior = ({ textIndex, artBoardRef, ...textEditor }) => {
     }
   }, [textEditor, textIndex, dispatch]);
 
+  // 더블클릭
   if (isDoubleClicked)
     return (
       <form>
         <div
-          ref={inputRef}
           className={style.input}
           style={{
             top: textEditor.top,
@@ -99,12 +105,14 @@ const TextEditior = ({ textIndex, artBoardRef, ...textEditor }) => {
           left: textEditor.left,
           fontSize: textEditor.fontSize,
           color: textEditor.color,
-          borderBottom: SHAPE_TEXT_STYLES.BORDER,
+          // borderBottom: SHAPE_TEXT_STYLES.BORDER,
         }}
         // 더블 클릭시
         onDoubleClick={() => {
           setIsDoubleClicked(true);
         }}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
         {textEditor.text}
       </div>

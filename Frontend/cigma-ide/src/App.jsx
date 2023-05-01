@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./App.module.scss";
 
 // import EditorOrganism from "./components/organisms/EditorOrganism";
@@ -12,13 +12,19 @@ function App() {
     const editorList = useRef(doc.current.ydoc.getMap("editorList"));
   }
 
+  //왼쪽 사이드바 표시를 변경하기 위한 State
+  const [handleFileBar, setHandleFileBar] = useState(true);
+
   return (
     <div className={styles.app}>
       <header>
-        <HeaderOrganism />
+        <HeaderOrganism
+          handleFileBar={handleFileBar}
+          setHandleFileBar={setHandleFileBar}
+        />
       </header>
       <div className={styles.workspaceDiv}>
-        <WorkBenchPage />
+        <WorkBenchPage handleFileBar={handleFileBar} />
       </div>
     </div>
   );
