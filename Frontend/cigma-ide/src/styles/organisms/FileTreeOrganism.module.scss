@@ -1,0 +1,45 @@
+.app {
+  height: calc(100vh - 60px);
+  width: 250px;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  background-color: #2e2e2e;
+  color: #efefef;
+  z-index: 999;
+}
+
+.treeRoot {
+  height: 100%;
+  margin: 0;
+  padding: 0 20px 0 20px;
+
+  li {
+    list-style-type: none;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.current {
+  background-color: #f3f3f3;
+  margin: 8px;
+  padding: 8px;
+}
+
+.currentLabel {
+  font-weight: bold;
+  margin-inline-start: 0.5em;
+}
+
+.draggingSource {
+  opacity: 0.3;
+}
+
+.dropTarget {
+  border-radius: 5px;
+  background-color: #727272;
+}

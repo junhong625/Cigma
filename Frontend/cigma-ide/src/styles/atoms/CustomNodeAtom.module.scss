@@ -1,0 +1,103 @@
+.root {
+  border-radius: 5px;
+  padding-left: 8px;
+  font-size: 12px;
+  position: relative;
+  align-items: center;
+  justify-items: start;
+  gap: 10px;
+  display: grid;
+  grid-template-columns: min-content 1fr auto;
+  height: 32px;
+  padding-inline-end: 8px;
+  cursor: pointer;
+  &:hover {
+    background-color: #999999;
+    .editButton {
+      display: flex;
+      &:hover {
+        color: #5c5c5c;
+      }
+    }
+  }
+  > div:first-child {
+    margin-left: 8px;
+  }
+}
+
+.root.isSelected {
+  background-color: #b3b3b3;
+  color: #2e2e2e;
+}
+
+.expandIconWrapper {
+  align-items: center;
+  font-size: 8px;
+  display: flex;
+  height: 24px;
+  justify-content: center;
+  width: 24px;
+  transition: transform linear 0.1s;
+  transform: rotate(90deg);
+}
+
+.expandIconWrapper.isOpen {
+  transform: rotate(180deg);
+}
+
+.iconWrapper {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  padding-left: 7px;
+}
+.labelGridItem {
+  padding-inline-start: 8px;
+}
+
+.pipeY {
+  position: absolute;
+  border-left: 2px solid #efefef;
+}
+
+.pipeX {
+  position: absolute;
+  left: 7px;
+  top: 16px;
+  height: 2px;
+  background-color: #efefef;
+}
+
+.nameSpace {
+  display: flex;
+  white-space: nowrap;
+  align-items: center;
+  .editButton {
+    display: none;
+    margin-left: 10px;
+  }
+}
+
+.inputWrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 2px;
+}
+
+.textField {
+  font-size: 12px;
+  padding: 6px 0;
+}
+
+.editButton {
+  padding: 6px;
+}
+
+.editIcon {
+  font-size: 12px;
+}
+
+.nodeInput {
+  width: 100%;
+}
