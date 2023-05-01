@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
@@ -63,7 +65,7 @@ public class UserController {
      */
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody UserLoginRequest userLoginRequest) {
-        log.info("토큰 만료시간 출력여부 : " + jwtProperties.getSecret());
+//        log.info("토큰 만료시간 출력여부 : " + jwtProperties.getSecret());
         try {
             return ResponseHandler.generateResponse(true, "로그인 성공", HttpStatus.OK, userService.login(userLoginRequest));
         } catch (Exception e) {
@@ -72,12 +74,22 @@ public class UserController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Object> logout(@RequestHeader("accessToken") String accessToken) {
+    public ResponseEntity<Object> logout(HttpServletRequest request) {
         try {
-            userService.logout(accessToken);
-            return ResponseHandler.generateResponse(true, "로그아웃", HttpStatus.OK, userService);
+            userService.logout(request);
+            return ResponseHandler.generateResponse(true, "로그아웃", HttpStatus.OK, null);
         } catch (Exception e) {
             return ResponseHandler.generateResponse(false, "유효하지 않은 accessToken입니다.", HttpStatus.BAD_REQUEST, null);
+        }
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> delete(HttpServletRequest request) {
+        try {
+            userService.delete(request);
+            return ResponseHandler.generateResponse(true, "회원탈퇴 완료", HttpStatus.OK, null);
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse(false, "유효하지 않은 accessToken 입니다.", HttpStatus.BAD_REQUEST, null);
         }
     }
 }

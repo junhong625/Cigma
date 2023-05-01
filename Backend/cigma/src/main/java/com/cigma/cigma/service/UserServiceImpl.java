@@ -1,5 +1,6 @@
 package com.cigma.cigma.service;
 
+import com.cigma.cigma.common.SecurityUtils;
 import com.cigma.cigma.dto.request.UserLoginRequest;
 import com.cigma.cigma.dto.response.UserLoginResponse;
 import com.cigma.cigma.jwt.Token;
@@ -9,14 +10,19 @@ import com.cigma.cigma.properties.JwtProperties;
 import com.cigma.cigma.repository.UserRepository;
 import com.cigma.cigma.dto.request.UserCreateRequest;
 import com.cigma.cigma.dto.response.UserCreateResponse;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -54,13 +60,14 @@ public class UserServiceImpl implements UserService{
             // 인증이 확인 됐으니 JWT 토큰 생성
             Token token = tokenProvider.createToken(authentication);
             Long refreshExpiredTime = jwtProperties.getRefreshTokenValidityInSeconds();
+            UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
             // refreshToken redis에 저장
             log.info("======redis에 token 저장 시작======");
-            log.info("유저 email : " + authentication.getName().toString());
+            log.info("유저 email : " + userPrincipal.getUserIdx());
             log.info("유저 토큰 : " + token.getRefreshToken());
             log.info("만료 시간 : " + refreshExpiredTime);
             log.info("=====================================");
-            redisTemplate.opsForValue().set(authentication.getName().toString(), token.getRefreshToken(), refreshExpiredTime, TimeUnit.MILLISECONDS);
+            redisTemplate.opsForValue().set(userPrincipal.getUserIdx().toString(), token.getRefreshToken(), refreshExpiredTime, TimeUnit.MILLISECONDS);
             log.info("redis에 token 저장 완료");
 
             return new UserLoginResponse(token);
@@ -70,28 +77,37 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void logout(String accessToken) {
-        log.info("로그아웃 토큰 확인 : " + !accessToken.isEmpty());
-        log.info("token 유효성 검사");
-        if (tokenProvider.validateToken(accessToken, "access")) {
-            log.info("token 유효성 검사 통과");
-            Authentication authentication = tokenProvider.getAuthentication(accessToken);
-            log.info("인증 정보 불러오기");
-            log.info("redis 내에서 token 조회");
+    public void logout(HttpServletRequest request) throws Exception {
+        UserPrincipal userPrincipal = SecurityUtils.getUserPrincipal();
+        try {
             log.info("출력테스트=============================");
-            UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-            log.info("UserID : " + userPrincipal.getUserEmail());
-//            if (redisTemplate.opsForValue().get(authentication.getName()) != null) {
-//                redisTemplate.delete(authentication.getName());
-            if (redisTemplate.opsForValue().get(userPrincipal.getUserEmail()) != null) {
-                redisTemplate.delete(userPrincipal.getUserEmail());
+            log.info("UserID : " + userPrincipal.getUserIdx());
+            if (redisTemplate.opsForValue().get(userPrincipal.getUserIdx().toString()) != null) {
+                redisTemplate.delete(userPrincipal.getUserIdx().toString());
                 log.info("token 삭제");
             } else {
                 log.info("이미 만료된 token 입니다");
             }
+            log.info("로그아웃 성공");
+            String accessToken = request.getHeader(jwtProperties.getHeader()).substring(7);
+            Long expiration = tokenProvider.getExpiration(accessToken);
+            redisTemplate.opsForValue().set(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);
+        } catch (Exception e){
+            log.info("비정상적인 접근");
+            throw new Exception("유효하지 않은 token입니다.");
         }
-        log.info("로그아웃 성공");
-        Long expiration = tokenProvider.getExpiration(accessToken);
-        redisTemplate.opsForValue().set(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);
+    }
+
+    @Override
+    public void delete(HttpServletRequest request) throws Exception {
+        log.info("계정 삭제 시작");
+        try {
+            UserPrincipal userPrincipal = SecurityUtils.getUserPrincipal();
+            log.info("사용자 정보 불러오기");
+            userRepository.deleteById(userPrincipal.getUserIdx());
+            redisTemplate.delete(request.getHeader(jwtProperties.getHeader()).substring(7));
+        } catch (Exception e) {
+            throw new Exception("유효하지 않은 token 입니다.");
+        }
     }
 }

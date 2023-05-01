@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -33,12 +34,14 @@ public class TokenProvider implements InitializingBean {
 
     private final JwtProperties jwtProperties;
     private StringRedisTemplate stringRedisTemplate = new StringRedisTemplate();
+    private final RedisTemplate redisTemplate;
 
     private Key key;
 
     // 2. 의존성 주입
-    public TokenProvider(JwtProperties jwtProperties) {
+    public TokenProvider(JwtProperties jwtProperties, RedisTemplate redisTemplate) {
         this.jwtProperties = jwtProperties;
+        this.redisTemplate = redisTemplate;
     }
 
     // 3. 주입받은 secret 값을 Base64 Decode해서 key 변수에 할당
@@ -69,7 +72,7 @@ public class TokenProvider implements InitializingBean {
 
     public String createAccessToken(UserPrincipal userPrincipal, String authorities, Long date) {
         return Jwts.builder()
-                .setSubject(userPrincipal.getUserEmail())
+                .setSubject(userPrincipal.getUserIdx().toString())
                 .claim(AUTHORITIES_KEY, authorities)
                 .claim(USER_IDX, userPrincipal.getUserIdx())
                 .signWith(key, SignatureAlgorithm.HS512)
@@ -79,7 +82,7 @@ public class TokenProvider implements InitializingBean {
 
     public String createRefreshToken(UserPrincipal userPrincipal, String authorities, Long date) {
         return Jwts.builder()
-                .setSubject(userPrincipal.getUserEmail())
+                .setSubject("refresh" + userPrincipal.getUserIdx().toString())
                 .claim(AUTHORITIES_KEY, authorities)
                 .claim(USER_IDX, userPrincipal.getUserIdx())
                 .signWith(key, SignatureAlgorithm.HS512)
@@ -130,12 +133,14 @@ public class TokenProvider implements InitializingBean {
         try {
             log.info("accessToken : " + token);
             JwtParser jwtParser = Jwts.parserBuilder().setSigningKey(key).build();
-            log.info("parser 생성");
             log.info(String.valueOf(jwtParser.parseClaimsJws(token).getBody().getExpiration()));
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            log.info("token parsing");
-
-
+            jwtParser.parseClaimsJws(token);
+            log.info("token parsing 완료");
+            log.info("token 존재 여부 " + redisTemplate.hasKey(token));
+            if (redisTemplate.hasKey(token)) {
+                log.info("해당 토큰 logout 처리됨");
+                return false;}
+            log.info("토큰 유효함");
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             logger.info("잘못된 " + type + " JWT 서명입니다.");
@@ -159,13 +164,13 @@ public class TokenProvider implements InitializingBean {
         }
     }
 
-    // 정상적인 Token 인지 판단
+    // 정상적인 refreshToken 인지 판단
     public boolean checkRedisToken(String refreshToken) {
         // redis에 저장된 refresh와 검사
         Claims claims = parseClaims(refreshToken);
         String userId = claims.get(USER_IDX).toString();
         String redisRefreshToken = stringRedisTemplate.opsForValue().get(userId);
-        if (redisRefreshToken != null && redisRefreshToken.equals(redisRefreshToken)) {
+        if (redisRefreshToken != null && redisRefreshToken.equals(refreshToken)) {
             return true;
         }
         return false;
