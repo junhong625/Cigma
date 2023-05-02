@@ -19,9 +19,9 @@
     "id": 3,
     "parent": 1,
     "droppable": false,
-    "text": "File 1-212312",
+    "text": "File 1-212312.txt",
     "data": {
-      "fileType": "text",
+      "fileType": "txt",
       "fileSize": "4.8MB"
     }
   },
@@ -41,9 +41,9 @@
     "id": 6,
     "parent": 5,
     "droppable": false,
-    "text": "File 2-1-1",
+    "text": "File 2-1-1.png",
     "data": {
-      "fileType": "image",
+      "fileType": "png",
       "fileSize": "2.1MB"
     }
   },
@@ -51,9 +51,9 @@
     "id": 7,
     "parent": 0,
     "droppable": false,
-    "text": "File 3",
+    "text": "File 3.png",
     "data": {
-      "fileType": "image",
+      "fileType": "png",
       "fileSize": "0.8MB"
     }
   }

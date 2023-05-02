@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "../../styles/atoms/HeaderBtnAtom.module.scss";
 
-const HeaderBtnAtom = (props, { onClick }) => {
+const HeaderBtnAtom = (props) => {
   const [focused, setFocused] = useState(false);
 
   return (
@@ -11,7 +11,9 @@ const HeaderBtnAtom = (props, { onClick }) => {
       }`}
       onClick={() => {
         setFocused(!focused);
-        onClick;
+        if (props.onClick) {
+          props.onClick();
+        }
       }}
     >
       {props.children}
