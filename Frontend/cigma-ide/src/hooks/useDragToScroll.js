@@ -4,16 +4,18 @@ import {
   selectIsInputFieldFocused,
   startDragScroll,
   finishDragScroll,
+  selectIsDragScrolling,
 } from "../store/toolSlice";
 
 // 스크롤 이동
 const useDragToScroll = (boardRef) => {
   // startDragScoll, finishDragScroll를 사용하기 위한 호출
   const dispatch = useDispatch();
-
+  const isDragScrolling = useSelector(selectIsDragScrolling);
   const isInputFieldFocused = useSelector(selectIsInputFieldFocused);
 
   useEffect(() => {
+    console.log("render");
     // isInputFieldFocused가 true면 탈출
     if (!boardRef.current || isInputFieldFocused) return;
 
@@ -61,10 +63,7 @@ const useDragToScroll = (boardRef) => {
 
     // 마우스 휠 클릭
     const handleWheelDown = (event) => {
-      if (event.button !== 1) return;
-
-      event.preventDefault();
-      dispatch(startDragScroll());
+      if (event.button !== 1) return null;
 
       const start = {
         // 수평 스크롤 값, 수직 스크롤 값
@@ -76,7 +75,10 @@ const useDragToScroll = (boardRef) => {
       };
 
       // 이동 중일 때 스크롤 위치 조정
-      const handleMouseMove = (event) => {
+      const handleWheelMove = (event) => {
+        console.log("working5");
+        dispatch(startDragScroll());
+        // console.log(isDragScrolling);
         // 이동된 값
         const curX = event.clientX - start.x;
         const curY = event.clientY - start.y;
@@ -88,21 +90,24 @@ const useDragToScroll = (boardRef) => {
       };
 
       // 마우스 클릭 종료
-      const handleMouseUp = () => {
+      const handleWheelUp = () => {
         // 마우스 커서 형태 변경
         board.style.cursor = "default";
         dispatch(finishDragScroll());
+        console.log("working2");
         // 이벤트 제거
-        board.removeEventListener("mousedown", handleWheelDown);
-        board.removeEventListener("mousemove", handleMouseMove);
-        board.removeEventListener("mouseup", handleMouseUp);
+        board.removeEventListener("mousemove", handleWheelMove);
+        window.removeEventListener("mouseup", handleWheelUp, { once: true });
       };
 
+      event.preventDefault();
+      dispatch(startDragScroll());
+      console.log("working1");
       // 마우스 커서 형태 변경
-      board.style.cursor = "grabbing";
+      board.style.cursor = "grab";
       // 이벤트 등록
-      board.addEventListener("mousemove", handleMouseMove);
-      board.addEventListener("mouseup", handleMouseUp);
+      board.addEventListener("mousemove", handleWheelMove);
+      window.addEventListener("mouseup", handleWheelUp);
     };
 
     const handleSpaceKeyDown = (event) => {
@@ -112,6 +117,7 @@ const useDragToScroll = (boardRef) => {
         event.preventDefault();
         // isDragScrolling 값 true
         dispatch(startDragScroll());
+        console.log("working3");
         board.style.cursor = "grab";
         // 마우스 클릭 이벤트 추가
         board.addEventListener("mousedown", handleMouseDown);
@@ -125,6 +131,7 @@ const useDragToScroll = (boardRef) => {
         event.preventDefault();
         // isDragScrolling 값 false
         dispatch(finishDragScroll());
+        console.log("working4");
         board.style.cursor = "default";
         // 마우스 클릭 이벤트 제거
         board.removeEventListener("mousedown", handleMouseDown);
@@ -134,8 +141,8 @@ const useDragToScroll = (boardRef) => {
     };
 
     // keydown 이벤트 추가
-    window.addEventListener("keydown", handleSpaceKeyDown);
     window.addEventListener("mousedown", handleWheelDown);
+    window.addEventListener("keydown", handleSpaceKeyDown);
 
     return () => {
       window.removeEventListener("keydown", handleSpaceKeyDown);
