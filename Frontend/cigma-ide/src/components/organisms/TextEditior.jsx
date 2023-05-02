@@ -8,6 +8,7 @@ import {
   deactivateSelector,
   setInputFieldBlurred,
   setInputFieldFocused,
+  setTextEditorIndex,
 } from "../../store/toolSlice";
 import { modifyText } from "../../store/textSlice";
 import { activateSelector } from "../../store/toolSlice";
@@ -107,6 +108,7 @@ const TextEditior = ({ textIndex, artBoardRef, ...textEditor }) => {
           color: textEditor.color,
           // borderBottom: SHAPE_TEXT_STYLES.BORDER,
         }}
+        onClick={() => dispatch(setTextEditorIndex(textIndex))}
         // 더블 클릭시
         onDoubleClick={() => {
           setIsDoubleClicked(true);

@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectCurrentScale,
+  selectCurrentTextEditorIndex,
   selectCurrentTool,
   selectIsDragScrolling,
 } from "../store/toolSlice";
@@ -16,10 +17,12 @@ const GRAVITY = 5;
 
 const useDragText = (textRef, artBoardRef, textIndex) => {
   const dispatch = useDispatch();
+
   const currentTool = useSelector(selectCurrentTool);
   const isDragScrolling = useSelector(selectIsDragScrolling);
   const textEditors = useSelector(selectAllTextEditor);
   const currentScale = useSelector(selectCurrentScale);
+  const workingTextEditorIndex = useSelector(selectCurrentTextEditorIndex);
 
   useEffect(() => {
     if (!textRef.current || !artBoardRef.current || isDragScrolling) return;
@@ -238,6 +241,8 @@ const useDragText = (textRef, artBoardRef, textIndex) => {
       window.addEventListener("mouseup", handleMouseUp, { once: true });
     };
 
+    text.addEventListener("mousedown", handleMouseDown);
+
     return () => {
       text.removeEventListener("mousedown", handleMouseDown);
     };
@@ -250,6 +255,7 @@ const useDragText = (textRef, artBoardRef, textIndex) => {
     isDragScrolling,
     textIndex,
     textRef,
+    workingTextEditorIndex,
   ]);
 };
 
