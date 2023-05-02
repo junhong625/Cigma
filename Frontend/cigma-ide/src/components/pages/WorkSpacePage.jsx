@@ -7,9 +7,11 @@ import useDragToScroll from "../../hooks/useDragToScroll";
 import useMockZoom from "../../hooks/useMockZoom";
 import { emptySelectedShapeIndexes } from "../../store/toolSlice";
 import useDrawCodeEditor from "../../hooks/useDrawCodeEditor";
+import useGlobalKeyboardShortCut from "../../hooks/useGlobalKeyboardShortCut";
 import useDrawText from "../../hooks/useDrawText";
 import { selectAllTextEditor } from "../../store/textSlice";
 import TextEditior from "../organisms/TextEditior";
+
 let isFirstRender = true;
 
 const WorkSpacePage = (props) => {
@@ -26,8 +28,13 @@ const WorkSpacePage = (props) => {
   useMockZoom(boardRef, innerBoardRef);
   // editor 창 추가
   useDrawCodeEditor(innerBoardRef);
+
+  // 단축키 추가
+  useGlobalKeyboardShortCut();
+
   // text 추가
   useDrawText(innerBoardRef);
+
 
   useEffect(() => {
     if (!boardRef.current || !isFirstRender) return;
@@ -36,9 +43,11 @@ const WorkSpacePage = (props) => {
 
     isFirstRender = false;
     boardRef.current.scrollTop = top - 100;
+
     boardRef.current.scrollLeft =
       left - boardRef.current.clientWidth / 2 + width / 2;
   }, [codeEditors, textEditors]);
+
 
   /**
    * @todo innerBoardRef관련 useEffect?
@@ -95,12 +104,7 @@ const WorkSpacePage = (props) => {
     <div ref={boardRef} className={styles["artboard-wrapper"]}>
       <div className={styles.artboard} ref={innerBoardRef}>
         {codeEditors.map((codeEditor, i) => (
-          <CodeEditor
-            {...codeEditor}
-            codeEditorIndex={i}
-            key={i}
-            artBoardRef={innerBoardRef}
-          />
+          <CodeEditor {...codeEditor} codeEditorIndex={i} key={i} artBoardRef={innerBoardRef} />
         ))}
         {textEditors.map((textEditor, i) => (
           <TextEditior

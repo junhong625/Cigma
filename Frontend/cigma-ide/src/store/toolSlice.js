@@ -48,6 +48,7 @@ const toolSlice = createSlice({
     },
     setCurrentTool: (state, { payload }) => {
       state.currentTool = payload;
+      console.log(`currTool::${state.currentTool}`);
     },
     setCodeEditorIndex: (state, { payload }) => {
       state.workingCodeEditorIndex = payload;
@@ -58,8 +59,7 @@ const toolSlice = createSlice({
   },
 });
 
-export const selectIsInputFieldFocused = (state) =>
-  state.tool.isInputFieldFocused;
+export const selectIsInputFieldFocused = (state) => state.tool.isInputFieldFocused;
 
 export const selectCurrentScale = (state) => state.tool.currentScale;
 
@@ -67,8 +67,7 @@ export const selectCurrentTool = (state) => state.tool.currentTool;
 
 export const selectIsDragScrolling = (state) => state.tool.isDragScrolling;
 
-export const selectCurrentCodeEditorIndex = (state) =>
-  state.tool.workingCodeEditorIndex;
+export const selectCurrentCodeEditorIndex = (state) => state.tool.workingCodeEditorIndex;
 
 export const selectCurrentTextEditorIndex = (state) =>
   state.tool.workingTextEditorIndex;
