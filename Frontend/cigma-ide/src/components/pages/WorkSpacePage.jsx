@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectAllCodeEditor } from "../../store/codeEditorSlice";
 import styles from "../../styles/pages/WorkSpacePage.module.scss";
 import CodeEditor from "../organisms/CodeEditor";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import useDragToScroll from "../../hooks/useDragToScroll";
 import useMockZoom from "../../hooks/useMockZoom";
 import { emptySelectedShapeIndexes } from "../../store/toolSlice";
@@ -60,6 +60,30 @@ const WorkSpacePage = (props) => {
       boardRef.current.scrollLeft -= props.widthLeft;
     }
   }, [props.handleFileBar]);
+
+  // 왼쪽 사이드바 사이즈 변경 시 화면 스크롤을 통해 위치 유지
+  const previousWidth = useRef(null);
+  const currentWidth = useRef(240);
+  const difference = useRef(null);
+
+  useEffect(() => {
+    if (previousWidth.current !== null && currentWidth.current !== null) {
+      const value = currentWidth.current - previousWidth.current;
+      difference.current = value;
+    }
+  }, [previousWidth.current, currentWidth.current]);
+
+  useEffect(() => {
+    previousWidth.current = currentWidth.current;
+  }, [props.widthLeft]);
+
+  useEffect(() => {
+    currentWidth.current = props.widthLeft;
+  }, [props.widthLeft]);
+
+  useEffect(() => {
+    boardRef.current.scrollLeft += difference.current;
+  }, [difference.current]);
 
   return (
     <div ref={boardRef} className={styles["artboard-wrapper"]}>
