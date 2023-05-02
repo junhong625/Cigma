@@ -20,36 +20,35 @@ function EditPointer({ direction, ...shape }) {
   const pointerRef = useRef();
 
   useDragToResize(pointerRef, direction);
-
   switch (direction) {
     case directions.N:
-      position.top = shape.top - pointerHalfWidth;
-      position.left = (shape.left + shape.width) / 2 - pointerHalfWidth;
+      position.top = shape.top - shape.top;
+      position.left = shape.width / 2 - pointerHalfWidth;
       position.cursor = "ns-resize";
       break;
     case directions.E:
-      position.top = (shape.top + shape.height) / 2 - pointerHalfWidth;
+      position.top = shape.height / 2 - pointerHalfWidth;
       position.left = shape.width - pointerHalfWidth;
       position.cursor = "ew-resize";
       break;
     case directions.S:
-      position.top = shape.height - pointerHalfWidth;
-      position.left = (shape.left + shape.width) / 2 - pointerHalfWidth;
+      position.top = shape.height;
+      position.left = shape.width / 2;
       position.cursor = "ns-resize";
       break;
     case directions.W:
-      position.top = (shape.top + shape.height) / 2 - pointerHalfWidth;
-      position.left = shape.left - pointerHalfWidth;
+      position.top = shape.height / 2 - pointerHalfWidth;
+      position.left = shape.left - shape.left;
       position.cursor = "ew-resize";
       break;
     case directions.NE:
-      position.top = shape.top - pointerHalfWidth;
-      position.left = shape.width - pointerHalfWidth;
+      position.top = shape.top - shape.top;
+      position.left = shape.width;
       position.cursor = "nesw-resize";
       break;
     case directions.NW:
-      position.top = shape.top - pointerHalfWidth;
-      position.left = shape.left - pointerHalfWidth;
+      position.top = shape.top - shape.top;
+      position.left = shape.left - shape.left;
       position.cursor = "nwse-resize";
       break;
     case directions.SE:
@@ -59,7 +58,7 @@ function EditPointer({ direction, ...shape }) {
       break;
     case directions.SW:
       position.top = shape.height - pointerHalfWidth;
-      position.left = shape.left - pointerHalfWidth;
+      position.left = shape.left - shape.left - pointerHalfWidth;
       position.cursor = "nesw-resize";
       break;
   }

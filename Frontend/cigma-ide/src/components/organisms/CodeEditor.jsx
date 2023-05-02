@@ -27,28 +27,29 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
 
   // 모나코 들어갈 곳
   return (
-    <div
-      ref={canvasRef}
-      className={styles["code-editor"]}
-      style={{ ...codeEditor }}
-      onDoubleClick={() => {
-        console.log(`작동되는건가?`);
-        setIsDoubleClicked(true);
-      }}
-      onClick={() => dispatch(setCodeEditorIndex(codeEditorIndex))}
-    >
-      {isDoubleClicked
-        ? // EditPinter atoms 들어갈 자리.
-          Object.values(directions).map((direction) => (
-            <EditPointer
-              direction={direction}
-              key={direction}
-              {...computeSelectionBox(codeEditors, codeEditorIndex)}
-            />
-          ))
-        : null}
-      test code editor
-    </div>
+    <>
+      <div
+        ref={canvasRef}
+        className={styles["code-editor"]}
+        style={{ ...codeEditor }}
+        onDoubleClick={() => {
+          setIsDoubleClicked(true);
+        }}
+        onClick={() => dispatch(setCodeEditorIndex(codeEditorIndex))}
+      >
+        test code editor
+        {isDoubleClicked
+          ? // EditPinter atoms 들어갈 자리.
+            Object.values(directions).map((direction) => (
+              <EditPointer
+                direction={direction}
+                key={direction}
+                {...computeSelectionBox(codeEditors, codeEditorIndex)}
+              />
+            ))
+          : null}
+      </div>
+    </>
   );
 };
 

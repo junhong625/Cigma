@@ -48,7 +48,7 @@ const codeEditorSlice = createSlice({
     resizeNorth: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;
       state[codeEditorIndex].top = current(state[codeEditorIndex]).top + payload.change;
-      state[codeEditorIndex].height = current(state[codeEditorIndex]).height + payload.change;
+      state[codeEditorIndex].height = current(state[codeEditorIndex]).height - payload.change;
     },
     resizeEast: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;
@@ -60,27 +60,26 @@ const codeEditorSlice = createSlice({
     },
     resizeWest: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;
-      //state[codeEditorIndex].top = current(state[codeEditorIndex]).top + payload.change;
       state[codeEditorIndex].left = current(state[codeEditorIndex]).left + payload.change;
       state[codeEditorIndex].width = current(state[codeEditorIndex]).width - payload.change;
     },
     resizeNorthEast: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;
-      state[codeEditorIndex].top = current(state[codeEditorIndex]).top + payload.verChange;
+      state[codeEditorIndex].top = current(state[codeEditorIndex]).top - payload.verChange;
       state[codeEditorIndex].height = current(state[codeEditorIndex]).height - payload.verChange;
-      state[codeEditorIndex].width = current(state[codeEditorIndex]).width + payload.verChange;
+      state[codeEditorIndex].width = current(state[codeEditorIndex]).width - payload.verChange;
     },
     resizeSouthEast: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;
       state[codeEditorIndex].height = current(state[codeEditorIndex]).height + payload.verChange;
-      state[codeEditorIndex].width = current(state[codeEditorIndex]).width + payload.verChange;
+      state[codeEditorIndex].width = current(state[codeEditorIndex]).width + payload.horChange;
     },
     resizeNorthWest: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;
       state[codeEditorIndex].top = current(state[codeEditorIndex]).top + payload.verChange;
       state[codeEditorIndex].height = current(state[codeEditorIndex]).height - payload.verChange;
       state[codeEditorIndex].left = current(state[codeEditorIndex]).left + payload.horChange;
-      state[codeEditorIndex].width = current(state[codeEditorIndex]).width + payload.horChange;
+      state[codeEditorIndex].width = current(state[codeEditorIndex]).width - payload.horChange;
     },
     resizeSouthWest: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;

@@ -1,14 +1,8 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  HOR_SNAP_LINE_STYLES,
-  VER_SNAP_LINE_STYLES,
-} from "../constants/styles";
-import {
-  modifyCodeEditor,
-  selectAllCodeEditor,
-} from "../store/codeEditorSlice";
+import { HOR_SNAP_LINE_STYLES, VER_SNAP_LINE_STYLES } from "../constants/styles";
+import { modifyCodeEditor, selectAllCodeEditor } from "../store/codeEditorSlice";
 import {
   selectCurrentScale,
   selectCurrentCodeEditorIndex,
@@ -33,15 +27,12 @@ function useDragCodeEditor(codeEditorIndex, artBoardRef, canvasRef) {
     const canvas = canvasRef.current;
 
     const handleMouseDown = (event) => {
-      console.log(event.currentTarget.offsetTop);
       const verticalLine = document.createElement("div");
       const horizontalLine = document.createElement("div");
 
       // 현재 CanvasIndex
       const currentCanvasIndex =
-        Array.from(event.currentTarget.parentNode.childNodes).indexOf(
-          event.currentTarget
-        ) / 2;
+        Array.from(event.currentTarget.parentNode.childNodes).indexOf(event.currentTarget) / 2;
 
       // Canvas의 위치, 정보
       const originalElPositionTop = event.currentTarget.offsetTop;
@@ -118,10 +109,7 @@ function useDragCodeEditor(codeEditorIndex, artBoardRef, canvasRef) {
           canvas.style.left = nearestPossibleSnapAtX + "px";
           isLeftAttached = true;
           isRightAttached = false;
-        } else if (
-          Math.abs(currentLeft + originalElWidth - nearestPossibleSnapAtX) <
-          GRAVITY
-        ) {
+        } else if (Math.abs(currentLeft + originalElWidth - nearestPossibleSnapAtX) < GRAVITY) {
           canvas.style.left = nearestPossibleSnapAtX - originalElWidth + "px";
           isRightAttached = true;
           isLeftAttached = false;
@@ -135,10 +123,7 @@ function useDragCodeEditor(codeEditorIndex, artBoardRef, canvasRef) {
           canvas.style.top = nearestPossibleSnapAtY + "px";
           isTopAttached = true;
           isBottomAttached = false;
-        } else if (
-          Math.abs(currentTop + originalElHeight - nearestPossibleSnapAtY) <
-          GRAVITY
-        ) {
+        } else if (Math.abs(currentTop + originalElHeight - nearestPossibleSnapAtY) < GRAVITY) {
           canvas.style.top = nearestPossibleSnapAtY - originalElHeight + "px";
           isBottomAttached = true;
           isTopAttached = false;
