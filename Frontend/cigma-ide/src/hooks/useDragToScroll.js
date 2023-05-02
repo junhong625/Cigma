@@ -19,7 +19,7 @@ const useDragToScroll = (boardRef) => {
 
     const board = boardRef.current;
 
-    // 마우스 클릭
+    // 스페이스 후, 마우스 클릭
     const handleMouseDown = (event) => {
       const start = {
         // 수평 스크롤 값, 수직 스크롤 값
@@ -48,6 +48,52 @@ const useDragToScroll = (boardRef) => {
         board.style.cursor = "grab";
         // 이벤트 제거
         board.removeEventListener("mousedown", handleMouseDown);
+        board.removeEventListener("mousemove", handleMouseMove);
+        board.removeEventListener("mouseup", handleMouseUp);
+      };
+
+      // 마우스 커서 형태 변경
+      board.style.cursor = "grabbing";
+      // 이벤트 등록
+      board.addEventListener("mousemove", handleMouseMove);
+      board.addEventListener("mouseup", handleMouseUp);
+    };
+
+    // 마우스 휠 클릭
+    const handleWheelDown = (event) => {
+      if (event.button !== 1) return;
+
+      event.preventDefault();
+      dispatch(startDragScroll());
+
+      const start = {
+        // 수평 스크롤 값, 수직 스크롤 값
+        left: board.scrollLeft,
+        top: board.scrollTop,
+        // 화면 상의 마우스 클릭 위치
+        x: event.clientX,
+        y: event.clientY,
+      };
+
+      // 이동 중일 때 스크롤 위치 조정
+      const handleMouseMove = (event) => {
+        // 이동된 값
+        const curX = event.clientX - start.x;
+        const curY = event.clientY - start.y;
+        // 마우스 커서 형태 변경
+        board.style.cursor = "grabbing";
+        // 현재 scroll 값 갱신
+        board.scrollLeft = start.left - curX;
+        board.scrollTop = start.top - curY;
+      };
+
+      // 마우스 클릭 종료
+      const handleMouseUp = () => {
+        // 마우스 커서 형태 변경
+        board.style.cursor = "default";
+        dispatch(finishDragScroll());
+        // 이벤트 제거
+        board.removeEventListener("mousedown", handleWheelDown);
         board.removeEventListener("mousemove", handleMouseMove);
         board.removeEventListener("mouseup", handleMouseUp);
       };
@@ -89,8 +135,12 @@ const useDragToScroll = (boardRef) => {
 
     // keydown 이벤트 추가
     window.addEventListener("keydown", handleSpaceKeyDown);
+    window.addEventListener("mousedown", handleWheelDown);
 
-    return () => window.removeEventListener("keydown", handleSpaceKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleSpaceKeyDown);
+      window.removeEventListener("mousedown", handleWheelDown);
+    };
   }, [boardRef, dispatch, isInputFieldFocused]);
 };
 export default useDragToScroll;
