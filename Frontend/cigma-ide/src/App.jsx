@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./App.module.scss";
 
-import EditorOrganism from "./components/organisms/EditorOrganism";
+// import EditorOrganism from "./components/organisms/EditorOrganism";
 import HeaderOrganism from "./components/organisms/HeaderOrganism";
 import WorkBenchPage from "./components/pages/WorkBenchPage";
 import initYjsDoc from "./store/initYjsDoc";

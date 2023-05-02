@@ -1,6 +1,5 @@
 import React, { useState, useRef } from "react";
 import styles from "../../styles/pages/WorkBenchPage.module.scss";
-import SideBar from "../organisms/SideBar";
 import FileTreeOrganism from "../organisms/FileTreeOrganism";
 import WorkSpacePage from "./WorkSpacePage";
 
@@ -11,7 +10,6 @@ const WorkBenchPage = ({ handleFileBar }) => {
   const defaultWidth = useRef(0);
   return (
     <div className={styles.workbench}>
-      {/* <SideBar /> */}
       <FileTreeOrganism
         handleFileBar={handleFileBar}
         widthLeft={widthLeft}

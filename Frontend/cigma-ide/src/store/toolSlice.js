@@ -11,6 +11,7 @@ const initialState = {
   currentTool: tools.SELECTOR,
   tools: [tools.SELECTOR, tools.TEXT, tools.CodeEditor],
   workingCodeEditorIndex: 0,
+  workingTextEditorIndex: 0,
 };
 
 const toolSlice = createSlice({
@@ -20,7 +21,7 @@ const toolSlice = createSlice({
     deactivateSelector: (state) => {
       state.isSelectorActivated = false;
     },
-    activeSelctor: (state) => {
+    activateSelector: (state) => {
       state.isSelectorActivated = true;
     },
     setInputFieldFocused: (state) => {
@@ -51,6 +52,9 @@ const toolSlice = createSlice({
     setCodeEditorIndex: (state, { payload }) => {
       state.workingCodeEditorIndex = payload;
     },
+    setTextEditorIndex: (state, { payload }) => {
+      state.workingTextEditorIndex = payload;
+    },
   },
 });
 
@@ -66,8 +70,14 @@ export const selectIsDragScrolling = (state) => state.tool.isDragScrolling;
 export const selectCurrentCodeEditorIndex = (state) =>
   state.tool.workingCodeEditorIndex;
 
+export const selectCurrentTextEditorIndex = (state) =>
+  state.tool.workingTextEditorIndex;
+
+export const selectIsSelectorActivated = (state) =>
+  state.tool.isSelectorActivated;
+
 export const {
-  activeSelctor,
+  activateSelector,
   deactivateSelector,
   setInputFieldFocused,
   setInputFieldBlurred,
@@ -77,6 +87,7 @@ export const {
   emptySelectedShapeIndexes,
   setCurrentTool,
   setCodeEditorIndex,
+  setTextEditorIndex,
 } = toolSlice.actions;
 
 export default toolSlice.reducer;
