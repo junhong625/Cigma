@@ -1,5 +1,5 @@
 import * as Y from "yjs";
-import { WebsocketProvider } from "y-websocket";
+import { WebrtcProvider } from "y-webrtc";
 
 /**
  *
@@ -10,7 +10,10 @@ import { WebsocketProvider } from "y-websocket";
 const initYjsDoc = (wsPath, roomName) => {
   if (wsPath !== undefined) {
     const ydoc = new Y.Doc();
-    const provider = new WebsocketProvider(wsPath, roomName, ydoc);
+    // set default signaling server
+    const provider = new WebrtcProvider(roomName, ydoc, {
+      signaling: [wsPath],
+    });
     return { ydoc: ydoc, provider: provider };
   } else {
     return { ydoc: null, provider: null };
