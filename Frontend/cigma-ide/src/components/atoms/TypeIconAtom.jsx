@@ -9,12 +9,13 @@ export const TypeIcon = (props) => {
     return <BsFillFolderFill />;
   }
 
+  // 입력된 data의 fileType에 따라 아이콘을 변경
   switch (props.fileType) {
-    case "image":
+    case "png":
       return <BsFillFileImageFill />;
     case "csv":
       return <BsFileText />;
-    case "text":
+    case "txt":
       return <BsFileTextFill />;
     default:
       return null;

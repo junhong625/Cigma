@@ -7,13 +7,13 @@ import WorkBenchPage from "./components/pages/WorkBenchPage";
 import initYjsDoc from "./store/initYjsDoc";
 
 function App() {
-  const doc = useRef(initYjsDoc("ws://localhost:1234/", "monacoTest"));
+  const doc = useRef(initYjsDoc("ws://localhost:4444/", "monacoTest"));
   if (doc.current.ydoc !== null) {
     const editorList = useRef(doc.current.ydoc.getMap("editorList"));
   }
 
   //왼쪽 사이드바 표시를 변경하기 위한 State
-  const [handleFileBar, setHandleFileBar] = useState(true);
+  const [handleFileBar, setHandleFileBar] = useState(false);
 
   return (
     <div className={styles.app}>
