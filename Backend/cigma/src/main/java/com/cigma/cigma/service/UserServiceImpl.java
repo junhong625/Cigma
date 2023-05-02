@@ -52,6 +52,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public Optional<User> findById(Long id) {
+        return userRepository.findById(id);
+    }
+
+    @Override
     public UserLoginResponse login(UserLoginRequest userLoginRequest) {
         // 이메일, 비밀번호로 인증을 위한 authenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken =

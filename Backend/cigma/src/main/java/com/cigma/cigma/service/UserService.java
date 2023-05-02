@@ -23,6 +23,7 @@ public interface UserService {
     // 회원탈퇴
     void delete(HttpServletRequest request) throws Exception;
 
+    Optional<User> findById(Long id);
     UserGetResponse getUser();
 
     Optional<User> findByUserEmail(String userEmail);
