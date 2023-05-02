@@ -30,4 +30,9 @@ public class TeamServiceImpl implements TeamService{
     public void deleteById(Long teamIdx) {
         teamRepository.deleteById(teamIdx);
     }
+
+    @Override
+    public Optional<Team> findByTeamLeader(User user) {
+        return teamRepository.findByTeamLeader(user);
+    }
 }
