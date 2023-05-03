@@ -71,14 +71,14 @@ const WorkSpacePage = (props) => {
   }, [codeEditors, textEditors]);
 
   useEffect(() => {
-    // const onSync = (isSynced) => {
-    //   if (isSynced) {
-    //     setLoading(false);
-    //   }
-    // };
-    // console.log(provider);
-    // provider.on("sync", onSync);
-    // return () => provider.off("sync", onSync);
+    const onSync = (isSynced) => {
+      if (isSynced) {
+        setLoading(false);
+      }
+    };
+    console.log(provider);
+    provider.on("sync", onSync);
+    return () => provider.off("sync", onSync);
   }, []);
 
   /**
@@ -157,7 +157,6 @@ const WorkSpacePage = (props) => {
         ))}
       </div>
       {Array.from(users.entries()).map(([key, value]) => {
-        console.log(awareness.getStates());
         if (key === awareness.clientID) return null;
 
         if (!value.cursor || !value.color || !value.name) return null;
