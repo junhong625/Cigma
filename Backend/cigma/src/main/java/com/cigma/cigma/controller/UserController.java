@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 public class UserController {
 
     private final UserServiceImpl userService;
-    private final JwtProperties jwtProperties;
 
     /*
     회원가입
