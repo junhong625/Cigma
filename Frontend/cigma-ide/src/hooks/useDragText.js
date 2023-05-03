@@ -1,61 +1,62 @@
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
-import { HOR_SNAP_LINE_STYLES, VER_SNAP_LINE_STYLES } from "../constants/styles";
-import { modifyCodeEditor, selectAllCodeEditor } from "../store/codeEditorSlice";
 import {
   selectCurrentScale,
-  selectCurrentCodeEditorIndex,
+  selectCurrentTextEditorIndex,
+  selectCurrentTool,
   selectIsDragScrolling,
 } from "../store/toolSlice";
+import { useEffect } from "react";
+import { modifyText, selectAllTextEditor } from "../store/textSlice";
+import {
+  HOR_SNAP_LINE_STYLES,
+  VER_SNAP_LINE_STYLES,
+} from "../constants/styles";
 import computeSnapPosition from "../tools/computeSnapPosition";
 
 const GRAVITY = 5;
 
-function useDragCodeEditor(codeEditorIndex, artBoardRef, canvasRef) {
+const useDragText = (textRef, artBoardRef, textIndex) => {
   const dispatch = useDispatch();
 
-  const currentScale = useSelector(selectCurrentScale);
-  const codeEditors = useSelector(selectAllCodeEditor);
-  const workingCanvasIndex = useSelector(selectCurrentCodeEditorIndex);
+  const currentTool = useSelector(selectCurrentTool);
   const isDragScrolling = useSelector(selectIsDragScrolling);
+  const textEditors = useSelector(selectAllTextEditor);
+  const currentScale = useSelector(selectCurrentScale);
+  const workingTextEditorIndex = useSelector(selectCurrentTextEditorIndex);
 
   useEffect(() => {
-    if (!canvasRef.current || !artBoardRef.current || isDragScrolling) return;
+    if (!textRef.current || !artBoardRef.current || isDragScrolling) return;
 
+    const text = textRef.current;
     const artBoard = artBoardRef.current;
-    const canvas = canvasRef.current;
 
     const handleMouseDown = (event) => {
       const verticalLine = document.createElement("div");
       const horizontalLine = document.createElement("div");
 
-      // 현재 CanvasIndex
-      const currentCanvasIndex =
-        Array.from(event.currentTarget.parentNode.childNodes).indexOf(event.currentTarget) / 2;
+      // 현재 텍스트 index
+      const currentTextIndex =
+        Array.from(event.currentTarget.parentNode.childNodes).indexOf(
+          event.currentTarget
+        ) / 2;
 
-      // Canvas의 위치, 정보
       const originalElPositionTop = event.currentTarget.offsetTop;
       const originalElPositionLeft = event.currentTarget.offsetLeft;
       const originalElHeight = event.currentTarget.offsetHeight;
       const originalElWidth = event.currentTarget.offsetWidth;
-
-      // 마우스의 위치
       const originalMousePositionTop = event.clientY;
       const originalMousePositionLeft = event.clientX;
 
-      // 새로운 canvasList
-      const canvasList = codeEditors.slice();
+      const textList = textEditors.slice();
 
       const filteredXAxisSnapPoints = [];
       const filteredYAxisSnapPoints = [];
 
-      canvasList.splice(currentCanvasIndex, 1);
+      textList.splice(currentTextIndex, 1);
 
-      // 수평 수직 스냅 계산을 위한 배열
-      canvasList.forEach((canvas) => {
-        filteredXAxisSnapPoints.push(canvas.left, canvas.left + canvas.width);
-        filteredYAxisSnapPoints.push(canvas.top, canvas.top + canvas.height);
+      textList.forEach((text) => {
+        filteredXAxisSnapPoints.push(text.left, text.left + text.width);
+        filteredYAxisSnapPoints.push(text.top, text.top + text.height);
       });
 
       let movedTop;
@@ -71,11 +72,9 @@ function useDragCodeEditor(codeEditorIndex, artBoardRef, canvasRef) {
       artBoard.appendChild(horizontalLine);
 
       const handleMouseMove = (event) => {
-        // 이동한 값
         movedTop = (event.clientY - originalMousePositionTop) / currentScale;
         movedLeft = (event.clientX - originalMousePositionLeft) / currentScale;
 
-        // 현재 위치
         const currentLeft = originalElPositionLeft + movedLeft;
         const currentTop = originalElPositionTop + movedTop;
 
@@ -91,7 +90,6 @@ function useDragCodeEditor(codeEditorIndex, artBoardRef, canvasRef) {
         horizontalLine.style.height = HOR_SNAP_LINE_STYLES.HEIGHT;
         horizontalLine.style.backgroundColor = HOR_SNAP_LINE_STYLES.BG_COLOR;
 
-        // 수평, 수직 스냅 위치 계산
         nearestPossibleSnapAtX = computeSnapPosition(
           filteredXAxisSnapPoints,
           currentLeft,
@@ -106,29 +104,35 @@ function useDragCodeEditor(codeEditorIndex, artBoardRef, canvasRef) {
         );
 
         if (Math.abs(currentLeft - nearestPossibleSnapAtX) < GRAVITY) {
-          canvas.style.left = nearestPossibleSnapAtX + "px";
+          text.style.left = nearestPossibleSnapAtX + "px";
           isLeftAttached = true;
           isRightAttached = false;
-        } else if (Math.abs(currentLeft + originalElWidth - nearestPossibleSnapAtX) < GRAVITY) {
-          canvas.style.left = nearestPossibleSnapAtX - originalElWidth + "px";
+        } else if (
+          Math.abs(currentLeft + originalElWidth - nearestPossibleSnapAtX) <
+          GRAVITY
+        ) {
+          text.style.left = nearestPossibleSnapAtX - originalElWidth + "px";
           isRightAttached = true;
           isLeftAttached = false;
         } else {
-          canvas.style.left = currentLeft + "px";
+          text.style.left = currentLeft + "px";
           isLeftAttached = false;
           isRightAttached = false;
         }
 
         if (Math.abs(currentTop - nearestPossibleSnapAtY) < GRAVITY) {
-          canvas.style.top = nearestPossibleSnapAtY + "px";
+          text.style.top = nearestPossibleSnapAtY + "px";
           isTopAttached = true;
           isBottomAttached = false;
-        } else if (Math.abs(currentTop + originalElHeight - nearestPossibleSnapAtY) < GRAVITY) {
-          canvas.style.top = nearestPossibleSnapAtY - originalElHeight + "px";
+        } else if (
+          Math.abs(currentTop + originalElHeight - nearestPossibleSnapAtY) <
+          GRAVITY
+        ) {
+          text.style.top = nearestPossibleSnapAtY - originalElHeight + "px";
           isBottomAttached = true;
           isTopAttached = false;
         } else {
-          canvas.style.top = currentTop + "px";
+          text.style.top = currentTop + "px";
           isTopAttached = false;
           isBottomAttached = false;
         }
@@ -154,74 +158,74 @@ function useDragCodeEditor(codeEditorIndex, artBoardRef, canvasRef) {
         if (movedTop || movedLeft) {
           if (isLeftAttached && isTopAttached) {
             dispatch(
-              modifyCodeEditor({
+              modifyText({
                 top: nearestPossibleSnapAtY,
                 left: nearestPossibleSnapAtX,
-                codeEditorIndex,
+                textIndex,
               })
             );
           } else if (isLeftAttached && isBottomAttached) {
             dispatch(
-              modifyCodeEditor({
+              modifyText({
                 top: nearestPossibleSnapAtY - originalElHeight,
                 left: nearestPossibleSnapAtX,
-                codeEditorIndex,
+                textIndex,
               })
             );
           } else if (isRightAttached && isTopAttached) {
             dispatch(
-              modifyCodeEditor({
+              modifyText({
                 top: nearestPossibleSnapAtY,
                 left: nearestPossibleSnapAtX - originalElWidth,
-                codeEditorIndex,
+                textIndex,
               })
             );
           } else if (isRightAttached && isBottomAttached) {
             dispatch(
-              modifyCodeEditor({
+              modifyText({
                 top: nearestPossibleSnapAtY - originalElHeight,
                 left: nearestPossibleSnapAtX - originalElWidth,
-                codeEditorIndex,
+                textIndex,
               })
             );
           } else if (isLeftAttached) {
             dispatch(
-              modifyCodeEditor({
+              modifyText({
                 top: newShapeTop,
                 left: nearestPossibleSnapAtX,
-                codeEditorIndex,
+                textIndex,
               })
             );
           } else if (isRightAttached) {
             dispatch(
-              modifyCodeEditor({
+              modifyText({
                 top: newShapeTop,
                 left: nearestPossibleSnapAtX - originalElWidth,
-                codeEditorIndex,
+                textIndex,
               })
             );
           } else if (isTopAttached) {
             dispatch(
-              modifyCodeEditor({
+              modifyText({
                 top: nearestPossibleSnapAtY,
                 left: newShapeLeft,
-                codeEditorIndex,
+                textIndex,
               })
             );
           } else if (isBottomAttached) {
             dispatch(
-              modifyCodeEditor({
+              modifyText({
                 top: nearestPossibleSnapAtY - originalElHeight,
                 left: newShapeLeft,
-                codeEditorIndex,
+                textIndex,
               })
             );
           } else {
             dispatch(
-              modifyCodeEditor({
+              modifyText({
                 top: newShapeTop,
                 left: newShapeLeft,
-                codeEditorIndex,
+                textIndex,
               })
             );
           }
@@ -237,19 +241,22 @@ function useDragCodeEditor(codeEditorIndex, artBoardRef, canvasRef) {
       window.addEventListener("mouseup", handleMouseUp, { once: true });
     };
 
-    canvas.addEventListener("mousedown", handleMouseDown);
+    text.addEventListener("mousedown", handleMouseDown);
 
-    return () => canvas.removeEventListener("mousedown", handleMouseDown);
+    return () => {
+      text.removeEventListener("mousedown", handleMouseDown);
+    };
   }, [
-    currentScale,
-    dispatch,
-    codeEditorIndex,
-    canvasRef,
     artBoardRef,
-    codeEditors,
-    workingCanvasIndex,
+    textEditors,
+    currentScale,
+    currentTool,
+    dispatch,
     isDragScrolling,
+    textIndex,
+    textRef,
+    workingTextEditorIndex,
   ]);
-}
+};
 
-export default useDragCodeEditor;
+export default useDragText;

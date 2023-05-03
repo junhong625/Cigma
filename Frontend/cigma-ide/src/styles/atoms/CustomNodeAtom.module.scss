@@ -53,6 +53,7 @@
 }
 .labelGridItem {
   padding-inline-start: 8px;
+  width: 100%;
 }
 
 .pipeY {
@@ -70,6 +71,7 @@
 
 .nameSpace {
   display: flex;
+  justify-content: space-between;
   white-space: nowrap;
   align-items: center;
   .editButton {
@@ -78,16 +80,25 @@
   }
 }
 
+.editWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
 .inputWrapper {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  gap: 2px;
+  gap: 3px;
 }
 
 .textField {
   font-size: 12px;
-  padding: 6px 0;
+  padding: 1px 5px !important;
+  border: 0;
+  border-radius: 5px;
 }
 
 .editButton {
@@ -95,7 +106,7 @@
 }
 
 .editIcon {
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .nodeInput {
