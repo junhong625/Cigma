@@ -8,9 +8,9 @@ import { onconnection } from "./socket/setWebrtc.js";
 
 const app = express();
 
-app.get("/", (req, res) => {
-  res.send("hello world");
-});
+// app.get("/", (req, res) => {
+//   res.send("hello world");
+// });
 
 // =====================================================
 // webRTC server
@@ -34,7 +34,7 @@ server.on("upgrade", (request, socket, head) => {
   wss.handleUpgrade(request, socket, head, handleAuth);
 });
 
-server.listen(port);
+server.listen(port, "0.0.0.0");
 console.log("Signaling server running on localhost:", port);
 
 //=======================================================================
