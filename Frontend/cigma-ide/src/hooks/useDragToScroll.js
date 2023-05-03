@@ -77,7 +77,7 @@ const useDragToScroll = (boardRef) => {
       // 이동 중일 때 스크롤 위치 조정
       const handleWheelMove = (event) => {
         console.log("working5");
-        dispatch(startDragScroll());
+        // dispatch(startDragScroll());
         // console.log(isDragScrolling);
         // 이동된 값
         const curX = event.clientX - start.x;

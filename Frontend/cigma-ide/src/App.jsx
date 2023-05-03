@@ -5,6 +5,7 @@ import styles from "./App.module.scss";
 import HeaderOrganism from "./components/organisms/HeaderOrganism";
 import WorkBenchPage from "./components/pages/WorkBenchPage";
 import initYjsDoc from "./store/initYjsDoc";
+import CheckTest from "./components/organisms/Check";
 
 function App() {
   const doc = useRef(initYjsDoc("ws://localhost:4444/", "monacoTest"));
@@ -16,17 +17,18 @@ function App() {
   const [handleFileBar, setHandleFileBar] = useState(false);
 
   return (
-    <div className={styles.app}>
-      <header>
-        <HeaderOrganism
-          handleFileBar={handleFileBar}
-          setHandleFileBar={setHandleFileBar}
-        />
-      </header>
-      <div className={styles.workspaceDiv}>
-        <WorkBenchPage handleFileBar={handleFileBar} />
-      </div>
-    </div>
+    // <div className={styles.app}>
+    //   <header>
+    //     <HeaderOrganism
+    //       handleFileBar={handleFileBar}
+    //       setHandleFileBar={setHandleFileBar}
+    //     />
+    //   </header>
+    //   <div className={styles.workspaceDiv}>
+    //     <WorkBenchPage handleFileBar={handleFileBar} />
+    //   </div>
+    // </div>
+    <CheckTest />
   );
 }
 
