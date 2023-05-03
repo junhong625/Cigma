@@ -8,3 +8,63 @@
 *:focus {
   outline: none;
 }
+
+.code-editor-wrapper {
+  position: relative;
+  height: 100%;
+  min-width: 100px;
+}
+
+.bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  background-color: #d7b3ba;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.hidden-bar {
+  position: absolute;
+  height: 30px;
+  background-color: #d7b3ba;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.resizeButton {
+  width: 10px;
+  height: 100%;
+  background-color: #aaa;
+  cursor: ew-resize;
+}
+
+.closeButton {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  background-color: #ddd;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  &:hover {
+    background-color: #aaa;
+  }
+}
+
+.showButton {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  padding: 5px;
+  background-color: #eee;
+  border: none;
+  cursor: pointer;
+  &:hover {
+    background-color: #ccc;
+  }
+}
