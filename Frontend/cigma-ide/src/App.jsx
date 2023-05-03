@@ -9,6 +9,7 @@ import initYjsDoc from "./store/initYjsDoc";
 function App() {
   const doc = useRef(initYjsDoc("ws://localhost:4444/", "monacoTest"));
   if (doc.current.ydoc !== null) {
+    console.log("ws connect");
     const editorList = useRef(doc.current.ydoc.getMap("editorList"));
   }
 
