@@ -42,6 +42,10 @@ public class User {
     @ColumnDefault("0")
     private int isAdmin;
 
+//    유저 프로필 이미지
+    @Column(name = "user_image_url")
+    private String userImageUrl;
+
 //    생성 시간
     @CreationTimestamp
     @Column(name = "create_time")

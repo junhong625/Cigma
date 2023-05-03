@@ -2,6 +2,7 @@ package com.cigma.cigma.service;
 
 import com.cigma.cigma.common.SecurityUtils;
 import com.cigma.cigma.dto.request.UserLoginRequest;
+import com.cigma.cigma.dto.request.UserUpdateRequest;
 import com.cigma.cigma.dto.response.UserGetResponse;
 import com.cigma.cigma.dto.response.UserLoginResponse;
 import com.cigma.cigma.entity.User;
@@ -12,9 +13,6 @@ import com.cigma.cigma.properties.JwtProperties;
 import com.cigma.cigma.repository.UserRepository;
 import com.cigma.cigma.dto.request.UserCreateRequest;
 import com.cigma.cigma.dto.response.UserCreateResponse;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -25,7 +23,6 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
-import java.util.OptionalInt;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -47,8 +44,41 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Optional<User> findByUserEmail(String userEmail) {
-        return userRepository.findByUserEmail(userEmail);
+    public UserCreateResponse changePassword(String password) {
+        log.info("======================================");
+        log.info("비밀번호 변경 시작");
+        // SecurityContextHolder 에서 가져온 사용자 정보
+        User user = userRepository.findById(SecurityUtils.getUserPrincipal().getUserIdx()).get();
+        log.info("유저 정보 로드");
+        // User 생성 권한
+        UserUpdateRequest request = new UserUpdateRequest(user);
+        log.info("요청 생성");
+        // 비밀번호 변경
+        request.setUserPass(password);
+        log.info("새로운 비밀번호 설정");
+        // 변경 반영
+        user = userRepository.save(request.toEntity());
+        log.info("변경 완료");
+        return new UserCreateResponse(user);
+    }
+
+    @Override
+    public UserCreateResponse changeName(String name) {
+        log.info("======================================");
+        log.info("이름 변경 시작");
+        // SecurityContextHolder 에서 가져온 사용자 정보
+        User user = userRepository.findById(SecurityUtils.getUserPrincipal().getUserIdx()).get();
+        log.info("유저 정보 로드");
+        // User 생성 권한
+        UserUpdateRequest request = new UserUpdateRequest(user);
+        log.info("요청 생성");
+        // 이름 변경
+        request.setUserName(name);
+        log.info("새로운 이름 설정");
+        // 변경 반영
+        user = userRepository.save(request.toEntity());
+        log.info("변경 완료");
+        return new UserCreateResponse(user);
     }
 
     @Override

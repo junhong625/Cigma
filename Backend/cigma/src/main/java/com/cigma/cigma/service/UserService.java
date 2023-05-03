@@ -23,8 +23,13 @@ public interface UserService {
     // 회원탈퇴
     void delete(HttpServletRequest request) throws Exception;
 
-    Optional<User> findById(Long id);
-    UserGetResponse getUser();
+    // 비밀번호 변경
+    UserCreateResponse changePassword(String password);
 
-    Optional<User> findByUserEmail(String userEmail);
+    // 이름 변경
+    UserCreateResponse changeName(String name);
+
+    Optional<User> findById(Long id);
+
+    UserGetResponse getUser();
 }

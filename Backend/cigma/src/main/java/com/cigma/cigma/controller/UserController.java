@@ -1,6 +1,7 @@
 package com.cigma.cigma.controller;
 
 import com.cigma.cigma.dto.request.UserLoginRequest;
+import com.cigma.cigma.dto.request.UserUpdateRequest;
 import com.cigma.cigma.handler.ResponseHandler;
 import com.cigma.cigma.dto.request.UserCreateRequest;
 import com.cigma.cigma.properties.JwtProperties;
@@ -40,9 +41,9 @@ public class UserController {
     ====================================
      */
     @PostMapping()
-    public ResponseEntity<Object> signUp(@RequestBody UserCreateRequest userCreateRequest) {
+    public ResponseEntity<Object> signUp(@RequestBody UserCreateRequest userUpdateRequest) {
         try {
-            return ResponseHandler.generateResponse(true, "회원가입 성공", HttpStatus.CREATED, userService.signUp(userCreateRequest));
+            return ResponseHandler.generateResponse(true, "회원가입 성공", HttpStatus.CREATED, userService.signUp(userUpdateRequest));
         } catch (Exception e) {
             return ResponseHandler.generateResponse(false, "이미 등록된 이메일입니다.", HttpStatus.BAD_REQUEST, null);
         }
@@ -140,6 +141,35 @@ public class UserController {
             return ResponseHandler.generateResponse(true, "조회 성공", HttpStatus.OK, userService.getUser());
         } catch (Exception e) {
             return ResponseHandler.generateResponse(false, "조회 실패", HttpStatus.BAD_REQUEST, null);
+        }
+    }
+
+    /*
+    유저 정보 변경
+    ============ header ============
+
+    Authorization : bearer {accessToken}
+    Refresh : bearer {refreshToken}
+
+    ============= response =============
+
+    성공 : {isSuccess : true}
+    실패 : {isSuccess : false}
+
+    ====================================
+     */
+    @PutMapping
+    public ResponseEntity<?> changeUserPrincipal(@RequestBody UserUpdateRequest userUpdateRequest) {
+        try {
+            if (userUpdateRequest.getUserName() != null) {
+                log.info("이름 변경");
+                return ResponseHandler.generateResponse(true, "이름 변경 성공", HttpStatus.OK, userService.changeName(userUpdateRequest.getUserName()));
+            } else {
+                log.info("비밀번호 변경");
+                return ResponseHandler.generateResponse(true, "비밀번호 변경 성공", HttpStatus.OK, userService.changePassword(userUpdateRequest.getUserPass()));
+            }
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse(false, "변경 실패", HttpStatus.BAD_REQUEST, null);
         }
     }
 }
