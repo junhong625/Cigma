@@ -8,6 +8,10 @@ import { onconnection } from "./socket/setWebrtc.js";
 
 const app = express();
 
+app.get("/", (req, res) => {
+  res.send("hello world");
+});
+
 // =====================================================
 // webRTC server
 
@@ -15,10 +19,7 @@ const port = process.env.PORT || 4444;
 // @ts-ignore
 const wss = new WebSocketServer({ noServer: true });
 
-const server = http.createServer((request, response) => {
-  response.writeHead(200, { "Content-Type": "text/plain" });
-  response.end("okay");
-});
+const server = http.createServer(app);
 
 wss.on("connection", onconnection);
 
