@@ -12,6 +12,7 @@ const initialState = {
   tools: [tools.SELECTOR, tools.TEXT, tools.CodeEditor],
   workingCodeEditorIndex: 0,
   workingTextEditorIndex: 0,
+  isEditPointerVisible: false,
 };
 
 const toolSlice = createSlice({
@@ -56,6 +57,13 @@ const toolSlice = createSlice({
     setTextEditorIndex: (state, { payload }) => {
       state.workingTextEditorIndex = payload;
     },
+    // 편집 포인터 관련
+    showEditPointer: (state) => {
+      state.isEditPointerVisible = true;
+    },
+    hideEditPointer: (state) => {
+      state.isEditPointerVisible = false;
+    },
   },
 });
 
@@ -69,11 +77,11 @@ export const selectIsDragScrolling = (state) => state.tool.isDragScrolling;
 
 export const selectCurrentCodeEditorIndex = (state) => state.tool.workingCodeEditorIndex;
 
-export const selectCurrentTextEditorIndex = (state) =>
-  state.tool.workingTextEditorIndex;
+export const selectCurrentTextEditorIndex = (state) => state.tool.workingTextEditorIndex;
 
-export const selectIsSelectorActivated = (state) =>
-  state.tool.isSelectorActivated;
+export const selectIsSelectorActivated = (state) => state.tool.isSelectorActivated;
+// 편집 포인터 숨김 여부 관련
+export const selectEditPointerVisible = (state) => state.tool.isEditPointerVisible;
 
 export const {
   activateSelector,
@@ -87,6 +95,8 @@ export const {
   setCurrentTool,
   setCodeEditorIndex,
   setTextEditorIndex,
+  showEditPointer,
+  hideEditPointer,
 } = toolSlice.actions;
 
 export default toolSlice.reducer;
