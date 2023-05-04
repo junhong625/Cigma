@@ -3,6 +3,7 @@ import path from "path";
 import { WebSocketServer } from "ws";
 import http from "http";
 import { onconnection } from "./socket/setWebrtc.js";
+import router from "./fsRoute.js";
 
 // file server
 
@@ -33,6 +34,12 @@ server.on("upgrade", (request, socket, head) => {
   };
   wss.handleUpgrade(request, socket, head, handleAuth);
 });
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+// router
+app.use("/api", router);
 
 server.listen(port);
 console.log("Signaling server running on localhost:", port);
