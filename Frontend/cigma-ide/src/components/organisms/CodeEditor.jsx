@@ -10,7 +10,11 @@ import useDragCodeEditor from "../../hooks/useDragCodeEditor";
 import { useRef, useState } from "react";
 import EditPointer from "../atoms/EditPointer";
 import computeSelectionBox from "../../tools/computeSelectionBox";
-import { hideCodeEditor, selectAllCodeEditor } from "../../store/codeEditorSlice";
+import {
+  hideCodeEditor,
+  selectAllCodeEditor,
+} from "../../store/codeEditorSlice";
+import EditorOrganism from "./EditorOrganism";
 
 const directions = {
   N: "n",
@@ -114,7 +118,11 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
         </div>
         test code editor
         {/* monaco가 들어갈곳 */}
-        <div className={styles["monaco-editor"]} style={{ height: height - 30 }} />
+        <EditorOrganism className={styles["monaco-editor"]} style={{}} />
+        {/* <div
+          className={styles["monaco-editor"]}
+          style={{ height: height - 30 }}
+        /> */}
         {/* comment 화면 처리 */}
         {!hideComment ? (
           <div
