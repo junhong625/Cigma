@@ -11,7 +11,7 @@ public class ResponseHandler {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("isSuccess", isSuccess);
         map.put("message", message);
-        map.put("status", status);
+        map.put("status", status.value());
         map.put("data", data);
         System.out.println(map);
         return new ResponseEntity<Object>(map, status);

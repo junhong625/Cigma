@@ -1,6 +1,5 @@
 package com.cigma.cigma;
 
-import com.cigma.cigma.controller.UserController;
 import com.cigma.cigma.dto.request.UserCreateRequest;
 import com.cigma.cigma.dto.request.UserLoginRequest;
 import com.cigma.cigma.dto.response.UserLoginResponse;
@@ -12,12 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -79,10 +77,23 @@ class CigmaApplicationTests {
 	}
 
 	@Test
-	@DisplayName("로그아웃 테스트")
-	void logoutTest() {
-		loginTest();
-		userService.logout(accessToken);
+	@DisplayName("teamMate Test")
+	void teamMateTest() {
+		String a = "test@test.com, test2@test.com, test3@test.com";
+		String email = "test2@test.com";
+//		a += String.format(", %s", email);
+		a = a.replace(email, "");
+		String[] b = a.split(",");
+		String members = "";
+		for (String c : b) {
+			if (!c.isBlank()) {
+				if (!members.isBlank()) {
+					members += ", ";
+				}
+				members += c.strip();
+			}
+		}
+		System.out.println(members);
 	}
 }
 

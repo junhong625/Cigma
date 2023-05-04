@@ -10,7 +10,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 @EnableConfigurationProperties({JwtProperties.class, RedisProperties.class})
 public class CigmaApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(CigmaApplication.class, args);
 	}

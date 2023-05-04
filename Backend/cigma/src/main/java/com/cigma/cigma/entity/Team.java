@@ -30,8 +30,8 @@ public class Team {
     private User teamLeader;
 
     //    팀원 : list, not null
-    @Column(name = "team_mate", length = 100)
-    private String teamMate;
+    @Column(name = "members", length = 100)
+    private String members;
 
     //    팀이름 : not null
     @Column(name = "team_name", length = 30, nullable = false)
@@ -42,9 +42,9 @@ public class Team {
     private String teamImage;
 
     @Builder
-    public Team(User teamLeader, String teamMate, String teamName, String teamImage) {
+    public Team(User teamLeader, String members, String teamName, String teamImage) {
         this.teamLeader = teamLeader;
-        this.teamMate = teamMate;
+        this.members = members;
         this.teamName = teamName;
         this.teamImage = teamImage;
     }
