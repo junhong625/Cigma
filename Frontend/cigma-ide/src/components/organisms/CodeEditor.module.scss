@@ -68,3 +68,17 @@
     background-color: #ccc;
   }
 }
+
+.commentButton {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: 10px;
+  padding: 5px;
+  background-color: #eee;
+  border: none;
+  cursor: poiniter;
+  &:hover {
+    background-color: #ccc;
+  }
+}

@@ -34,6 +34,8 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   const [isResizing, setIsResizing] = useState(false);
   const [resizeStartX, setResizeStartX] = useState(0);
   const [resizeStartWidth, setResizeStartWidth] = useState(0);
+  // comment 우측
+  const [hideComment, setHideComment] = useState(true);
 
   useDragCodeEditor(codeEditorIndex, artBoardRef, canvasRef);
   // 모나코 들어갈 곳
@@ -69,18 +71,28 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   const handleShowClick = () => {
     setIsHidden(false);
   };
+  // comment 보이기
+  const handleCommentClick = () => {
+    setHideComment(false);
+  };
+  // comment 숨기기
+  const handleHideCommentClick = () => {
+    setHideComment(true);
+  };
 
   // 숨김처리?
+  const { top, left, width, height } = codeEditor;
+  const commentLeft = left + width;
+  const commentWidth = width / 2;
   if (isHidden) {
-    const { top, left, width } = codeEditor;
     return (
       <div
         className={styles["hidden-bar"]}
         style={{ top, left, width }}
         onClick={() => dispatch(setCodeEditorIndex(codeEditorIndex))}
       >
-        <button className={styles.showButton} onClick={handleShowClick} />
-        <button className={styles.closeButton} onClick={handleHideClick} />
+        {/* <button className={styles.showButton} onClick={handleShowClick} /> */}
+        <button className={styles.closeButton} onClick={handleShowClick} />
       </div>
     );
   }
@@ -114,11 +126,27 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
             ))
           : null}
         <div className={styles.bar}>
-          <button className={styles.resizeButton} onMouseDown={handleResizeMouseDown} />
+          {/* comment 숨기는 버튼 추가 필요 */}
+          <button
+            className={styles.commentButton}
+            onClick={() => {
+              if (hideComment) {
+                handleCommentClick();
+              } else {
+                handleHideCommentClick();
+              }
+            }}
+          />
           <button className={styles.closeButton} onClick={handleHideClick} />
         </div>
         test code editor
       </div>
+      {!hideComment ? (
+        <div
+          style={{ top, left: commentLeft, height, width: commentWidth }}
+          className={styles["code-editor"]}
+        ></div>
+      ) : null}
     </>
   );
 };
