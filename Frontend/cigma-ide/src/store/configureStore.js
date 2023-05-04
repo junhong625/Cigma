@@ -3,6 +3,9 @@ import defaultTextSlice from "./defaultTextSlice";
 import codeEditorSlice from "./codeEditorSlice";
 import toolSlice from "./toolSlice";
 import textSlice from "./textSlice";
+
+import { bind, enhanceReducer } from "redux-yjs-bindings";
+import { ydoc } from "./initYDoc";
 // import undoable from "redux-undo";
 
 // const MAXIMUN_UNDO_COUNT = 100;
@@ -21,10 +24,13 @@ const workbench = combineReducers({
 
 const store = configureStore({
   reducer: {
-    workbench: workbench,
+    workbench: enhanceReducer(workbench),
     tool: toolSlice,
   },
 });
+
+bind(ydoc, store, "workbench");
+// bind(ydoc, store, "tool");
 
 export default store;
 
