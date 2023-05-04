@@ -47,7 +47,7 @@ spring:
   # - redis 종료 시에는 RDB를 통해 스냅샷 생성
 
   redis:
-    host: localhost
+    host: 172.19.0.4
     port: 6379
     password: ssafy8cigmapass
 
