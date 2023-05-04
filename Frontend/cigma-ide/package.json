@@ -18,6 +18,7 @@
     "express": "^4.18.2",
     "http-proxy-middleware": "^2.0.6",
     "lib0": "^0.2.74",
+    "lodash": "^4.17.21",
     "re-resizable": "^6.9.9",
     "react": "^18.2.0",
     "react-dnd": "^16.0.1",
@@ -27,9 +28,11 @@
     "redux-undo": "^1.0.1",
     "sass": "^1.62.1",
     "ws": "^8.13.0",
+    "y-leveldb": "^0.1.2",
     "y-monaco": "^0.1.4",
     "y-presence": "^0.2.3",
-    "y-webrtc": "^10.2.5",
+    "y-protocols": "^1.0.5",
+    "y-websocket": "^1.5.0",
     "yjs": "^13.6.0"
   },
   "devDependencies": {
