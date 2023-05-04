@@ -82,8 +82,7 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
 
   // 숨김처리?
   const { top, left, width, height } = codeEditor;
-  const commentLeft = left + width;
-  const commentWidth = width / 2;
+
   if (isHidden) {
     return (
       <div
@@ -126,7 +125,6 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
             ))
           : null}
         <div className={styles.bar}>
-          {/* comment 숨기는 버튼 추가 필요 */}
           <button
             className={styles.commentButton}
             onClick={() => {
@@ -140,13 +138,18 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
           <button className={styles.closeButton} onClick={handleHideClick} />
         </div>
         test code editor
+        {/* monaco가 들어갈곳 */}
+        <div className={styles["monaco-editor"]} style={{ height: height - 30 }} />
+        {/* comment 화면 처리 */}
+        {!hideComment ? (
+          <div
+            style={{
+              height: height - 30,
+            }}
+            className={styles.comment}
+          ></div>
+        ) : null}
       </div>
-      {!hideComment ? (
-        <div
-          style={{ top, left: commentLeft, height, width: commentWidth }}
-          className={styles["code-editor"]}
-        ></div>
-      ) : null}
     </>
   );
 };

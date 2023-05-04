@@ -82,3 +82,18 @@
     background-color: #ccc;
   }
 }
+
+.comment {
+  top: 30px;
+  right: 0;
+  position: absolute;
+  background-color: beige;
+  width: 30vw;
+}
+
+.monaco-editor {
+  top: 30px;
+  position: absolute;
+  background-color: pink;
+  width: 100%;
+}
