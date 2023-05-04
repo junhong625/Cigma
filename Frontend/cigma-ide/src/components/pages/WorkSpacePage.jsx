@@ -71,14 +71,17 @@ const WorkSpacePage = (props) => {
   }, [codeEditors, textEditors]);
 
   useEffect(() => {
-    const onSync = (isSynced) => {
-      if (isSynced) {
-        setLoading(false);
-      }
-    };
-    console.log(provider);
-    provider.on("sync", onSync);
-    return () => provider.off("sync", onSync);
+    /**
+     * How to Loading with y-websocket provider
+     */
+    // const onSync = (isSynced) => {
+    //   if (isSynced) {
+    //     setLoading(false);
+    //   }
+    // };
+    // console.log(provider);
+    // provider.on("sync", onSync);
+    // return () => provider.off("sync", onSync);
   }, []);
 
   /**
