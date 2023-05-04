@@ -61,72 +61,88 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
 
   // 숨김처리?
   const { top, left, width, height } = codeEditor;
-
-  if (isHidden) {
-    return (
-      <div
-        className={styles["hidden-bar"]}
-        style={{ top, left, width }}
-        onClick={() => dispatch(setCodeEditorIndex(codeEditorIndex))}
-      >
-        <button className={styles.closeButton} onClick={handleShowClick} />
-      </div>
-    );
-  }
+  const commentLeft = left + width;
+  const commentWidth = width / 2;
+  // if (isHidden) {
+  //   return (
+  //     <div
+  //       className={styles["hidden-bar"]}
+  //       style={{ top, left, width }}
+  //       onClick={() => dispatch(setCodeEditorIndex(codeEditorIndex))}
+  //     >
+  //       <button className={styles.closeButton} onClick={handleShowClick} />
+  //     </div>
+  //   );
+  // }
   return (
-    <>
+    <div
+      className={styles["code-editor"]}
+      onClick={() => {
+        dispatch(setCodeEditorIndex(codeEditorIndex));
+        setIsDoubleClicked(true);
+        dispatch(showEditPointer());
+      }}
+      onBlur={() => {
+        handleInput();
+      }}
+      ref={canvasRef}
+      tabIndex={0}
+      style={{ ...codeEditor }}
+    >
       <div
-        ref={canvasRef}
-        className={styles["code-editor"]}
-        style={{ ...codeEditor }}
-        tabIndex={0}
-        onDoubleClick={() => {}}
-        onBlur={() => {
-          handleInput();
-        }}
-        onClick={() => {
-          dispatch(setCodeEditorIndex(codeEditorIndex));
-          setIsDoubleClicked(true);
-          dispatch(showEditPointer());
+        className={styles.bar}
+        style={{
+          top,
+          left,
+          width,
         }}
       >
-        {isDoubleClicked
-          ? // EditPinter atoms 들어갈 자리.
-            Object.values(directions).map((direction) => (
-              <EditPointer
-                direction={direction}
-                key={direction}
-                {...computeSelectionBox(codeEditors, codeEditorIndex)}
-              />
-            ))
-          : null}
-        <div className={styles.bar}>
-          <button
-            className={styles.commentButton}
-            onClick={() => {
-              if (hideComment) {
-                handleCommentClick();
-              } else {
-                handleHideCommentClick();
-              }
-            }}
-          />
-          <button className={styles.closeButton} onClick={handleHideClick} />
-        </div>
-        test code editor
-        {/* monaco가 들어갈곳 */}
-        <div className={styles["monaco-editor"]} style={{ height: height - 30 }} />
-        {/* comment 화면 처리 */}
-        {!hideComment ? (
-          <div
-            style={{
-              height: height - 30,
-            }}
-            className={styles.comment}
-          ></div>
-        ) : null}
+        <button
+          className={styles.commentButton}
+          onClick={() => {
+            if (hideComment) {
+              handleCommentClick();
+            } else {
+              handleHideCommentClick();
+            }
+          }}
+        />
+        <button className={styles.closeButton} onClick={handleHideClick} />
       </div>
-    </>
+      {!hideComment ? (
+        <div
+          style={{
+            top,
+            left: commentLeft,
+            height,
+            width: commentWidth,
+          }}
+          className={styles.comment}
+        ></div>
+      ) : null}
+      {!isHidden ? (
+        <div
+          className={styles["code-editor"]}
+          style={{ top: top + 30, left, width, height }}
+          onDoubleClick={() => {}}
+        >
+          {isDoubleClicked
+            ? // EditPinter atoms 들어갈 자리.
+              Object.values(directions).map((direction) => (
+                <EditPointer
+                  direction={direction}
+                  key={direction}
+                  {...computeSelectionBox(codeEditors, codeEditorIndex)}
+                />
+              ))
+            : null}
+          test code editor
+          {/* monaco가 들어갈곳 */}
+          <div className={styles["monaco-editor"]} style={{ height: height - 30 }} />
+          {/* comment 화면 처리 */}
+        </div>
+      ) : null}
+    </div>
   );
 };
 
