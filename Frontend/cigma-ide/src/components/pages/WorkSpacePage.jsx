@@ -15,7 +15,7 @@ import TextEditior from "../organisms/TextEditior";
 import React from "react";
 import { useUsers } from "y-presence";
 import CursorAtom from "../atoms/CursorAtom";
-import { provider, awareness } from "../../store/initYDoc";
+import { provider, awareness, yLocs } from "../../store/initYDoc";
 import { USER_NAMES, USER_COLORS } from "../../constants";
 
 const random = (arr) => {
@@ -84,6 +84,10 @@ const WorkSpacePage = (props) => {
     // return () => provider.off("sync", onSync);
   }, []);
 
+  useEffect(() => {
+    yLocs.set("codeEditors", codeEditors);
+  }, [codeEditors]);
+
   /**
    * @todo innerBoardRef관련 useEffect?
    */
@@ -142,7 +146,7 @@ const WorkSpacePage = (props) => {
       onPointerMove={handlePointMove}
     >
       <div className={styles.artboard} ref={innerBoardRef}>
-        {codeEditors.map((codeEditor, i) => (
+        {yLocs.get("codeEditors").map((codeEditor, i) => (
           <CodeEditor
             {...codeEditor}
             codeEditorIndex={i}

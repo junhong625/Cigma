@@ -18,3 +18,6 @@ export const provider = new WebsocketProvider(
 );
 export const awareness = provider.awareness;
 export const yMap = ydoc.getMap();
+
+// codeEditor 위치 공유 배열
+export const yLocs = ydoc.getMap("Locs");
