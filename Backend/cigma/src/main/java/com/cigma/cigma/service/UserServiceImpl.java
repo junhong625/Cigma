@@ -115,7 +115,12 @@ public class UserServiceImpl implements UserService{
             log.info("refreshToken : " + token.getRefreshToken());
             log.info("refreshExpiredTime : " + refreshExpiredTime);
             log.info("TimeUnit : " + TimeUnit.MILLISECONDS);
-            redisTemplate.opsForValue().set(userPrincipal.getUserIdx().toString(), token.getRefreshToken(), refreshExpiredTime, TimeUnit.MILLISECONDS);
+            try {
+                redisTemplate.opsForValue().set(userPrincipal.getUserIdx().toString(), token.getRefreshToken(), refreshExpiredTime, TimeUnit.MILLISECONDS);
+            } catch (Exception e) {
+                log.info("Error : " + e.getMessage());
+            }
+
             log.info("redis에 token 저장 완료");
 
             return new UserLoginResponse(token);
