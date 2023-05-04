@@ -12,6 +12,21 @@ import useDrawText from "../../hooks/useDrawText";
 import { selectAllTextEditor } from "../../store/textSlice";
 import TextEditior from "../organisms/TextEditior";
 
+import React from "react";
+import { useUsers } from "y-presence";
+import CursorAtom from "../atoms/CursorAtom";
+import { provider, awareness, yLocs } from "../../store/initYDoc";
+import { USER_NAMES, USER_COLORS } from "../../constants";
+
+const random = (arr) => {
+  return arr[Math.floor(Math.random() * arr.length)];
+};
+
+const name = random(USER_NAMES);
+const color = random(USER_COLORS);
+
+awareness.setLocalState({ name, color });
+
 let isFirstRender = true;
 
 const WorkSpacePage = (props) => {
@@ -21,6 +36,14 @@ const WorkSpacePage = (props) => {
   const boardRef = useRef();
   // innerboard ref 추가
   const innerBoardRef = useRef();
+
+  const users = useUsers(awareness);
+  const handlePointMove = React.useCallback((e) => {
+    awareness.setLocalStateField("cursor", {
+      x: e.clientX,
+      y: e.clientY,
+    });
+  }, []);
 
   // 스크롤
   useDragToScroll(boardRef);
@@ -35,7 +58,6 @@ const WorkSpacePage = (props) => {
   // text 추가
   useDrawText(innerBoardRef);
 
-
   useEffect(() => {
     if (!boardRef.current || !isFirstRender) return;
 
@@ -48,6 +70,23 @@ const WorkSpacePage = (props) => {
       left - boardRef.current.clientWidth / 2 + width / 2;
   }, [codeEditors, textEditors]);
 
+  useEffect(() => {
+    /**
+     * How to Loading with y-websocket provider
+     */
+    // const onSync = (isSynced) => {
+    //   if (isSynced) {
+    //     setLoading(false);
+    //   }
+    // };
+    // console.log(provider);
+    // provider.on("sync", onSync);
+    // return () => provider.off("sync", onSync);
+  }, []);
+
+  useEffect(() => {
+    yLocs.set("codeEditors", codeEditors);
+  }, [codeEditors]);
 
   /**
    * @todo innerBoardRef관련 useEffect?
@@ -101,10 +140,19 @@ const WorkSpacePage = (props) => {
   }, [difference.current]);
 
   return (
-    <div ref={boardRef} className={styles["artboard-wrapper"]}>
+    <div
+      ref={boardRef}
+      className={styles["artboard-wrapper"]}
+      onPointerMove={handlePointMove}
+    >
       <div className={styles.artboard} ref={innerBoardRef}>
-        {codeEditors.map((codeEditor, i) => (
-          <CodeEditor {...codeEditor} codeEditorIndex={i} key={i} artBoardRef={innerBoardRef} />
+        {yLocs.get("codeEditors").map((codeEditor, i) => (
+          <CodeEditor
+            {...codeEditor}
+            codeEditorIndex={i}
+            key={i}
+            artBoardRef={innerBoardRef}
+          />
         ))}
         {textEditors.map((textEditor, i) => (
           <TextEditior
@@ -115,6 +163,20 @@ const WorkSpacePage = (props) => {
           />
         ))}
       </div>
+      {Array.from(users.entries()).map(([key, value]) => {
+        if (key === awareness.clientID) return null;
+
+        if (!value.cursor || !value.color || !value.name) return null;
+
+        return (
+          <CursorAtom
+            key={key}
+            cursor={value.cursor}
+            color={value.color}
+            name={value.name}
+          />
+        );
+      })}
     </div>
   );
 };
