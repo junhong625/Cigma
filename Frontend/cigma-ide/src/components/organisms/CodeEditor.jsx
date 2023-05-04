@@ -30,10 +30,7 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   const [isDoubleClicked, setIsDoubleClicked] = useState(false);
   // 에디터 상단 바
   const [isHidden, setIsHidden] = useState(false);
-  const [isBarOpen, setIsBarOpen] = useState(true);
-  const [isResizing, setIsResizing] = useState(false);
-  const [resizeStartX, setResizeStartX] = useState(0);
-  const [resizeStartWidth, setResizeStartWidth] = useState(0);
+
   // comment 우측
   const [hideComment, setHideComment] = useState(true);
 
@@ -43,25 +40,6 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   const handleInput = (event) => {
     setIsDoubleClicked(false);
     dispatch(hideEditPointer);
-  };
-
-  // 리사이징 관련
-  const handleResizeMouseDown = (event) => {
-    event.preventDefault();
-    setIsResizing(true);
-    setResizeStartX(event.clientX);
-  };
-
-  // 마우스 움직임
-  const handleMouseMove = (event) => {
-    if (isResizing) {
-      const dx = event.clientX - resizeStartX;
-      event.currentTarget.parentNode.style.width = resizeStartWidth + dx + "px";
-    }
-  };
-
-  const handleMouseUp = () => {
-    setIsResizing(false);
   };
 
   const handleHideClick = () => {
@@ -90,7 +68,6 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
         style={{ top, left, width }}
         onClick={() => dispatch(setCodeEditorIndex(codeEditorIndex))}
       >
-        {/* <button className={styles.showButton} onClick={handleShowClick} /> */}
         <button className={styles.closeButton} onClick={handleShowClick} />
       </div>
     );
@@ -111,8 +88,6 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
           setIsDoubleClicked(true);
           dispatch(showEditPointer());
         }}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
       >
         {isDoubleClicked
           ? // EditPinter atoms 들어갈 자리.
