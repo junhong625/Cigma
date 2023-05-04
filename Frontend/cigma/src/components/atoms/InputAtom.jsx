@@ -14,7 +14,7 @@ const InputAtom = ({ label, id, type, placeholder, value, onChange }) => {
         id={id}
         placeholder={placeholder}
         value={value}
-        onChange={onChange}
+        onChange={(event) => onChange(event.target.value)}
       />
     </div>
   );
