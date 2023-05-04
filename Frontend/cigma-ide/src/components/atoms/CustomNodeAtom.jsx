@@ -11,8 +11,11 @@ export const CustomNodeAtom = (props) => {
   const { id, text } = props.node;
   const [visibleInput, setVisibleInput] = useState(false);
   const [labelText, setLabelText] = useState(text);
+  const [beforeCreate, setBeforeCreate] = useState(false);
+  const [createText, setCreateText] = useState(text);
   const indent = props.depth * 24;
   const inputRef = useRef();
+  const newRef = useRef();
 
   const handleToggle = (e) => {
     props.onToggle(props.node.id);
@@ -36,13 +39,8 @@ export const CustomNodeAtom = (props) => {
 
   // 입력 취소
   const handleCancel = () => {
-    if (props.node.text === "") {
-      //방금 막 생성된 파일일 시, 삭제(파일을 생성하지 않음)
-      props.onDelete(id);
-    } else {
-      setLabelText(text);
-      setVisibleInput(false);
-    }
+    setLabelText(text);
+    setVisibleInput(false);
   };
 
   const handleChangeText = (e) => {
@@ -51,28 +49,14 @@ export const CustomNodeAtom = (props) => {
 
   //파일을 제출하는 코드
   const handleSubmit = () => {
-    // 방금 생성된 파일 일 때
-    if (props.node.text === "") {
-      //입력값이 존재하지 않을 시, 삭제(파일을 생성하지 않음)
-      if (labelText === "") {
-        props.onDelete(id);
-      } else {
-        // 값이 입력되어 있을 경우, 값을 발송.
-        setVisibleInput(false);
-        const fileType = labelText.split(".")[1];
-        props.onTextChange(id, labelText, fileType);
-      }
+    //입력값이 존재하지 않을 시, 수정을 취소
+    if (labelText === "") {
+      handleCancel();
     } else {
-      // 기존에 존재하던 파일일 때
-      //입력값이 존재하지 않을 시, 수정을 취소
-      if (labelText === "") {
-        handleCancel();
-      } else {
-        // 값이 입력되어 있을 경우, 값을 발송.
-        setVisibleInput(false);
-        const fileType = labelText.split(".")[1];
-        props.onTextChange(id, labelText, fileType);
-      }
+      // 값이 입력되어 있을 경우, 값을 발송.
+      setVisibleInput(false);
+      const fileType = labelText.split(".")[1];
+      props.onTextChange(id, labelText, fileType);
     }
   };
 
@@ -81,22 +65,62 @@ export const CustomNodeAtom = (props) => {
   const depthList = Array.from({ length: props.depth }, () => 0);
   const dragOverProps = useDragOver(id, props.isOpen, props.onToggle);
 
+  // 엔터 시 제출, esc 시 취소
   const pressKey = (event) => {
     if (event.key === "Enter") {
-      // 파일 명을 변경하는 코드
-      // 이하는 표시만 변경하는 코드
       handleSubmit();
     } else if (event.key === "Escape") {
       handleCancel();
     }
   };
 
-  // 방금 생성된 파일일 경우 input 모드
+  //======================파일 생성용 함수==============================//
+  // input 모드 변경
   useEffect(() => {
     if (props.node.id === props.lastCreated) {
-      handleShowInput();
+      setBeforeCreate(true);
     }
   }, [props.lastCreated]);
+
+  // input에 focus
+  useEffect(() => {
+    if (newRef.current) {
+      newRef.current.focus();
+    }
+  }, [beforeCreate]);
+
+  // 파일 생성 시 이름 입력
+  const handleCreateText = (e) => {
+    setCreateText(e.target.value);
+  };
+
+  // 생성 취소 (실제 파일에 영향 無)
+  const cancelCreate = () => {
+    setCreateText(text);
+    props.onDelete(id, props.node.text, props.node.droppable, true);
+  };
+
+  //파일을 제출하는 코드
+  const handleCreateSubmit = () => {
+    //입력값이 존재하지 않을 시, 수정을 취소
+    if (createText === "") {
+      cancelCreate();
+    } else {
+      // 값이 입력되어 있을 경우, 값을 발송.
+      setBeforeCreate(false);
+      const fileType = createText.split(".")[1];
+      props.createSignal(id, createText, props.node.droppable, fileType);
+    }
+  };
+
+  const pressCreateKey = (event) => {
+    if (event.key === "Enter") {
+      handleCreateSubmit();
+    } else if (event.key === "Escape") {
+      cancelCreate();
+    }
+  };
+  //======================================================================//
 
   return (
     <div
@@ -137,8 +161,28 @@ export const CustomNodeAtom = (props) => {
       })}
 
       <div className={styles.labelGridItem}>
-        {/* 이름을 변경중일 때 */}
-        {visibleInput ? (
+        {beforeCreate ? (
+          // 막 생성됨
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+            className={styles.editWrapper}
+          >
+            <input
+              ref={newRef}
+              className={`
+                ${styles.textField}
+                ${styles.nodeInput}
+                `}
+              value={createText}
+              onChange={handleCreateText}
+              onBlur={handleCreateSubmit}
+              onKeyDown={pressCreateKey}
+            />
+          </div>
+        ) : visibleInput ? (
+          // 이름 변경 중
           <div
             onClick={(e) => {
               e.stopPropagation();
@@ -172,7 +216,9 @@ export const CustomNodeAtom = (props) => {
               </div>
               <div
                 className={styles.editButton}
-                onClick={() => props.onDelete(id)}
+                onClick={() =>
+                  props.onDelete(id, props.node.text, props.node.droppable)
+                }
               >
                 <BsFillTrashFill className={styles.editIcon} />
               </div>
