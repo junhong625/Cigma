@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useLayoutEffect } from "react";
 import { DndProvider } from "react-dnd";
 import {
   Tree,
@@ -9,13 +9,15 @@ import {
 import { CustomNodeAtom } from "../atoms/CustomNodeAtom";
 import { CustomDragPreviewAtom } from "../atoms/CustomDragPreviewAtom";
 import styles from "../../styles/organisms/FileTreeOrganism.module.scss";
-import SampleData from "../../sample-data.json";
 import {
+  BsArrowDownSquare,
   BsArrowUpSquare,
   BsFileEarmarkPlus,
   BsFolderPlus,
 } from "react-icons/bs";
 import { Resizable } from "re-resizable";
+import axios from "axios";
+import { useQuery } from "react-query";
 
 // 마지막 파일의 Id 값을 가져옴
 const getLastId = (treeData) => {
@@ -36,12 +38,66 @@ const getLastId = (treeData) => {
   return 0;
 };
 
-function FileTreeOrganism(props) {
-  // 트리에 활용하는 데이터 리스트 생성
-  const [treeData, setTreeData] = useState(SampleData);
+//id에 해당하는 노드를 찾기 위한 재귀 함수
+const findNodeById = (id, nodes) => {
+  for (let i = 0; i < nodes.length; i++) {
+    const node = nodes[i];
+    if (node.id === id) {
+      return node;
+    } else if (node.children) {
+      const foundNode = findNodeById(id, node.children);
+      if (foundNode) {
+        return foundNode;
+      }
+    }
+  }
+  return null;
+};
 
-  // 파일 바꾸기
+//id를 기반으로 파일 경로를 구성하는 함수
+const getFilepathById = (id, nodes) => {
+  const node = findNodeById(id, nodes);
+  if (!node) {
+    return "/";
+  }
+
+  const segments = [];
+  let parent = findNodeById(node.parent, nodes);
+  while (parent) {
+    segments.unshift(parent.text);
+    parent = findNodeById(parent.parent, nodes);
+  }
+
+  return segments.join("/");
+};
+
+function FileTreeOrganism(props) {
+  // ============================ 트리용 데이터 리스트 생성=====================//
+  const [treeData, setTreeData] = useState([]);
+
+  // const { data, isLoading, isError } = useQuery('treeData', async () => {
+  //   const response = await axios.get('/api');
+  //   setTreeData(data)
+  // });
+
+  useLayoutEffect(() => {
+    axios
+      .get("/api")
+      .then((response) => {
+        setTreeData(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  //=========================== 파일 이름 바꾸기=============================== //
   const handleTextChange = (id, value, type) => {
+    // 파일 경로 확보
+    const filepath = getFilepathById(id, treeData);
+    const node = findNodeById(id, treeData);
+    const data = { oldName: node.text, newName: value, path: filepath };
+    // 파일 이름 변경에 성공한 경우
     const newTree = treeData.map((node) => {
       // 유효한 파일 타입 확장자를 입력 받았을 때
       if (node.id === id && type != undefined) {
@@ -62,39 +118,57 @@ function FileTreeOrganism(props) {
       }
       return node;
     });
-
     setTreeData(newTree);
+    axios
+      .put("/api", data)
+      .then((res) => {})
+      .catch((err) => {
+        console.error(err);
+        // 파일 이름 변경에 실패한 경우
+      });
   };
 
-  // id를 기준으로 노드 데이터 삭제 후 새로운 리스트 반환
-  const handleDelete = (id) => {
+  // ===============================파일 삭제================================= //
+  const handleDelete = (id, name, dir, created = false) => {
+    // 파일 경로
+    const filepath = getFilepathById(id, treeData);
     const deleteIds = [
       id,
       ...getDescendants(treeData, id).map((node) => node.id),
     ];
     const newTree = treeData.filter((node) => !deleteIds.includes(node.id));
-
-    setTreeData(newTree);
+    if (created != true) {
+      // 폴더일 경우
+      if (dir) {
+        axios
+          .delete(`/api/rmdir?name=${name}&path=${filepath}`)
+          .then((response) => {
+            setTreeData(newTree);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
+        //파일일 경우
+        axios
+          .delete(`/api?name=${name}&path=${filepath}`)
+          .then((response) => {
+            setTreeData(newTree);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    } else {
+      setTreeData(newTree);
+    }
   };
-
-  // 드래그 드롭을 실행하는 함수
-  const handleDrop = (newTree) => setTreeData(newTree);
-
-  // 선택된 노드를 표기하는 State
-  const [selectedNode, setSelectedNode] = useState(null);
-  const handleSelect = (node) => setSelectedNode(node);
-
-  //모든 폴더를 접는 Ref
-  const ref = useRef(null);
-  const handleCloseAll = () => ref.current?.closeAll();
-
-  // 새로운 파일/ 폴더 만들기
+  //========================= 새로운 파일/ 폴더 만들기=============================//
   const [lastCreated, setLastCreated] = useState(0);
 
   const handleCreate = (newNode) => {
     const lastId = getLastId(treeData) + 1;
     setLastCreated(lastId);
-
     setTreeData([
       ...treeData,
       {
@@ -106,7 +180,7 @@ function FileTreeOrganism(props) {
 
   // 현재 위치에 새로운 폴더를 만드는 함수
   const CreateFolder = () => {
-    const text = ""
+    const text = "";
     const droppable = true;
     // 선택중인 파일이 없을 때, 최상단에 생성
     if (selectedNode === null) {
@@ -164,6 +238,92 @@ function FileTreeOrganism(props) {
     }
   };
 
+  // 실제 Express 서버에 요청을 보내는 함수
+  const createSignal = (id, name, dir, type) => {
+    const newTree = treeData.map((node) => {
+      // 유효한 파일 타입 확장자를 입력 받았을 때
+      if (node.id === id && type != undefined) {
+        return {
+          ...node,
+          text: name,
+          data: {
+            ...node.data,
+            fileType: type,
+          },
+        };
+      } else if (node.id === id) {
+        // 파일명만 수정할 때
+        return {
+          ...node,
+          text: name,
+        };
+      }
+      return node;
+    });
+    setTreeData(newTree);
+    const filepath = getFilepathById(id, treeData);
+    if (dir) {
+      axios
+        .post("api/folder", { name: name, path: filepath })
+        .then((response) => {
+          console.log(response.data.message);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      axios
+        .post("api/file", { name: name, path: filepath })
+        .then((response) => {
+          console.log(response.data.message);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
+  //======================================================================//
+
+  // 드래그 드롭을 실행하는 함수
+  const handleDrop = async (newTree, monitor) => {
+    const dragNodeId = monitor.getItem().id;
+    const dropNodeId = monitor.getDropResult().node.id;
+
+    const dragNode = findNodeById(dragNodeId, treeData);
+    const dropNode = findNodeById(dropNodeId, newTree);
+
+    const isDraggedFile = !!dragNode.children;
+    const sourcePath = getFilepathById(dragNodeId, treeData);
+    const destinationPath = isDraggedFile
+      ? `${getFilepathById(dropNodeId, newTree)}/${dragNode.text}`
+      : getFilepathById(dropNodeId, newTree);
+
+    if (sourcePath === destinationPath) {
+      return;
+    }
+
+    try {
+      await axios.put("/api/move", {
+        name: dragNode.text,
+        path: sourcePath,
+        destination: destinationPath,
+      });
+      setTreeData(newTree);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // 선택된 노드를 표기하는 State
+  const [selectedNode, setSelectedNode] = useState(null);
+  const handleSelect = (node) => setSelectedNode(node);
+
+  //모든 폴더를 접는 Ref
+  const ref = useRef(null);
+  const handleCloseAll = () => ref.current?.closeAll();
+  const handleOpenAll = () => ref.current?.openAll();
+
   return (
     <Resizable
       size={{ width: props.widthLeft }}
@@ -193,6 +353,9 @@ function FileTreeOrganism(props) {
       <DndProvider backend={MultiBackend} options={getBackendOptions()}>
         <div className={styles.app} style={{ width: props.widthLeft + "px" }}>
           <div className={styles.buttonWapper}>
+            <div onClick={handleOpenAll}>
+              <BsArrowDownSquare />
+            </div>
             <div onClick={handleCloseAll}>
               <BsArrowUpSquare />
             </div>
@@ -226,6 +389,7 @@ function FileTreeOrganism(props) {
                 onSelect={handleSelect}
                 onDelete={handleDelete}
                 lastCreated={lastCreated}
+                createSignal={createSignal}
               />
             )}
             dragPreviewRender={(monitorProps) => (

@@ -2,6 +2,8 @@ import express from "express";
 import path from "path";
 import { WebSocketServer } from "ws";
 import http from "http";
+import { onconnection } from "./socket/setWebrtc.js";
+import router from "./fsRoute.js";
 import { setupWSConnection } from "./socket/utils.js";
 
 // file server
@@ -34,8 +36,13 @@ server.on("upgrade", (request, socket, head) => {
   wss.handleUpgrade(request, socket, head, handleAuth);
 });
 
-server.listen(port, host, () => {
-  console.log(`running at '${host}' on port ${port}`);
-});
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+// router
+app.use("/api", router);
+
+server.listen(port);
+console.log("Signaling server running on localhost:", port);
 
 //=======================================================================
