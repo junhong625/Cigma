@@ -118,7 +118,10 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
         </div>
         test code editor
         {/* monaco가 들어갈곳 */}
-        <EditorOrganism className={styles["monaco-editor"]} style={{}} />
+        <EditorOrganism
+          className={styles["monaco-editor"]}
+          style={{ height: height - 30 }}
+        />
         {/* <div
           className={styles["monaco-editor"]}
           style={{ height: height - 30 }}

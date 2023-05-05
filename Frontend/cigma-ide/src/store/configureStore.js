@@ -10,6 +10,7 @@ import { ydoc } from "./initYDoc";
 
 // const MAXIMUN_UNDO_COUNT = 100;
 
+// if you want share state add the workbench
 const workbench = combineReducers({
   defaultText: defaultTextSlice,
   codeEditor: codeEditorSlice,

@@ -18,7 +18,7 @@ const EditorOrganism = () => {
         onChange={handleEditorChange}
         options={{
           fontSize: 14,
-          minimap: { enabled: false },
+          minimap: { enabled: true },
         }}
       />
     </>
