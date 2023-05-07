@@ -17,6 +17,7 @@ export const provider = new WebsocketProvider(
   ydoc
 );
 export const awareness = provider.awareness;
+console.log("clientID : ", awareness.clientID);
 export const yMap = ydoc.getMap();
 
 // codeEditor 위치 공유 배열

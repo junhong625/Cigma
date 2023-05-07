@@ -2,11 +2,12 @@ import { createSlice, current } from "@reduxjs/toolkit";
 import { yLocs } from "./initYDoc";
 
 const generateCodeEditor = (top, left) => ({
-  codeEditorName: "",
+  canvasName: "canvas_0",
   top,
   left,
   width: 800,
   height: 500,
+  filePath: "",
 });
 
 const initialState = [generateCodeEditor(1000, 1000)];
@@ -40,6 +41,7 @@ const codeEditorSlice = createSlice({
     // 코드에디터 위치 수정
     modifyCodeEditor: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;
+      console.log(state[codeEditorIndex].canvasName);
       delete payload.codeEditorIndex;
       state[codeEditorIndex] = {
         ...state[codeEditorIndex],

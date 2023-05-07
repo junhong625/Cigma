@@ -150,7 +150,7 @@ const WorkSpacePage = (props) => {
           <CodeEditor
             {...codeEditor}
             codeEditorIndex={i}
-            key={i}
+            key={codeEditor.canvasName}
             artBoardRef={innerBoardRef}
           />
         ))}

@@ -120,6 +120,7 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
         {/* monaco가 들어갈곳 */}
         <EditorOrganism
           className={styles["monaco-editor"]}
+          file={codeEditors[codeEditorIndex].canvasName}
           style={{ height: height - 30 }}
         />
         {/* <div
