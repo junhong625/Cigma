@@ -10,7 +10,12 @@ import useDragCodeEditor from "../../hooks/useDragCodeEditor";
 import { useRef, useState } from "react";
 import EditPointer from "../atoms/EditPointer";
 import computeSelectionBox from "../../tools/computeSelectionBox";
-import { hideCodeEditor, selectAllCodeEditor } from "../../store/codeEditorSlice";
+import {
+  hideCodeEditor,
+  selectAllCodeEditor,
+  selectIsHidden,
+  showCodeEditor,
+} from "../../store/codeEditorSlice";
 
 const directions = {
   N: "n",
@@ -23,14 +28,14 @@ const directions = {
   SW: "sw",
 };
 const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
-  console.log(codeEditorIndex);
   const dispatch = useDispatch();
   const canvasRef = useRef();
   const codeEditors = useSelector(selectAllCodeEditor);
+  const { top, left, width, height, isHidden } = codeEditor;
   // 더블클릭 -> 사이즈 조정
   const [isDoubleClicked, setIsDoubleClicked] = useState(false);
   // 에디터 상단 바
-  const [isHidden, setIsHidden] = useState(false);
+  // const [isHidden, setIsHidden] = useState(false);
 
   // comment 우측
   const [hideComment, setHideComment] = useState(true);
@@ -42,13 +47,13 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
     setIsDoubleClicked(false);
     dispatch(hideEditPointer);
   };
-
+  // editor 숨기기
   const handleHideClick = () => {
-    setIsHidden(true);
+    dispatch(hideCodeEditor({ codeEditorIndex: codeEditorIndex }));
   };
 
   const handleShowClick = () => {
-    setIsHidden(false);
+    dispatch(showCodeEditor({ codeEditorIndex: codeEditorIndex }));
   };
   // comment 보이기
   const handleCommentClick = () => {
@@ -59,21 +64,13 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
     setHideComment(true);
   };
 
-  // 숨김처리?
-  const { top, left, width, height } = codeEditor;
-  const commentLeft = left + width;
+  // comment창 크기 설정
   const commentWidth = width / 2;
-  // if (isHidden) {
-  //   return (
-  //     <div
-  //       className={styles["hidden-bar"]}
-  //       style={{ top, left, width }}
-  //       onClick={() => dispatch(setCodeEditorIndex(codeEditorIndex))}
-  //     >
-  //       <button className={styles.closeButton} onClick={handleShowClick} />
-  //     </div>
-  //   );
-  // }
+  // editor 숨김처리되었을때 isHidden store 값에 따른 css 설정
+  const isHiddenStyle = {
+    ...codeEditor,
+    height: isHidden ? "30px" : height,
+  };
   return (
     <div
       className={styles["code-editor"]}
@@ -87,7 +84,7 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
       }}
       ref={canvasRef}
       tabIndex={0}
-      style={{ ...codeEditor }}
+      style={isHiddenStyle}
     >
       <div
         className={styles.bar}
@@ -118,6 +115,7 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
           }}
         />
       </div>
+      {/* 댓글창 숨김처리 */}
       {!hideComment ? (
         <div
           style={{
@@ -133,10 +131,9 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
         <div
           className={styles["code-editor"]}
           style={{ top: 30, left: 0, width, height: height - 30 }}
-          onDoubleClick={() => {}}
         >
           {isDoubleClicked
-            ? // EditPinter atoms 들어갈 자리.
+            ? // EditPointer atoms 들어갈 자리.
               Object.values(directions).map((direction) => (
                 <EditPointer
                   direction={direction}
