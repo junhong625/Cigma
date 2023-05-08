@@ -16,7 +16,6 @@
 }
 
 .bar {
-  position: absolute;
   height: 30px;
   background-color: #d7b3ba;
   display: flex;
@@ -90,7 +89,7 @@
 }
 
 .monaco-editor {
-  top: 30px;
+  top: 0;
   position: absolute;
   background-color: pink;
   width: 100%;
