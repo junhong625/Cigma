@@ -1,5 +1,6 @@
 import { createSlice, current } from "@reduxjs/toolkit";
 import { yLocs } from "./initYDoc";
+import _ from "lodash";
 
 const generateCodeEditor = (top, left) => ({
   codeEditorName: "",
@@ -8,6 +9,7 @@ const generateCodeEditor = (top, left) => ({
   width: 800,
   height: 500,
   isHidden: false,
+  comments: [],
 });
 
 const initialState = [generateCodeEditor(1000, 1000)];
@@ -116,17 +118,24 @@ const codeEditorSlice = createSlice({
     showCodeEditor: (state) => {
       state.isHidden = true;
     },
+    addComment: (state, { payload }) => {
+      const codeEditorIndex = payload.codeEditorIndex;
+      const comment = payload.comment;
+      state[codeEditorIndex].append(comment);
+    },
+    deleteComment: (state, { payload }) => {
+      const codeEditorIndex = payload.codeEditorIndex;
+      const comment = payload.comment;
+      const commendIndex = _.findIndex(
+        state[codeEditorIndex].comments,
+        comment
+      );
+      state[commendIndex].comments.splice(codeEditorIndex, 1);
+    },
   },
 });
 
 export const selectAllCodeEditor = (state) => state.workbench.codeEditor;
-// export const selectAllCodeEditor = () => yLocs.get("codeEditors");
-
-// export const selectCanvasLength = (state) =>
-//   state.workbench.present.canvas.length;
-
-// 현재 코드에디터 숨김 상태 확인
-export const selectIsHidden = (state) => state.workbench.codeEditor.isHidden;
 
 export const {
   loadCodeEditor,
@@ -144,6 +153,7 @@ export const {
   resizeSouthWest,
   showCodeEditor,
   deleteCodeEditor,
+  addComment,
 } = codeEditorSlice.actions;
 
 export default codeEditorSlice.reducer;
