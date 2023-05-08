@@ -126,6 +126,7 @@ const codeEditorSlice = createSlice({
     deleteComment: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;
       const comment = payload.comment;
+      // comment timestamp의 key로 index 찾기
       const commendIndex = _.findIndex(
         state[codeEditorIndex].comments,
         comment.timestamp
@@ -154,6 +155,7 @@ export const {
   showCodeEditor,
   deleteCodeEditor,
   addComment,
+  deleteComment,
 } = codeEditorSlice.actions;
 
 export default codeEditorSlice.reducer;
