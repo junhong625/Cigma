@@ -7,6 +7,7 @@ const generateCodeEditor = (top, left) => ({
   left,
   width: 800,
   height: 500,
+  isHidden: false,
 });
 
 const initialState = [generateCodeEditor(1000, 1000)];
@@ -21,25 +22,21 @@ const codeEditorSlice = createSlice({
       // yLocs.set("codeEditors", payload);
       return payload;
     },
-    // 코드에디터 숨기기
-    hideCodeEditor: (state, { payload: codeEditorIndex }) => {
+    // 코드에디터 삭제
+    deleteCodeEditor: (state, { payload: codeEditorIndex }) => {
       state.splice(codeEditorIndex, 1);
-      // yLocs.set("codeEditors", state);
     },
     // 코드에디터 추가
-    showCodeEditor: (state, { payload: { top, left } }) => {
-      console.log("working");
+    addCodeEditor: (state, { payload: { top, left } }) => {
       const newCodeEditor = {
         ...generateCodeEditor(top, left),
         canvasName: `canvas_${state.length}`,
       };
       state.push(newCodeEditor);
-      // yLocs.set("codeEditors", state);
     },
     // 코드에디터 이름 바꾸기
     changeCodeEditorName: (state, { payload: { name, codeEditorIndex } }) => {
       state[codeEditorIndex].canvasName = name;
-      // yLocs.set("codeEditors", state);
     },
     // 코드에디터 위치 수정
     modifyCodeEditor: (state, { payload }) => {
@@ -49,7 +46,6 @@ const codeEditorSlice = createSlice({
         ...state[codeEditorIndex],
         ...payload,
       };
-      // yLocs.set("codeEditors", state);
     },
     // 코드에디터 크기 수정
     resizeNorth: (state, { payload }) => {
@@ -112,6 +108,14 @@ const codeEditorSlice = createSlice({
       state[codeEditorIndex].width =
         current(state[codeEditorIndex]).width - payload.horChange;
     },
+    // 코드에디터 숨기기
+    hideCodeEditor: (state) => {
+      state.isHidden = false;
+    },
+    // 코드에디터 보이기
+    showCodeEditor: (state) => {
+      state.isHidden = true;
+    },
   },
 });
 
@@ -121,10 +125,13 @@ export const selectAllCodeEditor = (state) => state.workbench.codeEditor;
 // export const selectCanvasLength = (state) =>
 //   state.workbench.present.canvas.length;
 
+// 현재 코드에디터 숨김 상태 확인
+export const selectIsHidden = (state) => state.workbench.codeEditor.isHidden;
+
 export const {
   loadCodeEditor,
   hideCodeEditor,
-  showCodeEditor,
+  addCodeEditor,
   changeCodeEditorName,
   modifyCodeEditor,
   resizeEast,
@@ -135,6 +142,8 @@ export const {
   resizeSouthEast,
   resizeNorthWest,
   resizeSouthWest,
+  showCodeEditor,
+  deleteCodeEditor,
 } = codeEditorSlice.actions;
 
 export default codeEditorSlice.reducer;
