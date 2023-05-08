@@ -22,7 +22,7 @@ const LoginPage = () => {
     const { status } = await login(email, password);
     if (status === 200) {
       alert("로그인 되었습니다");
-      navigate("");
+      navigate("/projects");
     } else {
       alert("유효하지 않는 정보입니다");
       setEmail("");
