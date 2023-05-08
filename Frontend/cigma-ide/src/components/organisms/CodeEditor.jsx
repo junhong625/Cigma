@@ -13,7 +13,6 @@ import computeSelectionBox from "../../tools/computeSelectionBox";
 import {
   hideCodeEditor,
   selectAllCodeEditor,
-  selectIsHidden,
   showCodeEditor,
 } from "../../store/codeEditorSlice";
 
@@ -144,7 +143,10 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
             : null}
 
           {/* monaco가 들어갈곳 */}
-          <div className={styles["monaco-editor"]} style={{ height: height - 30 }} />
+          <div
+            className={styles["monaco-editor"]}
+            style={{ height: height - 30 }}
+          />
           {/* comment 화면 처리 */}
         </div>
       ) : null}
