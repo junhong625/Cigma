@@ -22,7 +22,7 @@ function EditPointer({ direction, ...shape }) {
   useDragToResize(pointerRef, direction);
   switch (direction) {
     case directions.N:
-      position.top = shape.top - shape.top - pointerHalfWidth;
+      position.top = shape.top - shape.top - 30;
       position.left = shape.width / 2 - pointerHalfWidth;
       position.cursor = "ns-resize";
       break;
@@ -32,7 +32,7 @@ function EditPointer({ direction, ...shape }) {
       position.cursor = "ew-resize";
       break;
     case directions.S:
-      position.top = shape.height - pointerHalfWidth;
+      position.top = shape.height - pointerHalfWidth - 30;
       position.left = shape.width / 2 - pointerHalfWidth;
       position.cursor = "ns-resize";
       break;
@@ -42,22 +42,22 @@ function EditPointer({ direction, ...shape }) {
       position.cursor = "ew-resize";
       break;
     case directions.NE:
-      position.top = shape.top - shape.top - pointerHalfWidth;
+      position.top = shape.top - shape.top - 30;
       position.left = shape.width - pointerHalfWidth;
       position.cursor = "nesw-resize";
       break;
     case directions.NW:
-      position.top = shape.top - shape.top - pointerHalfWidth;
+      position.top = shape.top - shape.top - 30;
       position.left = shape.left - shape.left - pointerHalfWidth;
       position.cursor = "nwse-resize";
       break;
     case directions.SE:
-      position.top = shape.height - pointerHalfWidth;
+      position.top = shape.height - 30;
       position.left = shape.width - pointerHalfWidth;
       position.cursor = "nwse-resize";
       break;
     case directions.SW:
-      position.top = shape.height - pointerHalfWidth;
+      position.top = shape.height - 30;
       position.left = shape.left - shape.left - pointerHalfWidth;
       position.cursor = "nesw-resize";
       break;
