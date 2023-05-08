@@ -3,7 +3,14 @@ import InputAtom from "../atoms/InputAtom";
 import ButtonAtom from "../atoms/ButtonAtom";
 import "../../styles/organisms/SignOrganism.scss";
 
-const SignOrganism1 = ({ onClick, name, setName, email, setEmail }) => {
+const SignOrganism1 = ({
+  onClick,
+  name,
+  setName,
+  email,
+  setEmail,
+  onKeyPress,
+}) => {
   return (
     <div className="sign-box">
       <h1>이메일 인증</h1>
@@ -13,6 +20,7 @@ const SignOrganism1 = ({ onClick, name, setName, email, setEmail }) => {
         label={"이름"}
         value={name}
         onChange={setName}
+        onKeyPress={onKeyPress}
       />
       <InputAtom
         id={"email"}
@@ -20,6 +28,7 @@ const SignOrganism1 = ({ onClick, name, setName, email, setEmail }) => {
         label={"이메일"}
         value={email}
         onChange={setEmail}
+        onKeyPress={onKeyPress}
       />
       <ButtonAtom
         buttonName={"다음"}

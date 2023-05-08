@@ -9,6 +9,7 @@ const SignOrganism3 = ({
   setPassword,
   password2,
   setPassword2,
+  onKeyPress,
 }) => {
   return (
     <div className="sign-box">
@@ -19,13 +20,15 @@ const SignOrganism3 = ({
         label={"비밀번호"}
         value={password}
         onChange={setPassword}
+        onKeyPress={onKeyPress}
       />
       <InputAtom
         id={"verifypassword"}
-        type={"verifypassword"}
+        type={"password"}
         label={"비밀번호 확인"}
         value={password2}
         onChange={setPassword2}
+        onKeyPress={onKeyPress}
       />
       <ButtonAtom
         buttonName={"회원가입"}

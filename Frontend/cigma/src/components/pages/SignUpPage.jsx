@@ -16,7 +16,6 @@ const SignUpPage = () => {
   const navigate = useNavigate();
   const emailRegex = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
   const goSecond = () => {
-    console.log("working1");
     if (name.trim() === "") {
       alert("이름을 입력해주세요");
       return;
@@ -31,8 +30,7 @@ const SignUpPage = () => {
     }
     setPage(2);
   };
-  const signupClick = () => {
-    console.log("working2");
+  const signupClick = async () => {
     if (password.trim() === "") {
       alert("비밀번호을 입력해주세요");
       return;
@@ -45,8 +43,8 @@ const SignUpPage = () => {
       alert("비밀번호가 일치하지 않습니다");
       return;
     }
-    const status = signup(email, password, name);
-    if (status === 200) {
+    const { status } = await signup(email, password, name);
+    if (status === 201) {
       alert("회원가입이 완료되었습니다");
       navigate("/login");
     } else {
@@ -56,6 +54,16 @@ const SignUpPage = () => {
       setPassword("");
       setPassword2("");
       setPage(1);
+    }
+  };
+  const onKeyPress1 = (event) => {
+    if (event.key == "Enter") {
+      goSecond();
+    }
+  };
+  const onKeyPress2 = (event) => {
+    if (event.key == "Enter") {
+      signupClick();
     }
   };
   return (
@@ -70,6 +78,7 @@ const SignUpPage = () => {
           setName={setName}
           email={email}
           setEmail={setEmail}
+          onKeyPress={onKeyPress1}
         />
       )}
       {/* {page === 2 && <SignOrganism2 onClick={goThird} />} */}
@@ -80,6 +89,7 @@ const SignUpPage = () => {
           setPassword={setPassword}
           password2={password2}
           setPassword2={setPassword2}
+          onKeyPress={onKeyPress2}
         />
       )}
     </div>

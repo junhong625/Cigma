@@ -19,7 +19,7 @@ const LoginPage = () => {
       alert("비밀번호를 입력해주세요");
       return;
     }
-    const status = await login(email, password);
+    const { status } = await login(email, password);
     if (status === 200) {
       alert("로그인 되었습니다");
       navigate("");
@@ -27,6 +27,11 @@ const LoginPage = () => {
       alert("유효하지 않는 정보입니다");
       setEmail("");
       setPassword("");
+    }
+  };
+  const onKeyDown = (event) => {
+    if (event.key == "Enter") {
+      loginClick();
     }
   };
   return (
@@ -42,6 +47,7 @@ const LoginPage = () => {
           label={"이메일"}
           value={email}
           onChange={setEmail}
+          onKeyPress={onKeyDown}
         />
         <InputAtom
           id={"password"}
@@ -49,6 +55,7 @@ const LoginPage = () => {
           label={"비밀번호"}
           value={password}
           onChange={setPassword}
+          onKeyPress={onKeyDown}
         />
         <div className="auto-login">
           <input type="checkbox" id="autoLogin" />
