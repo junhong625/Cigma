@@ -43,7 +43,6 @@ const HeaderOrganism = (props) => {
       </div>
       <div className={styles.headerMiddleDiv}>Project Name</div>
       <div className={styles.headerRightDiv}>
-        <button className={styles.shareBtn}>share</button>
         <HeaderBtnAtom>
           <BsFillPlayFill color="white" size={24} />
         </HeaderBtnAtom>

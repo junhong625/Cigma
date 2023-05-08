@@ -84,9 +84,9 @@ const WorkSpacePage = (props) => {
     // return () => provider.off("sync", onSync);
   }, []);
 
-  useEffect(() => {
-    yLocs.set("codeEditors", codeEditors);
-  }, [codeEditors]);
+  // useEffect(() => {
+  //   yLocs.set("codeEditors", codeEditors);
+  // }, [codeEditors]);
 
   /**
    * @todo innerBoardRef관련 useEffect?
@@ -146,11 +146,11 @@ const WorkSpacePage = (props) => {
       onPointerMove={handlePointMove}
     >
       <div className={styles.artboard} ref={innerBoardRef}>
-        {yLocs.get("codeEditors").map((codeEditor, i) => (
+        {codeEditors.map((codeEditor, i) => (
           <CodeEditor
             {...codeEditor}
             codeEditorIndex={i}
-            key={i}
+            key={codeEditor.canvasName}
             artBoardRef={innerBoardRef}
           />
         ))}

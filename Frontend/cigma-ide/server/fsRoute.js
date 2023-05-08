@@ -1,10 +1,23 @@
 import express from "express";
+import multer from "multer";
 import fs from "fs";
 import path from "path";
 
 const router = express.Router();
 
 const ROOT_FOLDER = "../../workspace/project";
+
+// 파일 업로드 설정 (multer : 디스크 저장)
+const setStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, ROOT_FOLDER);
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage: setStorage });
 
 // 파일 목록 받기
 router.get("/", (req, res) => {
@@ -147,6 +160,9 @@ router.put("/move", (req, res) => {
   const sourcePath = path.join(ROOT_FOLDER, filePath, name);
   const destinationPath = path.join(ROOT_FOLDER, destination, name);
 
+  console.log(sourcePath)
+  console.log(destinationPath)
+
   fs.rename(sourcePath, destinationPath, (err) => {
     if (err) {
       console.error(err);
@@ -155,6 +171,13 @@ router.put("/move", (req, res) => {
       res.json({ message: "File/Folder moved successfully" });
     }
   });
+});
+
+/**
+ * 클라이언트에서 key(fieldname)을 files로 전송하면
+ */
+router.post("/upload", upload.array("files"), (req, res, next) => {
+  // 파일들 업로드 부분
 });
 
 export default router;

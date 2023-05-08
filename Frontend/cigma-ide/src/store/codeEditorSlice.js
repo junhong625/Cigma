@@ -1,19 +1,19 @@
 import { createSlice, current } from "@reduxjs/toolkit";
-import { yLocs } from "./initYDoc";
 import _ from "lodash";
 
 const generateCodeEditor = (top, left) => ({
-  codeEditorName: "",
+  canvasName: "canvas_0",
   top,
   left,
   width: 800,
   height: 500,
   isHidden: false,
   comments: [],
+  filePath: "",
 });
 
 const initialState = [generateCodeEditor(1000, 1000)];
-yLocs.set("codeEditors", initialState);
+// yLocs.set("codeEditors", initialState);
 
 const codeEditorSlice = createSlice({
   name: "codeEditor",
@@ -21,7 +21,6 @@ const codeEditorSlice = createSlice({
   reducers: {
     // 작성중인 코드에디터 불러오기
     loadCodeEditor: (_, { payload }) => {
-      // yLocs.set("codeEditors", payload);
       return payload;
     },
     // 코드에디터 삭제
@@ -43,6 +42,7 @@ const codeEditorSlice = createSlice({
     // 코드에디터 위치 수정
     modifyCodeEditor: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;
+      console.log(state[codeEditorIndex].canvasName);
       delete payload.codeEditorIndex;
       state[codeEditorIndex] = {
         ...state[codeEditorIndex],
@@ -52,45 +52,63 @@ const codeEditorSlice = createSlice({
     // 코드에디터 크기 수정
     resizeNorth: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;
-      state[codeEditorIndex].top = current(state[codeEditorIndex]).top + payload.change;
-      state[codeEditorIndex].height = current(state[codeEditorIndex]).height - payload.change;
+      state[codeEditorIndex].top =
+        current(state[codeEditorIndex]).top + payload.change;
+      state[codeEditorIndex].height =
+        current(state[codeEditorIndex]).height - payload.change;
     },
     resizeEast: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;
-      state[codeEditorIndex].width = current(state[codeEditorIndex]).width + payload.change;
+      state[codeEditorIndex].width =
+        current(state[codeEditorIndex]).width + payload.change;
     },
     resizeSouth: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;
-      state[codeEditorIndex].height = current(state[codeEditorIndex]).height + payload.change;
+      state[codeEditorIndex].height =
+        current(state[codeEditorIndex]).height + payload.change;
     },
     resizeWest: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;
-      state[codeEditorIndex].left = current(state[codeEditorIndex]).left + payload.change;
-      state[codeEditorIndex].width = current(state[codeEditorIndex]).width - payload.change;
+      state[codeEditorIndex].left =
+        current(state[codeEditorIndex]).left + payload.change;
+      state[codeEditorIndex].width =
+        current(state[codeEditorIndex]).width - payload.change;
     },
     resizeNorthEast: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;
-      state[codeEditorIndex].top = current(state[codeEditorIndex]).top - payload.verChange;
-      state[codeEditorIndex].height = current(state[codeEditorIndex]).height - payload.verChange;
-      state[codeEditorIndex].width = current(state[codeEditorIndex]).width - payload.verChange;
+      state[codeEditorIndex].top =
+        current(state[codeEditorIndex]).top - payload.verChange;
+      state[codeEditorIndex].height =
+        current(state[codeEditorIndex]).height - payload.verChange;
+      state[codeEditorIndex].width =
+        current(state[codeEditorIndex]).width - payload.verChange;
     },
     resizeSouthEast: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;
-      state[codeEditorIndex].height = current(state[codeEditorIndex]).height + payload.verChange;
-      state[codeEditorIndex].width = current(state[codeEditorIndex]).width + payload.horChange;
+      state[codeEditorIndex].height =
+        current(state[codeEditorIndex]).height + payload.verChange;
+      state[codeEditorIndex].width =
+        current(state[codeEditorIndex]).width + payload.horChange;
     },
     resizeNorthWest: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;
-      state[codeEditorIndex].top = current(state[codeEditorIndex]).top + payload.verChange;
-      state[codeEditorIndex].height = current(state[codeEditorIndex]).height - payload.verChange;
-      state[codeEditorIndex].left = current(state[codeEditorIndex]).left + payload.horChange;
-      state[codeEditorIndex].width = current(state[codeEditorIndex]).width - payload.horChange;
+      state[codeEditorIndex].top =
+        current(state[codeEditorIndex]).top + payload.verChange;
+      state[codeEditorIndex].height =
+        current(state[codeEditorIndex]).height - payload.verChange;
+      state[codeEditorIndex].left =
+        current(state[codeEditorIndex]).left + payload.horChange;
+      state[codeEditorIndex].width =
+        current(state[codeEditorIndex]).width - payload.horChange;
     },
     resizeSouthWest: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;
-      state[codeEditorIndex].height = current(state[codeEditorIndex]).height + payload.verChange;
-      state[codeEditorIndex].left = current(state[codeEditorIndex]).left + payload.horChange;
-      state[codeEditorIndex].width = current(state[codeEditorIndex]).width - payload.horChange;
+      state[codeEditorIndex].height =
+        current(state[codeEditorIndex]).height + payload.verChange;
+      state[codeEditorIndex].left =
+        current(state[codeEditorIndex]).left + payload.horChange;
+      state[codeEditorIndex].width =
+        current(state[codeEditorIndex]).width - payload.horChange;
     },
     // 코드에디터 숨기기
     hideCodeEditor: (state, { payload }) => {
