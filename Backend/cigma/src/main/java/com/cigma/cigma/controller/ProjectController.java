@@ -1,23 +1,20 @@
 package com.cigma.cigma.controller;
 
+import com.cigma.cigma.common.CustomResponseEntity;
 import com.cigma.cigma.common.SecurityUtils;
 import com.cigma.cigma.dto.request.ProjectCreateRequest;
 import com.cigma.cigma.dto.request.ProjectPatchRequest;
-import com.cigma.cigma.dto.request.TeamCreateRequest;
-import com.cigma.cigma.dto.request.TeamPatchRequest;
 import com.cigma.cigma.entity.Project;
 import com.cigma.cigma.entity.Team;
 import com.cigma.cigma.entity.User;
 import com.cigma.cigma.handler.ResponseHandler;
 import com.cigma.cigma.jwt.UserPrincipal;
-import com.cigma.cigma.repository.ProjectRepository;
 import com.cigma.cigma.service.ProjectServiceImpl;
 import com.cigma.cigma.service.TeamServiceImpl;
 import com.cigma.cigma.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +33,7 @@ public class ProjectController {
 
     // 프로젝트 생성
     @PostMapping()
-    public ResponseEntity<? extends Object> createProject(HttpServletRequest request, @RequestBody ProjectCreateRequest projectCreateRequest) throws IOException {
+    public CustomResponseEntity<? extends Object> createProject(HttpServletRequest request, @RequestBody ProjectCreateRequest projectCreateRequest) throws IOException {
         try {
             UserPrincipal userPrincipal = SecurityUtils.getUserPrincipal();
             Optional<User> user = userService.findById(userPrincipal.getUserIdx());
@@ -66,7 +63,7 @@ public class ProjectController {
 
     // 프로젝트 삭제
     @DeleteMapping("{id}")
-    public ResponseEntity<? extends Object> deleteProject(HttpServletRequest request, @PathVariable("id") Long projectIdx) throws IOException {
+    public CustomResponseEntity<? extends Object> deleteProject(HttpServletRequest request, @PathVariable("id") Long projectIdx) throws IOException {
         try {
             UserPrincipal userPrincipal = SecurityUtils.getUserPrincipal();
             Optional<User> user = userService.findById(userPrincipal.getUserIdx());
@@ -93,7 +90,7 @@ public class ProjectController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<? extends Object> changeProjectName(HttpServletRequest request, @PathVariable("id") Long projectIdx, @RequestBody ProjectPatchRequest projectPatchRequest) throws IOException {
+    public CustomResponseEntity<? extends Object> changeProjectName(HttpServletRequest request, @PathVariable("id") Long projectIdx, @RequestBody ProjectPatchRequest projectPatchRequest) throws IOException {
         try {
             UserPrincipal userPrincipal = SecurityUtils.getUserPrincipal();
             Optional<User> user = userService.findById(userPrincipal.getUserIdx());

@@ -13,6 +13,9 @@ services:
       TZ: Asia/Seoul
     volumes:
       - ./mysql/data:/var/lib/mysql
+    networks:
+      - default
+      - nginx_proxy_net
     ports:
       - 3306:3306
     command:
@@ -21,12 +24,14 @@ services:
     restart: always
 
   application:
-      build: .
-      ports:
-        - 9090:9090
-      restart: always
-      depends_on:
-        - database
+    build: .
+    networks:
+      - default
+    ports:
+      - 9090:9090
+    restart: always
+    depends_on:
+      - database
 
   redis:
     hostname: redis
@@ -37,5 +42,7 @@ services:
       - ./redis/data:/data
       - ./redis/conf/redis.conf:/usr/local/etc/redis/redis.conf
       - ./redis/acl/users.acl:/etc/redis/users.acl
+    networks:
+      - default
     ports:
       - 6379:6379
