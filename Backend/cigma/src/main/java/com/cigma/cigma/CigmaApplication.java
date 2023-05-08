@@ -22,7 +22,10 @@ public class CigmaApplication {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("k8a601.p.ssafy.io");
+				registry.addMapping("/**")
+						.allowedOrigins("*")
+						.allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
+						.maxAge(3000);
 			}
 		};
 	}

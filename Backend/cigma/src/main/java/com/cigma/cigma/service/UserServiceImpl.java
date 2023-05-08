@@ -119,6 +119,7 @@ public class UserServiceImpl implements UserService{
                 redisTemplate.opsForValue().set(userPrincipal.getUserIdx().toString(), token.getRefreshToken(), refreshExpiredTime, TimeUnit.MILLISECONDS);
             } catch (Exception e) {
                 log.info("Error : " + e.getMessage());
+                throw new Exception(e.getMessage());
             }
 
             log.info("redis에 token 저장 완료");
