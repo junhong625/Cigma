@@ -32,7 +32,7 @@ services:
     hostname: redis
     container_name: redis
     image: redis
-    command: redis-server --requirepass 'auth ssafy8cigmapass' --port 6379
+    command: redis-server --requirepass 'auth ssafy8cigmapass' --port 6379 /usr/local/etc/redis/redis.conf
     volumes:
       - ./redis/data:/usr/local/etc/redis
     ports:
