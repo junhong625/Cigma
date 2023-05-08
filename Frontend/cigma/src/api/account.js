@@ -12,6 +12,9 @@ export const login = async (userEmail, userPass) => {
     };
   } catch (error) {
     console.error("login error", error);
+    return {
+      status: error.response.status,
+    };
   }
 };
 
@@ -40,5 +43,8 @@ export const signout = async () => {
     };
   } catch (error) {
     console.error("signout error:", error);
+    return {
+      status: error.response.status,
+    };
   }
 };
