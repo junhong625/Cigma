@@ -128,7 +128,7 @@ const codeEditorSlice = createSlice({
       const comment = payload.comment;
       const commendIndex = _.findIndex(
         state[codeEditorIndex].comments,
-        comment
+        comment.timestamp
       );
       state[commendIndex].comments.splice(codeEditorIndex, 1);
     },
