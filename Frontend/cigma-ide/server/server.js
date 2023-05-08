@@ -2,7 +2,6 @@ import express from "express";
 import path from "path";
 import { WebSocketServer } from "ws";
 import http from "http";
-import { onconnection } from "./socket/setWebrtc.js";
 import router from "./fsRoute.js";
 import { setupWSConnection } from "./socket/utils.js";
 

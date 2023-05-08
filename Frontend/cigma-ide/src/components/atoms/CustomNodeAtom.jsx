@@ -77,7 +77,7 @@ export const CustomNodeAtom = (props) => {
   //======================파일 생성용 함수==============================//
   // input 모드 변경
   useEffect(() => {
-    if (props.node.id === props.lastCreated) {
+    if (props.node.id === props.lastCreated && props.node.text === "") {
       setBeforeCreate(true);
     }
   }, [props.lastCreated]);
