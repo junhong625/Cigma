@@ -38,15 +38,15 @@ public class Team {
     private String teamName;
 
     //    팀이미지 :
-    @Column(name = "team_image", length = 255)
-    private String teamImage;
+    @Column(name = "team_image_url", length = 255)
+    private String teamImageUrl;
 
     @Builder
-    public Team(User teamLeader, String members, String teamName, String teamImage) {
+    public Team(User teamLeader, String members, String teamName, String teamImageUrl) {
         this.teamLeader = teamLeader;
         this.members = members;
         this.teamName = teamName;
-        this.teamImage = teamImage;
+        this.teamImageUrl = teamImageUrl;
     }
 
 }

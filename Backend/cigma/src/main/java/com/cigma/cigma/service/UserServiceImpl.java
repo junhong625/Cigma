@@ -20,6 +20,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
@@ -34,6 +35,7 @@ public class UserServiceImpl implements UserService{
     private final TokenProvider tokenProvider;
     private final JwtProperties jwtProperties;
     private final RedisTemplate redisTemplate;
+    private final S3ServiceImpl s3Service;
 
     @Override
     public UserCreateResponse signUp(UserCreateRequest userCreateRequest) {
@@ -48,7 +50,7 @@ public class UserServiceImpl implements UserService{
         log.info("======================================");
         log.info("비밀번호 변경 시작");
         // SecurityContextHolder 에서 가져온 사용자 정보
-        User user = userRepository.findById(SecurityUtils.getUserPrincipal().getUserIdx()).get();
+        User user = getUserBySecurity();
         log.info("유저 정보 로드");
         // User 생성 권한
         UserUpdateRequest request = new UserUpdateRequest(user);
@@ -67,13 +69,33 @@ public class UserServiceImpl implements UserService{
         log.info("======================================");
         log.info("이름 변경 시작");
         // SecurityContextHolder 에서 가져온 사용자 정보
-        User user = userRepository.findById(SecurityUtils.getUserPrincipal().getUserIdx()).get();
+        User user = getUserBySecurity();
         log.info("유저 정보 로드");
         // User 생성 권한
         UserUpdateRequest request = new UserUpdateRequest(user);
         log.info("요청 생성");
         // 이름 변경
         request.setUserName(name);
+        log.info("새로운 이름 설정");
+        // 변경 반영
+        user = userRepository.save(request.toEntity());
+        log.info("변경 완료");
+        return new UserCreateResponse(user);
+    }
+
+    @Override
+    public UserCreateResponse changeImage(MultipartFile multipartFile) {
+        log.info("======================================");
+        log.info("유저 이미지 변경 시작");
+        // SecurityContextHolder 에서 가져온 사용자 정보
+        User user = getUserBySecurity();
+        log.info("유저 정보 로드");
+        // User 생성 권한
+        UserUpdateRequest request = new UserUpdateRequest(user);
+        log.info("요청 생성");
+        // 이름 변경
+        String imageUrl = s3Service.save(multipartFile, "user");
+        request.setUserImageUrl(imageUrl);
         log.info("새로운 이름 설정");
         // 변경 반영
         user = userRepository.save(request.toEntity());
@@ -189,5 +211,9 @@ public class UserServiceImpl implements UserService{
     public void registBlacklist(String token) {
         Long expiration = tokenProvider.getExpiration(token);
         redisTemplate.opsForValue().set(token, "blacklist", expiration, TimeUnit.MILLISECONDS);
+    }
+
+    public User getUserBySecurity() {
+        return userRepository.findById(SecurityUtils.getUserPrincipal().getUserIdx()).get();
     }
 }

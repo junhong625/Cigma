@@ -47,7 +47,8 @@ spring:
   # - redis 종료 시에는 RDB를 통해 스냅샷 생성
 
   redis:
-    host: redis
+    host: localhost # localhost 전용
+#    host: redis # Server 전용
     port: 6379
     password: ssafy8cigmapass
 
@@ -66,10 +67,10 @@ logging:
             sql: trace
 #      # ???? ???? ??.
 #      # AWS
-#    com:
-#      amazonaws:
-#        util:
-#          EC2MetadataUtils: ERROR
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: ERROR
 
 # jwt 관련
 jwt:
@@ -77,3 +78,22 @@ jwt:
   secret: Y2lnbWEtc3ByaW5nLWJvb3Qtand0LXNlY3JldC1rZXktY2lnbWEtc3ByaW5nLWJvb3Qtand0LXNlY3JldC1rZXktYnktYWpoCg==
   access-token-validity-in-seconds: 1800000 # accessToken 유효시간 30분
   refresh-token-validity-in-seconds: 1209600000 # refreshToken 유효시간 2주
+
+# aws 관련
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: cigma-ajh
+    access-key: AKIA3WSTMVY32SWQLEFQ
+    secret-key: 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
+    stack:
+      auto: false
+
+# image 관련
+image:
+  base-path:
+    user: Users/Image/
+    team: Teams/Image/
+    project: Projects/Image/

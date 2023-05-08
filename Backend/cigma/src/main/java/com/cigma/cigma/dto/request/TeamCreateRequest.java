@@ -15,14 +15,13 @@ public class TeamCreateRequest {
     private User teamLeader;
     private String members;
     private String teamName;
-    private String teamImage;
+    private String teamImageUrl;
 
     public TeamCreateRequest(Team team) {
         teamIdx = team.getTeamIdx();
         teamLeader = team.getTeamLeader();
         members = team.getMembers();
         teamName = team.getTeamName();
-        teamImage = team.getTeamImage();
     }
 
     public Team toEntity() {
@@ -31,7 +30,6 @@ public class TeamCreateRequest {
                 .teamLeader(teamLeader)
                 .members(members)
                 .teamName(teamName)
-                .teamImage(teamImage)
                 .build();
     }
 }

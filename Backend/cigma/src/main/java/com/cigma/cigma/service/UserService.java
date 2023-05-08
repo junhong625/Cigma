@@ -6,6 +6,7 @@ import com.cigma.cigma.dto.response.UserCreateResponse;
 import com.cigma.cigma.dto.response.UserGetResponse;
 import com.cigma.cigma.dto.response.UserLoginResponse;
 import com.cigma.cigma.entity.User;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
@@ -28,6 +29,9 @@ public interface UserService {
 
     // 이름 변경
     UserCreateResponse changeName(String name);
+
+    // 이미지 변경
+    UserCreateResponse changeImage(MultipartFile multipartFile);
 
     Optional<User> findById(Long id);
 

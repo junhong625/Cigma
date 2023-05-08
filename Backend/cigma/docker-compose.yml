@@ -15,7 +15,6 @@ services:
       - ./mysql/data:/var/lib/mysql
     networks:
       - default
-      - nginx_proxy_net
     ports:
       - 3306:3306
     command:
@@ -27,11 +26,13 @@ services:
     build: .
     networks:
       - default
+      - nginx_proxy_net
     ports:
       - 9090:9090
     restart: always
     depends_on:
       - database
+      
 
   redis:
     hostname: redis
@@ -46,3 +47,7 @@ services:
       - default
     ports:
       - 6379:6379
+
+networks:
+  nginx_proxy_net:
+    external: true

@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/user")
@@ -157,14 +158,22 @@ public class UserController {
     ====================================
      */
     @PutMapping
-    public CustomResponseEntity<?> changeUserPrincipal(@RequestBody UserUpdateRequest userUpdateRequest) {
+    public CustomResponseEntity<?> changeUserPrincipal(@ModelAttribute UserUpdateRequest userUpdateRequest) {
         try {
+            // 이름 변경
             if (userUpdateRequest.getUserName() != null) {
                 log.info("이름 변경");
                 return ResponseHandler.generateResponse(true, "이름 변경 성공", HttpStatus.OK, userService.changeName(userUpdateRequest.getUserName()));
-            } else {
+            // 비밀번호 변경
+            } else if (userUpdateRequest.getUserPass() != null) {
                 log.info("비밀번호 변경");
                 return ResponseHandler.generateResponse(true, "비밀번호 변경 성공", HttpStatus.OK, userService.changePassword(userUpdateRequest.getUserPass()));
+            // 이미지 변경
+            } else if (userUpdateRequest.getUserImage() != null){
+                log.info("이미지 변경");
+                return ResponseHandler.generateResponse(true, "비밀번호 변경 성공", HttpStatus.OK, userService.changeImage(userUpdateRequest.getUserImage()));
+            } else {
+                throw new IOException("변경사항이 없습니다.");
             }
         } catch (Exception e) {
             return ResponseHandler.generateResponse(false, "변경 실패", HttpStatus.BAD_REQUEST, null);

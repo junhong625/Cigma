@@ -46,14 +46,14 @@ public class Project {
     private Timestamp updateTime;
 
     //    팀이미지 : varchar(255)
-    @Column(name = "project_image")
-    private String projectImage;
+    @Column(name = "project_image_url")
+    private String projectImageUrl;
 
     @Builder
-    public Project(Team team, String projectUrl, String projectName, String projectImage) {
+    public Project(Team team, String projectUrl, String projectName, String projectImageUrl) {
         this.team = team;
         this.projectUrl = projectUrl;
         this.projectName = projectName;
-        this.projectImage = projectImage;
+        this.projectImageUrl = projectImageUrl;
     }
 }
