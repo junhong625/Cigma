@@ -18,6 +18,7 @@ const directions = {
   SW: "sw",
 };
 const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
+  console.log(codeEditorIndex);
   const dispatch = useDispatch();
   const canvasRef = useRef();
   const codeEditors = useSelector(selectAllCodeEditor);
