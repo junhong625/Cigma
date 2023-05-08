@@ -13,6 +13,7 @@
     "electron:build": "npm run esbuild-cjs && electron-packager --out=release ."
   },
   "dependencies": {
+    "axios": "^1.4.0",
     "lottie-react": "^2.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
