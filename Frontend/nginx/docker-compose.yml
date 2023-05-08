@@ -15,3 +15,7 @@ services:
       - /var/lib/letsencrypt:/var/lib/letsencrypt
       - ./default:/etc/nginx/sites-enabled/default
     restart: always
+
+networks:
+  nginx_proxy_net:
+    external: true
