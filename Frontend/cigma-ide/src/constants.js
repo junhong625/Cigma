@@ -5,9 +5,6 @@ export const USER_COLORS = [
   "#4FC3F7",
   "#81C784",
   "#144cb5",
-  "#FF8A65",
-  "#F06292",
-  "#7986CB",
 ];
 
 export const USER_NAMES = [
