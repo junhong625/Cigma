@@ -10,12 +10,7 @@ import useDragCodeEditor from "../../hooks/useDragCodeEditor";
 import { useRef, useState } from "react";
 import EditPointer from "../atoms/EditPointer";
 import computeSelectionBox from "../../tools/computeSelectionBox";
-import {
-  hideCodeEditor,
-  selectAllCodeEditor,
-  selectIsHidden,
-  showCodeEditor,
-} from "../../store/codeEditorSlice";
+import { hideCodeEditor, selectAllCodeEditor, showCodeEditor } from "../../store/codeEditorSlice";
 
 const directions = {
   N: "n",
