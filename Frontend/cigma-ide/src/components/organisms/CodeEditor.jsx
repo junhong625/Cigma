@@ -107,13 +107,22 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
             }
           }}
         />
-        <button className={styles.closeButton} onClick={handleHideClick} />
+        <button
+          className={styles.closeButton}
+          onClick={() => {
+            if (isHidden) {
+              handleShowClick();
+            } else {
+              handleHideClick();
+            }
+          }}
+        />
       </div>
       {!hideComment ? (
         <div
           style={{
-            top,
-            left: commentLeft,
+            top: 0,
+            left: width,
             height,
             width: commentWidth,
           }}
@@ -123,7 +132,7 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
       {!isHidden ? (
         <div
           className={styles["code-editor"]}
-          style={{ top: top + 30, left, width, height }}
+          style={{ top: 30, left: 0, width, height: height - 30 }}
           onDoubleClick={() => {}}
         >
           {isDoubleClicked
@@ -136,7 +145,7 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
                 />
               ))
             : null}
-          test code editor
+
           {/* monaco가 들어갈곳 */}
           <div className={styles["monaco-editor"]} style={{ height: height - 30 }} />
           {/* comment 화면 처리 */}
