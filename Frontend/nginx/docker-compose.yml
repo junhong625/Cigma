@@ -13,7 +13,7 @@ services:
       - /var/www/html:../cigma/dist
       - /etc/letsencrypt:/etc/letsencrypt
       - /var/lib/letsencrypt:/var/lib/letsencrypt
-      - /etc/nginx/sites-enabled/default:./default
+      - /etc/nginx/sites-enabled/default.conf:./default.conf
     restart: always
 
 networks:
