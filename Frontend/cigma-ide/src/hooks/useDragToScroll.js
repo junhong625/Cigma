@@ -141,12 +141,12 @@ const useDragToScroll = (boardRef) => {
     };
 
     // keydown 이벤트 추가
-    window.addEventListener("mousedown", handleWheelDown);
+    // window.addEventListener("mousedown", handleWheelDown);
     window.addEventListener("keydown", handleSpaceKeyDown);
 
     return () => {
       window.removeEventListener("keydown", handleSpaceKeyDown);
-      window.removeEventListener("mousedown", handleWheelDown);
+      // window.removeEventListener("mousedown", handleWheelDown);
     };
   }, [boardRef, dispatch, isInputFieldFocused]);
 };

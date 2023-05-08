@@ -160,6 +160,9 @@ router.put("/move", (req, res) => {
   const sourcePath = path.join(ROOT_FOLDER, filePath, name);
   const destinationPath = path.join(ROOT_FOLDER, destination, name);
 
+  console.log(sourcePath)
+  console.log(destinationPath)
+
   fs.rename(sourcePath, destinationPath, (err) => {
     if (err) {
       console.error(err);

@@ -286,26 +286,23 @@ function FileTreeOrganism(props) {
   //======================================================================//
 
   // 드래그 드롭을 실행하는 함수
-  const handleDrop = async (newTree, monitor) => {
-    const dragNodeId = monitor.getItem().id;
-    const dropNodeId = monitor.getDropResult().node.id;
+  const handleDrop = async (
+    newTree,
+    { dragSourceId, dropTargetId, dragSource, dropTarget }
+  ) => {
+    // 현위치와 목표 위치를 정의
+    const sourcePath = getFilepathById(dragSourceId, treeData);
+    let destinationPath = getFilepathById(dropTargetId, treeData);
 
-    const dragNode = findNodeById(dragNodeId, treeData);
-    const dropNode = findNodeById(dropNodeId, newTree);
-
-    const isDraggedFile = !!dragNode.children;
-    const sourcePath = getFilepathById(dragNodeId, treeData);
-    const destinationPath = isDraggedFile
-      ? `${getFilepathById(dropNodeId, newTree)}/${dragNode.text}`
-      : getFilepathById(dropNodeId, newTree);
-
-    if (sourcePath === destinationPath) {
-      return;
+    // 최상단은 droptarget이 undefined로 입력되므로 조건문을 통해 경로를 추가
+    if (dropTarget) {
+      destinationPath += `/${dropTarget.text}`;
     }
 
+    //axios 처리 후 Tree 수정
     try {
       await axios.put("/api/move", {
-        name: dragNode.text,
+        name: dragSource.text,
         path: sourcePath,
         destination: destinationPath,
       });
@@ -349,59 +346,69 @@ function FileTreeOrganism(props) {
       // 배경색
       style={{ backgroundColor: "#24282e" }}
       className={props.handleFileBar ? "" : styles.hidden}
+      onClick={() => {
+        setSelectedNode(null);
+      }}
     >
       <DndProvider backend={MultiBackend} options={getBackendOptions()}>
         <div className={styles.app} style={{ width: props.widthLeft + "px" }}>
-          <div className={styles.buttonWapper}>
-            <div onClick={handleOpenAll}>
-              <BsArrowDownSquare />
-            </div>
-            <div onClick={handleCloseAll}>
-              <BsArrowUpSquare />
-            </div>
-            <div
-              onClick={() => {
-                CreateFile();
-              }}
-            >
-              <BsFileEarmarkPlus />
-            </div>
-            <div
-              onClick={() => {
-                CreateFolder();
-              }}
-            >
-              <BsFolderPlus />
-            </div>
-          </div>
-          <Tree
-            ref={ref}
-            tree={treeData}
-            rootId={0}
-            render={(node, { depth, isOpen, onToggle }) => (
-              <CustomNodeAtom
-                node={node}
-                depth={depth}
-                isOpen={isOpen}
-                isSelected={node.id === selectedNode?.id}
-                onToggle={onToggle}
-                onTextChange={handleTextChange}
-                onSelect={handleSelect}
-                onDelete={handleDelete}
-                lastCreated={lastCreated}
-                createSignal={createSignal}
-              />
-            )}
-            dragPreviewRender={(monitorProps) => (
-              <CustomDragPreviewAtom monitorProps={monitorProps} />
-            )}
-            onDrop={handleDrop}
-            classes={{
-              root: styles.treeRoot,
-              draggingSource: styles.draggingSource,
-              dropTarget: styles.dropTarget,
+          <div
+            className={styles.noBubble}
+            onClick={(e) => {
+              e.stopPropagation();
             }}
-          />
+          >
+            <div className={styles.buttonWapper}>
+              <div onClick={handleOpenAll}>
+                <BsArrowDownSquare />
+              </div>
+              <div onClick={handleCloseAll}>
+                <BsArrowUpSquare />
+              </div>
+              <div
+                onClick={() => {
+                  CreateFile();
+                }}
+              >
+                <BsFileEarmarkPlus />
+              </div>
+              <div
+                onClick={() => {
+                  CreateFolder();
+                }}
+              >
+                <BsFolderPlus />
+              </div>
+            </div>
+            <Tree
+              ref={ref}
+              tree={treeData}
+              rootId={0}
+              render={(node, { depth, isOpen, onToggle }) => (
+                <CustomNodeAtom
+                  node={node}
+                  depth={depth}
+                  isOpen={isOpen}
+                  isSelected={node.id === selectedNode?.id}
+                  onToggle={onToggle}
+                  onTextChange={handleTextChange}
+                  onSelect={handleSelect}
+                  onDelete={handleDelete}
+                  lastCreated={lastCreated}
+                  createSignal={createSignal}
+                />
+              )}
+              dragPreviewRender={(monitorProps) => (
+                <CustomDragPreviewAtom monitorProps={monitorProps} />
+              )}
+              onDrop={handleDrop}
+              classes={{
+                root: styles.treeRoot,
+                draggingSource: styles.draggingSource,
+                dropTarget: styles.dropTarget,
+              }}
+            />
+          </div>
         </div>
       </DndProvider>
     </Resizable>

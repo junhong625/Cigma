@@ -8,7 +8,7 @@ import {
 } from "../store/toolSlice";
 import { CANVAS_PREVIEW_STYLES } from "../constants/styles";
 import computePreviewElement from "../tools/computePreviewElement";
-import { showCodeEditor } from "../store/codeEditorSlice";
+import { addCodeEditor } from "../store/codeEditorSlice";
 
 const useDrawCodeEditor = (elementRef) => {
   const dispatch = useDispatch();
@@ -88,7 +88,7 @@ const useDrawCodeEditor = (elementRef) => {
         };
 
         // codeEditor 추가하기
-        dispatch(showCodeEditor(coordinates));
+        dispatch(addCodeEditor(coordinates));
 
         dispatch(setCurrentTool("selector"));
 

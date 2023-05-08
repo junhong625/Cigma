@@ -1,5 +1,5 @@
 import { createSlice, current } from "@reduxjs/toolkit";
-import { yLocs } from "./initYDoc";
+import _ from "lodash";
 
 const generateCodeEditor = (top, left) => ({
   canvasName: "canvas_0",
@@ -7,6 +7,8 @@ const generateCodeEditor = (top, left) => ({
   left,
   width: 800,
   height: 500,
+  isHidden: false,
+  comments: [],
   filePath: "",
 });
 
@@ -21,13 +23,12 @@ const codeEditorSlice = createSlice({
     loadCodeEditor: (_, { payload }) => {
       return payload;
     },
-    // 코드에디터 숨기기
-    hideCodeEditor: (state, { payload: codeEditorIndex }) => {
+    // 코드에디터 삭제
+    deleteCodeEditor: (state, { payload: codeEditorIndex }) => {
       state.splice(codeEditorIndex, 1);
     },
     // 코드에디터 추가
-    showCodeEditor: (state, { payload: { top, left } }) => {
-      console.log("working");
+    addCodeEditor: (state, { payload: { top, left } }) => {
       const newCodeEditor = {
         ...generateCodeEditor(top, left),
         canvasName: `canvas_${state.length}`,
@@ -109,18 +110,40 @@ const codeEditorSlice = createSlice({
       state[codeEditorIndex].width =
         current(state[codeEditorIndex]).width - payload.horChange;
     },
+    // 코드에디터 숨기기
+    hideCodeEditor: (state, { payload }) => {
+      const codeEditorIndex = payload.codeEditorIndex;
+      state[codeEditorIndex].isHidden = true;
+    },
+    // 코드에디터 보이기
+    showCodeEditor: (state, { payload }) => {
+      const codeEditorIndex = payload.codeEditorIndex;
+      state[codeEditorIndex].isHidden = false;
+    },
+    addComment: (state, { payload }) => {
+      const codeEditorIndex = payload.codeEditorIndex;
+      const comment = payload.comment;
+      state[codeEditorIndex].append(comment);
+    },
+    deleteComment: (state, { payload }) => {
+      const codeEditorIndex = payload.codeEditorIndex;
+      const comment = payload.comment;
+      // comment timestamp의 key로 index 찾기
+      const commendIndex = _.findIndex(
+        state[codeEditorIndex].comments,
+        comment.timestamp
+      );
+      state[commendIndex].comments.splice(codeEditorIndex, 1);
+    },
   },
 });
 
 export const selectAllCodeEditor = (state) => state.workbench.codeEditor;
 
-// export const selectCanvasLength = (state) =>
-//   state.workbench.present.canvas.length;
-
 export const {
   loadCodeEditor,
   hideCodeEditor,
-  showCodeEditor,
+  addCodeEditor,
   changeCodeEditorName,
   modifyCodeEditor,
   resizeEast,
@@ -131,6 +154,10 @@ export const {
   resizeSouthEast,
   resizeNorthWest,
   resizeSouthWest,
+  showCodeEditor,
+  deleteCodeEditor,
+  addComment,
+  deleteComment,
 } = codeEditorSlice.actions;
 
 export default codeEditorSlice.reducer;
