@@ -5,7 +5,10 @@ import CodeEditor from "../organisms/CodeEditor";
 import { useEffect, useRef, useState } from "react";
 import useDragToScroll from "../../hooks/useDragToScroll";
 import useMockZoom from "../../hooks/useMockZoom";
-import { emptySelectedShapeIndexes } from "../../store/toolSlice";
+import {
+  emptySelectedShapeIndexes,
+  selectCurrentScale,
+} from "../../store/toolSlice";
 import useDrawCodeEditor from "../../hooks/useDrawCodeEditor";
 import useGlobalKeyboardShortCut from "../../hooks/useGlobalKeyboardShortCut";
 import useDrawText from "../../hooks/useDrawText";
@@ -33,17 +36,29 @@ const WorkSpacePage = (props) => {
   const dispatch = useDispatch();
   const codeEditors = useSelector(selectAllCodeEditor);
   const textEditors = useSelector(selectAllTextEditor);
+  const currentScale = useSelector(selectCurrentScale);
   const boardRef = useRef();
   // innerboard ref 추가
   const innerBoardRef = useRef();
 
   const users = useUsers(awareness);
-  const handlePointMove = React.useCallback((e) => {
-    awareness.setLocalStateField("cursor", {
-      x: e.clientX,
-      y: e.clientY,
-    });
-  }, []);
+  const handlePointMove = React.useCallback(
+    (e) => {
+      const artboardNode = innerBoardRef.current.getBoundingClientRect();
+      awareness.setLocalStateField("cursor", {
+        x:
+          (((e.clientX - artboardNode.left) /
+            (artboardNode.right - artboardNode.left)) *
+            artboardNode.width) /
+          currentScale,
+        y:
+          ((e.clientY - artboardNode.top) /
+            (artboardNode.bottom - artboardNode.top)) *
+          artboardNode.height,
+      }) / currentScale;
+    },
+    [currentScale, innerBoardRef.current]
+  );
 
   // 스크롤
   useDragToScroll(boardRef);
