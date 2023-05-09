@@ -2,20 +2,21 @@ package com.cigma.cigma.service;
 
 import com.cigma.cigma.common.SecurityUtils;
 import com.cigma.cigma.dto.request.TeamMateRequest;
-import com.cigma.cigma.dto.request.TeamCreateRequest;
+import com.cigma.cigma.dto.request.TeamUpdateRequest;
 import com.cigma.cigma.dto.response.TeamGetResponse;
 import com.cigma.cigma.entity.Team;
 import com.cigma.cigma.entity.User;
 import com.cigma.cigma.handler.customException.*;
 import com.cigma.cigma.jwt.UserPrincipal;
+import com.cigma.cigma.properties.ImageProperties;
 import com.cigma.cigma.repository.TeamRepository;
 import com.cigma.cigma.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -25,6 +26,8 @@ import java.util.Optional;
 public class TeamServiceImpl implements TeamService{
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
+    private final S3ServiceImpl s3Service;
+    private final ImageProperties imageProperties;
 
 
     @Override
@@ -33,22 +36,17 @@ public class TeamServiceImpl implements TeamService{
     }
 
     @Override
-    public TeamGetResponse createTeam(TeamCreateRequest teamCreateRequest) {
+    public TeamGetResponse createTeam(TeamUpdateRequest teamUpdateRequest) {
         UserPrincipal userPrincipal = SecurityUtils.getUserPrincipal();
         Optional<User> user = userRepository.findById(userPrincipal.getUserIdx());
 
         log.info(userPrincipal.getUserEmail() + " " + userPrincipal.getPassword() + " " + userPrincipal.getUserIdx());
-//                teammates = teammates.substring(1, teammates.length()-1);  // 리스트로 보내준 [A,B,C,..] 를 앞 뒤 [] 자름
-//                String[] mates = teammates.split(",");  // 위에서 자른 문자열을 다시 , 를 기준으로 split
         Team team = Team.builder()
                 .teamLeader(user.get())
                 .members("")
-                .teamName(teamCreateRequest.getTeamName())
+                .teamName(teamUpdateRequest.getTeamName())
+                .teamImageUrl(imageProperties.getDefaultPath().getTeam())
                 .build();
-//                team.setTeamLeader(user.get());
-//                team.setTeamMate(teammates);
-//                team.setTeamName(teamCreateRequest.getTeamName());
-//                team.setTeamImage(teamCreateRequest.getTeamImage());
         return new TeamGetResponse(teamRepository.save(team));
     }
 
@@ -59,8 +57,30 @@ public class TeamServiceImpl implements TeamService{
 
     @Override
     public TeamGetResponse getTeam(Long teamIdx) {
+        return new TeamGetResponse(findTeam(teamIdx));
+    }
+
+    @Override
+    public TeamGetResponse changeName(Team team, String teamName) {
+        // 유저 수정 권한 체크
+        checkAuthorization(team.getTeamIdx());
+        TeamUpdateRequest teamUpdateRequest = new TeamUpdateRequest(team);
+        teamUpdateRequest.setTeamName(teamName);
+        return new TeamGetResponse(teamRepository.save(teamUpdateRequest.toEntity()));
+    }
+
+    @Override
+    public TeamGetResponse changeImage(Team team, MultipartFile multipartFile) {
+        // 유저 수정 권한 체크
+        checkAuthorization(team.getTeamIdx());
+        TeamUpdateRequest teamUpdateRequest = new TeamUpdateRequest(team);
+        teamUpdateRequest.setTeamImageUrl(s3Service.save(multipartFile, "team", teamUpdateRequest.getTeamIdx()));
+        return new TeamGetResponse(teamRepository.save(teamUpdateRequest.toEntity()));
+    }
+
+    public Team findTeam(Long teamIdx) {
         Team team = teamRepository.findById(teamIdx).get();
-        return new TeamGetResponse(team);
+        return team;
     }
 
     @Override
@@ -69,7 +89,19 @@ public class TeamServiceImpl implements TeamService{
     }
 
     @Override
+    public boolean checkDuplicate(String teamName) {
+        // 이미 존재하는 팀명이라면
+        if (teamRepository.findByTeamName(teamName).isPresent()) {
+            return true;
+        }
+        // 존재하지 않는 팀명일 경우
+        return false;
+    }
+
+    @Override
     public TeamGetResponse addTeamMate(Long teamIdx, TeamMateRequest teamMateRequest) throws Exception{
+        // 유저 수정 권한 체크
+        checkAuthorization(teamIdx);
         // 팀원 추가를 요청한 유저
         UserPrincipal requestUser = SecurityUtils.getUserPrincipal();
         String userEmail = teamMateRequest.getUserEmail();
@@ -104,15 +136,17 @@ public class TeamServiceImpl implements TeamService{
         }
         // members 존재 여부에 따른 member 추가
         members = members.isBlank() ? members + userEmail : members + String.format(",%s", userEmail);
-        TeamCreateRequest teamCreateRequest = new TeamCreateRequest(team.get());
-        teamCreateRequest.setMembers(members);
-        return new TeamGetResponse(teamRepository.save(teamCreateRequest.toEntity()));
+        TeamUpdateRequest teamUpdateRequest = new TeamUpdateRequest(team.get());
+        teamUpdateRequest.setMembers(members);
+        return new TeamGetResponse(teamRepository.save(teamUpdateRequest.toEntity()));
     }
 
     @Override
     public TeamGetResponse popTeamMate(Long teamIdx, TeamMateRequest teamMateRequest) throws Exception {
-        String userEmail = teamMateRequest.getUserEmail();
+        // 유저 수정 권한 체크
+        checkAuthorization(teamIdx);
         // 뺄 유저
+        String userEmail = teamMateRequest.getUserEmail();
         Optional<User> user = userRepository.findByUserEmail(userEmail);
         // 뺄 팀
         Optional<Team> team = teamRepository.findById(teamIdx);
@@ -140,13 +174,22 @@ public class TeamServiceImpl implements TeamService{
                 newTeamMate += member;
             }
         }
-        TeamCreateRequest teamCreateRequest = new TeamCreateRequest(team.get());
-        teamCreateRequest.setMembers(newTeamMate);
-        return new TeamGetResponse(teamRepository.save(teamCreateRequest.toEntity()));
+        TeamUpdateRequest teamUpdateRequest = new TeamUpdateRequest(team.get());
+        teamUpdateRequest.setMembers(newTeamMate);
+        return new TeamGetResponse(teamRepository.save(teamUpdateRequest.toEntity()));
     }
 
     @Override
     public Optional<Team> findByTeamLeader(User user) {
         return teamRepository.findByTeamLeader(user);
+    }
+
+    // 팀 수정 권한이 있는 팀장인지 확인
+    public void checkAuthorization(Long teamIdx) {
+        UserPrincipal userPrincipal = SecurityUtils.getUserPrincipal();
+        Team team = findTeam(teamIdx);
+        if (userPrincipal.getUserIdx() != team.getTeamLeader().getUserIdx()) {
+            throw new AuthorizationServiceException("권한이 없는 유저입니다");
+        }
     }
 }

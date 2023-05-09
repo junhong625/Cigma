@@ -61,8 +61,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // 추가적�
                 .and()
                 .authorizeRequests()  // HttpServletRequest 를 사용하는 요청들에 대한 접근제한을 설정
                 // 모든 URI 인증없이 허용
-                .antMatchers("/**").permitAll()
-//                .antMatchers("/api/user", "/api/user/signup").permitAll() // 입력된 URI에 대한 요청은 인증없이 전급을 허용하겠다는 의미
+//                .antMatchers("/**").permitAll()
+                .antMatchers("/user", "/user/login").permitAll() // 입력된 URI에 대한 요청은 인증없이 전급을 허용하겠다는 의미
                 .anyRequest().authenticated()          // 나머지 요청들은 모두 인정되어야한다는 의미
 
                 // JwtSecurity Config 적용

@@ -160,23 +160,24 @@ public class UserController {
     @PutMapping
     public CustomResponseEntity<?> changeUserPrincipal(@ModelAttribute UserUpdateRequest userUpdateRequest) {
         try {
+//            log.info("type : " + userUpdateRequest.getUserImage().getContentType());
             // 이름 변경
-            if (userUpdateRequest.getUserName() != null) {
+            if (userUpdateRequest.getUserName() != null && !userUpdateRequest.getUserName().isBlank()) {
                 log.info("이름 변경");
                 return ResponseHandler.generateResponse(true, "이름 변경 성공", HttpStatus.OK, userService.changeName(userUpdateRequest.getUserName()));
             // 비밀번호 변경
-            } else if (userUpdateRequest.getUserPass() != null) {
+            } else if (userUpdateRequest.getUserPass() != null && !userUpdateRequest.getUserPass().isBlank()) {
                 log.info("비밀번호 변경");
                 return ResponseHandler.generateResponse(true, "비밀번호 변경 성공", HttpStatus.OK, userService.changePassword(userUpdateRequest.getUserPass()));
             // 이미지 변경
-            } else if (userUpdateRequest.getUserImage() != null){
+            } else if (userUpdateRequest.getUserImage() != null && userUpdateRequest.getUserImage().getContentType().startsWith("image")){
                 log.info("이미지 변경");
                 return ResponseHandler.generateResponse(true, "비밀번호 변경 성공", HttpStatus.OK, userService.changeImage(userUpdateRequest.getUserImage()));
             } else {
                 throw new IOException("변경사항이 없습니다.");
             }
         } catch (Exception e) {
-            return ResponseHandler.generateResponse(false, "변경 실패", HttpStatus.BAD_REQUEST, null);
+            return ResponseHandler.generateResponse(false, "변경 실패 : " + e.getMessage(), HttpStatus.BAD_REQUEST, null);
         }
     }
 }

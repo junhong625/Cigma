@@ -9,6 +9,7 @@ import com.cigma.cigma.entity.User;
 import com.cigma.cigma.jwt.Token;
 import com.cigma.cigma.jwt.TokenProvider;
 import com.cigma.cigma.jwt.UserPrincipal;
+import com.cigma.cigma.properties.ImageProperties;
 import com.cigma.cigma.properties.JwtProperties;
 import com.cigma.cigma.repository.UserRepository;
 import com.cigma.cigma.dto.request.UserCreateRequest;
@@ -19,6 +20,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,11 +38,13 @@ public class UserServiceImpl implements UserService{
     private final JwtProperties jwtProperties;
     private final RedisTemplate redisTemplate;
     private final S3ServiceImpl s3Service;
+    private final ImageProperties imageProperties;
 
     @Override
     public UserCreateResponse signUp(UserCreateRequest userCreateRequest) {
         // email 유효성 검사
         checkDuplicateMemberEmail(userCreateRequest.getUserEmail());
+        userCreateRequest.setUserImageUrl(imageProperties.getDefaultPath().getUser());
         // 등록되지 않은 이메일일 경우 회원가입 진행
         return new UserCreateResponse(userRepository.save(userCreateRequest.toEntity()));
     }
@@ -94,7 +98,7 @@ public class UserServiceImpl implements UserService{
         UserUpdateRequest request = new UserUpdateRequest(user);
         log.info("요청 생성");
         // 이름 변경
-        String imageUrl = s3Service.save(multipartFile, "user");
+        String imageUrl = s3Service.save(multipartFile, "user", user.getUserIdx());
         request.setUserImageUrl(imageUrl);
         log.info("새로운 이름 설정");
         // 변경 반영
@@ -213,7 +217,12 @@ public class UserServiceImpl implements UserService{
         redisTemplate.opsForValue().set(token, "blacklist", expiration, TimeUnit.MILLISECONDS);
     }
 
-    public User getUserBySecurity() {
-        return userRepository.findById(SecurityUtils.getUserPrincipal().getUserIdx()).get();
+    public User getUserBySecurity() throws AuthenticationException {
+        try {
+            return userRepository.findById(SecurityUtils.getUserPrincipal().getUserIdx()).get();
+        } catch (Exception e) {
+            throw new AuthenticationException("존재하지 않는 사용자입니다.") {
+            };
+        }
     }
 }

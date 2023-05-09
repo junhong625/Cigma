@@ -12,6 +12,7 @@ public class UserCreateRequest {
     private String userEmail;
     private String userPass;
     private String userName;
+    private String userImageUrl;
 
     public User toEntity() {
         return User
@@ -19,6 +20,7 @@ public class UserCreateRequest {
                 .userEmail(userEmail)
                 .userPass(passwordEncoder.encode(userPass))
                 .userName(userName)
+                .userImageUrl(userImageUrl)
                 .build();
     }
 }
