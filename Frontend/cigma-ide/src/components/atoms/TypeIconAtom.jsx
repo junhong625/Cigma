@@ -24,6 +24,7 @@ export const TypeIcon = (props) => {
   switch (props.fileType) {
     case "png":
     case "jpeg":
+    case "jpg":
       return <FcGallery />;
     case "md":
     case "txt":
