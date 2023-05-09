@@ -14,6 +14,8 @@ services:
       - ./cigma/dist:/var/www/html
       - /etc/letsencrypt:/etc/letsencrypt
       - /var/lib/letsencrypt:/var/lib/letsencrypt
+    environment:
+      - TZ=Asia/Seoul
     restart: always
 
 networks:
