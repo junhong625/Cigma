@@ -15,7 +15,7 @@ import axios from "axios";
 import { useDropzone } from "react-dropzone";
 import { useSelector, useDispatch } from "react-redux";
 import { modifyTreeData } from "../../store/TreeData";
-
+import { saveAs } from "file-saver";
 // 마지막 파일의 Id 값을 가져옴
 const getLastId = (treeData) => {
   const reversedArray = [...treeData].sort((a, b) => {
