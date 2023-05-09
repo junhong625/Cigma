@@ -25,7 +25,7 @@ function useGlobalKeyboardShortCut() {
      * backspace 누르면 삭제
      */
     const deleteCanvasShortCut = (event) => {
-      if (event.key == "Backspace" && editorCount > 1) {
+      if (event.shiftKey && event.key == "Backspace" && editorCount > 1) {
         event.preventDefault();
         dispatch(deleteCodeEditor(workingEditorIndex));
         // dispatch(setCodeEditorIndex(0));
@@ -37,10 +37,10 @@ function useGlobalKeyboardShortCut() {
      * Selector code-editor로 설정
      */
 
-    const codeEditorShortCut = (e) => {
-      if ((e.ctrlKey && e.code === "KeyN") || (e.metaKey && e.code === "KeyN")) return;
-      if (e.code === "KeyN") {
-        e.preventDefault();
+    const codeEditorShortCut = (event) => {
+      // if ((e.ctrlKey && e.code === "KeyN") || (e.metaKey && e.code === "KeyN")) return;
+      if (event.shiftKey && event.code === "KeyN") {
+        event.preventDefault();
         dispatch(setCurrentTool("code-editor"));
       }
     };
@@ -50,10 +50,10 @@ function useGlobalKeyboardShortCut() {
      * 텍스트 새로 생성하기
      * Selector text로 설정
      */
-    const textToolShortCut = (e) => {
-      if ((e.ctrlKey && e.code === "KeyT") || (e.metaKey && e.code === "KeyT")) return;
-      if (e.code === "KeyT") {
-        e.preventDefault();
+    const textToolShortCut = (event) => {
+      // if ((e.ctrlKey && e.code === "KeyT") || (e.metaKey && e.code === "KeyT")) return;
+      if (event.shiftKey && event.code === "KeyT") {
+        event.preventDefault();
         dispatch(setCurrentTool("text"));
       }
     };
@@ -61,10 +61,10 @@ function useGlobalKeyboardShortCut() {
      * ctrl + V
      * 일반적인 selector로 설정
      */
-    const selectorToolShortCut = (e) => {
-      if ((e.ctrlKey && e.code === "KeyV") || (e.metaKey && e.code === "KeyV")) return;
-      if (e.code === "KeyV") {
-        e.preventDefault();
+    const selectorToolShortCut = (event) => {
+      // if ((e.ctrlKey && e.code === "KeyV") || (e.metaKey && e.code === "KeyV")) return;
+      if (event.shiftKey && event.code === "KeyV") {
+        event.preventDefault();
         dispatch(setCurrentTool("selector"));
       }
     };
