@@ -60,7 +60,9 @@ export const CustomNodeAtom = (props) => {
     }
   };
 
-  const handleSelect = () => props.onSelect(props.node);
+  const handleSelect = () => {
+    props.onSelect(props.node);
+  };
   const TREE_X_OFFSET = 24;
   const depthList = Array.from({ length: props.depth }, () => 0);
   const dragOverProps = useDragOver(id, props.isOpen, props.onToggle);
