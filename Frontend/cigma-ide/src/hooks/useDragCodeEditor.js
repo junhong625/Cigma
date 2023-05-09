@@ -29,6 +29,8 @@ function useDragCodeEditor(codeEditorIndex, artBoardRef, canvasRef) {
   useEffect(() => {
     if (!canvasRef.current || !artBoardRef.current || isDragScrolling) return;
 
+    // if (codeEditors[codeEditorIndex].isShown) return
+
     const artBoard = artBoardRef.current;
     const canvas = canvasRef.current;
 
