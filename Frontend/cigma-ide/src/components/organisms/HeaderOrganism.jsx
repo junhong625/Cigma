@@ -21,11 +21,6 @@ const HeaderOrganism = (props) => {
   return (
     <>
       <div className={styles.headerLeftDiv}>
-        <img
-          className={styles.logo}
-          src="./assets/img/Logo.png"
-          alt="thisislogo"
-        />
         {/* plugin 추가 */}
         <HeaderBtnAtom
           onClick={() => {
