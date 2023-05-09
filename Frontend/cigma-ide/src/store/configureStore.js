@@ -3,6 +3,7 @@ import defaultTextSlice from "./defaultTextSlice";
 import codeEditorSlice from "./codeEditorSlice";
 import toolSlice from "./toolSlice";
 import textSlice from "./textSlice";
+import treeData from "./TreeData";
 
 import { bind, enhanceReducer } from "redux-yjs-bindings";
 import { ydoc } from "./initYDoc";
@@ -15,6 +16,7 @@ const workbench = combineReducers({
   defaultText: defaultTextSlice,
   codeEditor: codeEditorSlice,
   textEditor: textSlice,
+  treeData,
 });
 
 // 뒤로가기
