@@ -15,7 +15,7 @@ import TextEditior from "../organisms/TextEditior";
 import React from "react";
 import { useUsers } from "y-presence";
 import CursorAtom from "../atoms/CursorAtom";
-import { provider, awareness, yLocs } from "../../store/initYDoc";
+import { provider, awareness } from "../../store/initYDoc";
 import { USER_NAMES, USER_COLORS } from "../../constants";
 
 const random = (arr) => {

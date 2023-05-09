@@ -13,7 +13,6 @@ import computeSelectionBox from "../../tools/computeSelectionBox";
 import {
   hideCodeEditor,
   selectAllCodeEditor,
-  selectIsHidden,
   showCodeEditor,
 } from "../../store/codeEditorSlice";
 import EditorOrganism from "./EditorOrganism";
