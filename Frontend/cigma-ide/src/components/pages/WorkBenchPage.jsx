@@ -1,4 +1,6 @@
 import React, { useState, useRef } from "react";
+import { DndProvider } from "react-dnd";
+import { MultiBackend, getBackendOptions } from "@minoru/react-dnd-treeview";
 import styles from "../../styles/pages/WorkBenchPage.module.scss";
 import FileTreeOrganism from "../organisms/FileTreeOrganism";
 import WorkSpacePage from "./WorkSpacePage";
@@ -9,20 +11,22 @@ const WorkBenchPage = ({ handleFileBar }) => {
   //width의 d.width값을 적용하기 위한 기본값
   const defaultWidth = useRef(0);
   return (
-    <div className={styles.workbench}>
-      <FileTreeOrganism
-        handleFileBar={handleFileBar}
-        widthLeft={widthLeft}
-        setWidthLeft={setWidthLeft}
-        defaultWidth={defaultWidth}
-      />
-      <WorkSpacePage
-        handleFileBar={handleFileBar}
-        widthLeft={widthLeft}
-        defaultWidth={defaultWidth}
-      />
-      {/* <SideBar /> */}
-    </div>
+    <DndProvider backend={MultiBackend} options={getBackendOptions()}>
+      <div className={styles.workbench}>
+        <FileTreeOrganism
+          handleFileBar={handleFileBar}
+          widthLeft={widthLeft}
+          setWidthLeft={setWidthLeft}
+          defaultWidth={defaultWidth}
+        />
+        <WorkSpacePage
+          handleFileBar={handleFileBar}
+          widthLeft={widthLeft}
+          defaultWidth={defaultWidth}
+        />
+        {/* <SideBar /> */}
+      </div>
+    </DndProvider>
   );
 };
 export default WorkBenchPage;

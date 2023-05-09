@@ -1,11 +1,5 @@
-import React, { useState, useRef, useLayoutEffect, useCallback } from "react";
-import { DndProvider } from "react-dnd";
-import {
-  Tree,
-  MultiBackend,
-  getDescendants,
-  getBackendOptions,
-} from "@minoru/react-dnd-treeview";
+import React, { useState, useRef, useCallback, useEffect } from "react";
+import { Tree, getDescendants } from "@minoru/react-dnd-treeview";
 import { CustomNodeAtom } from "../atoms/CustomNodeAtom";
 import { CustomDragPreviewAtom } from "../atoms/CustomDragPreviewAtom";
 import styles from "../../styles/organisms/FileTreeOrganism.module.scss";
@@ -14,11 +8,13 @@ import {
   BsArrowUpSquare,
   BsFileEarmarkPlus,
   BsFolderPlus,
+  BsDownload,
 } from "react-icons/bs";
 import { Resizable } from "re-resizable";
 import axios from "axios";
 import { useDropzone } from "react-dropzone";
-import { useQuery } from "react-query";
+import FileSaver from "file-saver";
+import { provider } from "../../store/initYDoc";
 
 // 마지막 파일의 Id 값을 가져옴
 const getLastId = (treeData) => {
@@ -76,12 +72,6 @@ function FileTreeOrganism(props) {
   // ============================ 트리용 데이터 리스트 생성=====================//
   const [treeData, setTreeData] = useState([]);
 
-  // 제이쿼리?
-  // const { data, isLoading, isError } = useQuery('treeData', async () => {
-  //   const response = await axios.get('/api');
-  //   setTreeData(data)
-  // });
-
   const fileTreeUpdate = () => {
     axios
       .get("/api")
@@ -93,10 +83,10 @@ function FileTreeOrganism(props) {
       });
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
+    // 최초 렌더링 시 파일 트리 업데이트
     fileTreeUpdate();
   }, []);
-
   //=========================== 파일 이름 바꾸기=============================== //
   const handleTextChange = (id, value, type) => {
     // 파일 경로 확보
@@ -327,6 +317,13 @@ function FileTreeOrganism(props) {
   const handleCloseAll = () => ref.current?.closeAll();
   const handleOpenAll = () => ref.current?.openAll();
 
+  // 파일, 폴더 생성 이전에 선택 중인 폴더를 열기
+  const handleOpen = (node) => {
+    if (node != null) {
+      ref.current.open(node.id);
+    }
+  };
+
   //==========파일을 드래그 앤 드롭하는 드롭 존 ===============//
   const onDrop = useCallback(async (acceptedFiles) => {
     console.log(acceptedFiles);
@@ -355,7 +352,20 @@ function FileTreeOrganism(props) {
     onDrop,
     noClick: true,
   });
-  // ======================================================================//
+  // =======================프로젝트 파일 다운로드=============================//
+  const projectDownload = async () => {
+    try {
+      const response = await axios.get("/api/download", {
+        responseType: "blob", // 서버에서 응답으로 받을 데이터 타입 설정
+      });
+
+      const blob = new Blob([response.data]); // Blob 객체 생성
+      saveAs(blob, "project.zip"); // 압축 파일 다운로드
+    } catch (error) {
+      console.error("Error downloading archive:", error);
+    }
+  };
+
   return (
     <Resizable
       size={{ width: props.widthLeft }}
@@ -387,72 +397,75 @@ function FileTreeOrganism(props) {
     >
       <div {...getRootProps({ className: `${styles.dropzone}` })}>
         <input {...getInputProps()} />
-        <DndProvider backend={MultiBackend} options={getBackendOptions()}>
-          <div className={styles.app} style={{ width: props.widthLeft + "px" }}>
-            <div
-              className={styles.noBubble}
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-            >
-              <div className={styles.buttonWapper}>
-                <div onClick={handleOpenAll}>
-                  <BsArrowDownSquare />
-                </div>
-                <div onClick={handleCloseAll}>
-                  <BsArrowUpSquare />
-                </div>
-                <div
-                  onClick={() => {
-                    CreateFile();
-                  }}
-                >
-                  <BsFileEarmarkPlus />
-                </div>
-                <div
-                  onClick={() => {
-                    CreateFolder();
-                  }}
-                >
-                  <BsFolderPlus />
-                </div>
+        <div className={styles.app} style={{ width: props.widthLeft + "px" }}>
+          <div
+            className={styles.noBubble}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            <div className={styles.buttonWapper}>
+              <div onClick={projectDownload}>
+                <BsDownload />
               </div>
-              <Tree
-                ref={ref}
-                tree={treeData}
-                rootId={0}
-                render={(node, { depth, isOpen, onToggle }) => (
-                  <CustomNodeAtom
-                    node={node}
-                    depth={depth}
-                    isOpen={isOpen}
-                    isSelected={node.id === selectedNode?.id}
-                    onToggle={onToggle}
-                    onTextChange={handleTextChange}
-                    onSelect={handleSelect}
-                    onDelete={handleDelete}
-                    lastCreated={lastCreated}
-                    createSignal={createSignal}
-                  />
-                )}
-                dragPreviewRender={(monitorProps) => (
-                  <CustomDragPreviewAtom monitorProps={monitorProps} />
-                )}
-                onDrop={handleDrop}
-                classes={{
-                  root: styles.treeRoot,
-                  draggingSource: styles.draggingSource,
-                  dropTarget: styles.dropTarget,
+              <div onClick={handleOpenAll}>
+                <BsArrowDownSquare />
+              </div>
+              <div onClick={handleCloseAll}>
+                <BsArrowUpSquare />
+              </div>
+              <div
+                onClick={() => {
+                  handleOpen(selectedNode);
+                  CreateFile();
                 }}
-              />
+              >
+                <BsFileEarmarkPlus />
+              </div>
+              <div
+                onClick={() => {
+                  handleOpen(selectedNode);
+                  CreateFolder();
+                }}
+              >
+                <BsFolderPlus />
+              </div>
             </div>
-            {isDragActive ? (
-              <div className={styles.guideComment}>Upload</div>
-            ) : (
-              ""
-            )}
+            <Tree
+              ref={ref}
+              tree={treeData}
+              rootId={0}
+              render={(node, { depth, isOpen, onToggle }) => (
+                <CustomNodeAtom
+                  node={node}
+                  depth={depth}
+                  isOpen={isOpen}
+                  isSelected={node.id === selectedNode?.id}
+                  onToggle={onToggle}
+                  onTextChange={handleTextChange}
+                  onSelect={handleSelect}
+                  onDelete={handleDelete}
+                  lastCreated={lastCreated}
+                  createSignal={createSignal}
+                />
+              )}
+              dragPreviewRender={(monitorProps) => (
+                <CustomDragPreviewAtom monitorProps={monitorProps} />
+              )}
+              onDrop={handleDrop}
+              classes={{
+                root: styles.treeRoot,
+                draggingSource: styles.draggingSource,
+                dropTarget: styles.dropTarget,
+              }}
+            />
           </div>
-        </DndProvider>
+          {isDragActive ? (
+            <div className={styles.guideComment}>Upload</div>
+          ) : (
+            ""
+          )}
+        </div>
       </div>
     </Resizable>
   );

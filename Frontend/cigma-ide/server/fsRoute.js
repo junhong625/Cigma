@@ -1,10 +1,31 @@
 import express from "express";
 import fs from "fs";
 import path from "path";
+import archiver from "archiver";
 
 const router = express.Router();
 
 const ROOT_FOLDER = "../../workspace/project";
+
+//루트폴더가 없을경우 생성
+function createRootFolderIfNotExists() {
+  const currentDir = decodeURIComponent(
+    path.dirname(new URL(import.meta.url).pathname)
+  ); // 현재 파일이 있는 디렉토리 경로
+
+  const isWindows = process.platform === "win32";
+  const absoluteRootFolder = path.resolve(
+    isWindows ? currentDir.slice(1) : currentDir,
+    ROOT_FOLDER
+  );
+
+  if (!fs.existsSync(absoluteRootFolder)) {
+    fs.mkdirSync(absoluteRootFolder, { recursive: true });
+    console.log("Root folder created:", absoluteRootFolder);
+  }
+}
+
+createRootFolderIfNotExists();
 
 // 파일 목록 받기
 router.get("/", (req, res) => {
@@ -170,7 +191,7 @@ router.post("/upload", (req, res) => {
     fs.mkdirSync(folderPath, { recursive: true });
   }
 
-  // 파일 저장
+  // 파일 업로드
   file.mv(uploadPath, (err) => {
     if (err) {
       console.error(err);
@@ -179,6 +200,24 @@ router.post("/upload", (req, res) => {
       res.json({ message: "File uploaded successfully" });
     }
   });
+});
+
+//압축 후 반환
+router.get("/download", (req, res) => {
+  // 압축 파일 생성
+  const archive = archiver("zip", { zlib: { level: 9 } });
+
+  // HTTP 응답 설정
+  res.attachment("project.zip");
+  archive.pipe(res);
+
+  archive.on("error", (error) => {
+    console.error("Error creating archive:", error);
+    res.status(500).send("Error creating archive");
+  });
+
+  archive.directory(ROOT_FOLDER, false); // 폴더를 압축에 추가
+  archive.finalize();
 });
 
 export default router;
