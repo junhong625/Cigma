@@ -13,8 +13,8 @@ import {
 import { Resizable } from "re-resizable";
 import axios from "axios";
 import { useDropzone } from "react-dropzone";
-import FileSaver from "file-saver";
-import { provider } from "../../store/initYDoc";
+import { useSelector, useDispatch } from "react-redux";
+import { modifyTreeData } from "../../store/TreeData";
 
 // 마지막 파일의 Id 값을 가져옴
 const getLastId = (treeData) => {
@@ -70,13 +70,14 @@ const getFilepathById = (id, nodes) => {
 
 function FileTreeOrganism(props) {
   // ============================ 트리용 데이터 리스트 생성=====================//
-  const [treeData, setTreeData] = useState([]);
+  const dispatch = useDispatch();
+  const treeData = useSelector((state) => state.workbench.treeData);
 
   const fileTreeUpdate = () => {
     axios
       .get("/api")
       .then((response) => {
-        setTreeData(response.data);
+        dispatch(modifyTreeData(response.data));
       })
       .catch((error) => {
         console.log(error);
@@ -87,6 +88,7 @@ function FileTreeOrganism(props) {
     // 최초 렌더링 시 파일 트리 업데이트
     fileTreeUpdate();
   }, []);
+
   //=========================== 파일 이름 바꾸기=============================== //
   const handleTextChange = (id, value, type) => {
     // 파일 경로 확보
@@ -114,7 +116,7 @@ function FileTreeOrganism(props) {
       }
       return node;
     });
-    setTreeData(newTree);
+    dispatch(modifyTreeData(newTree));
     axios
       .put("/api", data)
       .then((res) => {})
@@ -139,7 +141,7 @@ function FileTreeOrganism(props) {
         axios
           .delete(`/api/rmdir?name=${name}&path=${filepath}`)
           .then((response) => {
-            setTreeData(newTree);
+            dispatch(modifyTreeData(newTree));
           })
           .catch((error) => {
             console.log(error);
@@ -149,14 +151,14 @@ function FileTreeOrganism(props) {
         axios
           .delete(`/api?name=${name}&path=${filepath}`)
           .then((response) => {
-            setTreeData(newTree);
+            dispatch(modifyTreeData(newTree));
           })
           .catch((error) => {
             console.log(error);
           });
       }
     } else {
-      setTreeData(newTree);
+      dispatch(modifyTreeData(newTree));
     }
   };
   //========================= 새로운 파일/ 폴더 만들기=============================//
@@ -165,13 +167,15 @@ function FileTreeOrganism(props) {
   const handleCreate = (newNode) => {
     const lastId = getLastId(treeData) + 1;
     setLastCreated(lastId);
-    setTreeData([
-      ...treeData,
-      {
-        ...newNode,
-        id: lastId,
-      },
-    ]);
+    dispatch(
+      modifyTreeData([
+        ...treeData,
+        {
+          ...newNode,
+          id: lastId,
+        },
+      ])
+    );
   };
 
   // 현재 위치에 새로운 폴더를 만드는 함수
@@ -256,7 +260,7 @@ function FileTreeOrganism(props) {
       }
       return node;
     });
-    setTreeData(newTree);
+    dispatch(modifyTreeData(newTree));
     const filepath = getFilepathById(id, treeData);
     if (dir) {
       axios
@@ -302,7 +306,7 @@ function FileTreeOrganism(props) {
         path: sourcePath,
         destination: destinationPath,
       });
-      setTreeData(newTree);
+      dispatch(modifyTreeData(newTree));
     } catch (err) {
       console.error(err);
     }
