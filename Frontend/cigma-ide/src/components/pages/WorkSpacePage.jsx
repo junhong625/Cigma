@@ -99,10 +99,6 @@ const WorkSpacePage = (props) => {
     // return () => provider.off("sync", onSync);
   }, []);
 
-  // useEffect(() => {
-  //   yLocs.set("codeEditors", codeEditors);
-  // }, [codeEditors]);
-
   /**
    * @todo innerBoardRef관련 useEffect?
    */

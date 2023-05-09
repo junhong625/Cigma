@@ -32,7 +32,11 @@ const HeaderOrganism = (props) => {
         <HeaderBtnAtom onClick={() => dispatch(setCurrentTool("text"))}>
           <BsFileFontFill color="white" size={24} />
         </HeaderBtnAtom>
-        <HeaderBtnAtom>
+        <HeaderBtnAtom
+          onClick={() => {
+            props.setHandleXtermBar(!props.handleXtermBar);
+          }}
+        >
           <BsFillTerminalFill color="white" size={24} />
         </HeaderBtnAtom>
       </div>

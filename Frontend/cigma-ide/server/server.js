@@ -6,6 +6,7 @@ import http from "http";
 import router from "./fsRoute.js";
 import fileUpload from "express-fileupload";
 import { setupWSConnection } from "./socket/utils.js";
+import { setupPty } from "./socket/simplePty.js";
 
 // file server
 
@@ -14,13 +15,8 @@ const app = express();
 //file upload
 app.use(fileUpload());
 
-// app.get("/", (req, res) => {
-//   res.send("hello world");
-// });
-
 // =====================================================
-// webRTC server
-const host = process.env.HOST || "0.0.0.0";
+// webSocket server
 const port = process.env.PORT || 4444;
 // @ts-ignore
 const wss = new WebSocketServer({ noServer: true });
@@ -39,6 +35,21 @@ server.on("upgrade", (request, socket, head) => {
   };
   wss.handleUpgrade(request, socket, head, handleAuth);
 });
+
+// websocket server end ==================================
+
+// term websocket server =================================
+const termPort = process.env.TERMPORT || 2222;
+const termServer = http.createServer(app);
+
+const termWs = new WebSocketServer({ noServer: true });
+
+termWs.on("connection", setupPty);
+
+termServer.listen(termPort);
+console.log("Term server running on port : ", termPort);
+
+// term websocket server end =============================
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
