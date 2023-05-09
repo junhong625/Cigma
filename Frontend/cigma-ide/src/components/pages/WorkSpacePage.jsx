@@ -189,6 +189,7 @@ const WorkSpacePage = (props) => {
             cursor={value.cursor}
             color={value.color}
             name={value.name}
+            style={{ overflow: "hidden" }}
           />
         );
       })}
