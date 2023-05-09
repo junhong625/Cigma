@@ -1,4 +1,4 @@
-import React, { useState, useRef, useLayoutEffect } from "react";
+import React, { useState, useRef, useLayoutEffect, useCallback } from "react";
 import { DndProvider } from "react-dnd";
 import {
   Tree,
@@ -17,6 +17,7 @@ import {
 } from "react-icons/bs";
 import { Resizable } from "re-resizable";
 import axios from "axios";
+import { useDropzone } from "react-dropzone";
 import { useQuery } from "react-query";
 
 // 마지막 파일의 Id 값을 가져옴
@@ -75,12 +76,13 @@ function FileTreeOrganism(props) {
   // ============================ 트리용 데이터 리스트 생성=====================//
   const [treeData, setTreeData] = useState([]);
 
+  // 제이쿼리?
   // const { data, isLoading, isError } = useQuery('treeData', async () => {
   //   const response = await axios.get('/api');
   //   setTreeData(data)
   // });
 
-  useLayoutEffect(() => {
+  const fileTreeUpdate = () => {
     axios
       .get("/api")
       .then((response) => {
@@ -89,6 +91,10 @@ function FileTreeOrganism(props) {
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  useLayoutEffect(() => {
+    fileTreeUpdate();
   }, []);
 
   //=========================== 파일 이름 바꾸기=============================== //
@@ -293,7 +299,7 @@ function FileTreeOrganism(props) {
     // 현위치와 목표 위치를 정의
     const sourcePath = getFilepathById(dragSourceId, treeData);
     let destinationPath = getFilepathById(dropTargetId, treeData);
-
+    console.log(dropTargetId);
     // 최상단은 droptarget이 undefined로 입력되므로 조건문을 통해 경로를 추가
     if (dropTarget) {
       destinationPath += `/${dropTarget.text}`;
@@ -321,6 +327,35 @@ function FileTreeOrganism(props) {
   const handleCloseAll = () => ref.current?.closeAll();
   const handleOpenAll = () => ref.current?.openAll();
 
+  //==========파일을 드래그 앤 드롭하는 드롭 존 ===============//
+  const onDrop = useCallback(async (acceptedFiles) => {
+    console.log(acceptedFiles);
+    try {
+      await Promise.all(
+        acceptedFiles.map(async (file) => {
+          const formData = new FormData();
+          const encodedFilePath = encodeURIComponent(file.path);
+          formData.append("file", file);
+          formData.append("path", encodedFilePath);
+
+          console.log(file.path);
+
+          await axios.post("/api/upload", formData);
+          console.log("File upload successful");
+        })
+      );
+    } catch (error) {
+      console.error("File upload failed", error);
+    }
+
+    fileTreeUpdate();
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    noClick: true,
+  });
+  // ======================================================================//
   return (
     <Resizable
       size={{ width: props.widthLeft }}
@@ -350,67 +385,75 @@ function FileTreeOrganism(props) {
         setSelectedNode(null);
       }}
     >
-      <DndProvider backend={MultiBackend} options={getBackendOptions()}>
-        <div className={styles.app} style={{ width: props.widthLeft + "px" }}>
-          <div
-            className={styles.noBubble}
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          >
-            <div className={styles.buttonWapper}>
-              <div onClick={handleOpenAll}>
-                <BsArrowDownSquare />
-              </div>
-              <div onClick={handleCloseAll}>
-                <BsArrowUpSquare />
-              </div>
-              <div
-                onClick={() => {
-                  CreateFile();
-                }}
-              >
-                <BsFileEarmarkPlus />
-              </div>
-              <div
-                onClick={() => {
-                  CreateFolder();
-                }}
-              >
-                <BsFolderPlus />
-              </div>
-            </div>
-            <Tree
-              ref={ref}
-              tree={treeData}
-              rootId={0}
-              render={(node, { depth, isOpen, onToggle }) => (
-                <CustomNodeAtom
-                  node={node}
-                  depth={depth}
-                  isOpen={isOpen}
-                  isSelected={node.id === selectedNode?.id}
-                  onToggle={onToggle}
-                  onTextChange={handleTextChange}
-                  onSelect={handleSelect}
-                  onDelete={handleDelete}
-                  lastCreated={lastCreated}
-                  createSignal={createSignal}
-                />
-              )}
-              dragPreviewRender={(monitorProps) => (
-                <CustomDragPreviewAtom monitorProps={monitorProps} />
-              )}
-              onDrop={handleDrop}
-              classes={{
-                root: styles.treeRoot,
-                draggingSource: styles.draggingSource,
-                dropTarget: styles.dropTarget,
+      <div {...getRootProps({ className: `${styles.dropzone}` })}>
+        <input {...getInputProps()} />
+        <DndProvider backend={MultiBackend} options={getBackendOptions()}>
+          <div className={styles.app} style={{ width: props.widthLeft + "px" }}>
+            <div
+              className={styles.noBubble}
+              onClick={(e) => {
+                e.stopPropagation();
               }}
-            />
+            >
+              <div className={styles.buttonWapper}>
+                <div onClick={handleOpenAll}>
+                  <BsArrowDownSquare />
+                </div>
+                <div onClick={handleCloseAll}>
+                  <BsArrowUpSquare />
+                </div>
+                <div
+                  onClick={() => {
+                    CreateFile();
+                  }}
+                >
+                  <BsFileEarmarkPlus />
+                </div>
+                <div
+                  onClick={() => {
+                    CreateFolder();
+                  }}
+                >
+                  <BsFolderPlus />
+                </div>
+              </div>
+              <Tree
+                ref={ref}
+                tree={treeData}
+                rootId={0}
+                render={(node, { depth, isOpen, onToggle }) => (
+                  <CustomNodeAtom
+                    node={node}
+                    depth={depth}
+                    isOpen={isOpen}
+                    isSelected={node.id === selectedNode?.id}
+                    onToggle={onToggle}
+                    onTextChange={handleTextChange}
+                    onSelect={handleSelect}
+                    onDelete={handleDelete}
+                    lastCreated={lastCreated}
+                    createSignal={createSignal}
+                  />
+                )}
+                dragPreviewRender={(monitorProps) => (
+                  <CustomDragPreviewAtom monitorProps={monitorProps} />
+                )}
+                onDrop={handleDrop}
+                classes={{
+                  root: styles.treeRoot,
+                  draggingSource: styles.draggingSource,
+                  dropTarget: styles.dropTarget,
+                }}
+              />
+            </div>
+            {isDragActive ? (
+              <div className={styles.guideComment}>Upload</div>
+            ) : (
+              ""
+            )}
           </div>
-        </div>
-      </DndProvider>
+        </DndProvider>
+      </div>
     </Resizable>
   );
 }

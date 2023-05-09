@@ -1,23 +1,10 @@
 import express from "express";
-import multer from "multer";
 import fs from "fs";
 import path from "path";
 
 const router = express.Router();
 
 const ROOT_FOLDER = "../../workspace/project";
-
-// 파일 업로드 설정 (multer : 디스크 저장)
-const setStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, ROOT_FOLDER);
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
-  },
-});
-
-const upload = multer({ storage: setStorage });
 
 // 파일 목록 받기
 router.get("/", (req, res) => {
@@ -97,7 +84,6 @@ router.post("/folder", (req, res) => {
 router.delete("/", (req, res) => {
   const { name, path: filePath } = req.query;
   const fullPath = path.join(ROOT_FOLDER, filePath, name);
-  console.log(fullPath);
 
   fs.unlink(fullPath, (err) => {
     if (err) {
@@ -113,7 +99,6 @@ router.delete("/", (req, res) => {
 router.delete("/rmdir", (req, res) => {
   const { name, path: filePath } = req.query;
   const fullPath = path.join(ROOT_FOLDER, filePath, name);
-  console.log(fullPath);
 
   function removeDir(path) {
     if (fs.existsSync(path)) {
@@ -160,9 +145,6 @@ router.put("/move", (req, res) => {
   const sourcePath = path.join(ROOT_FOLDER, filePath, name);
   const destinationPath = path.join(ROOT_FOLDER, destination, name);
 
-  console.log(sourcePath)
-  console.log(destinationPath)
-
   fs.rename(sourcePath, destinationPath, (err) => {
     if (err) {
       console.error(err);
@@ -173,11 +155,30 @@ router.put("/move", (req, res) => {
   });
 });
 
-/**
- * 클라이언트에서 key(fieldname)을 files로 전송하면
- */
-router.post("/upload", upload.array("files"), (req, res, next) => {
-  // 파일들 업로드 부분
+//업로드
+router.post("/upload", (req, res) => {
+  // 드롭존에서 전달된 파일 가져오기
+  const file = req.files.file;
+  // 디코딩된 파일명 얻기
+  const decodedFilePath = decodeURIComponent(req.body.path);
+  // 저장할 경로 설정
+  const uploadPath = path.join(ROOT_FOLDER, decodedFilePath);
+
+  //폴더경로가 전달되었을 경우, 해당 경로에 맞춰 폴더 생성
+  const folderPath = path.dirname(uploadPath);
+  if (!fs.existsSync(folderPath)) {
+    fs.mkdirSync(folderPath, { recursive: true });
+  }
+
+  // 파일 저장
+  file.mv(uploadPath, (err) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("File upload failed");
+    } else {
+      res.json({ message: "File uploaded successfully" });
+    }
+  });
 });
 
 export default router;
