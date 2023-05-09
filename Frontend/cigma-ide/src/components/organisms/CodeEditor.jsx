@@ -3,19 +3,23 @@ import styles from "./CodeEditor.module.scss";
 import {
   hideEditPointer,
   selectEditPointerVisible,
+  selectIsDragScrolling,
   setCodeEditorIndex,
   showEditPointer,
 } from "../../store/toolSlice";
 import useDragCodeEditor from "../../hooks/useDragCodeEditor";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import EditPointer from "../atoms/EditPointer";
 import computeSelectionBox from "../../tools/computeSelectionBox";
 import {
   hideCodeEditor,
   selectAllCodeEditor,
+  setFinishIsShown,
+  setStartIsShown,
   showCodeEditor,
 } from "../../store/codeEditorSlice";
 import EditorOrganism from "./EditorOrganism";
+import { awareness } from "../../store/initYDoc";
 
 const directions = {
   N: "n",
@@ -31,17 +35,20 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   const dispatch = useDispatch();
   const canvasRef = useRef();
   const codeEditors = useSelector(selectAllCodeEditor);
-  const { top, left, width, height, isHidden } = codeEditor;
+  const { top, left, width, height, isHidden, isShown } = codeEditor;
   // 더블클릭 -> 사이즈 조정
   const [isDoubleClicked, setIsDoubleClicked] = useState(false);
   // 에디터 상단 바
   // const [isHidden, setIsHidden] = useState(false);
+  const isDragScrolling = useSelector(selectIsDragScrolling);
 
   // comment 우측
   const [hideComment, setHideComment] = useState(true);
 
   useDragCodeEditor(codeEditorIndex, artBoardRef, canvasRef);
   // 모나코 들어갈 곳
+  const myColor = awareness.getLocalState().color;
+  const myName = awareness.getLocalState().name;
 
   const handleInput = (event) => {
     setIsDoubleClicked(false);
@@ -63,6 +70,14 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   const handleHideCommentClick = () => {
     setHideComment(true);
   };
+  const handleStartIsShown = () => {
+    if (isDragScrolling) return;
+    dispatch(setStartIsShown({ codeEditorIndex: codeEditorIndex }));
+  };
+  const handleFinishIsShown = () => {
+    dispatch(setFinishIsShown({ codeEditorIndex: codeEditorIndex }));
+  };
+  const borderRef = useRef(null);
 
   // comment창 크기 설정
   const commentWidth = width / 2;
@@ -70,14 +85,42 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   const isHiddenStyle = {
     ...codeEditor,
     height: isHidden ? "30px" : height,
+    border: isShown ? `2px solid ${myColor}` : "none",
   };
+  // const isShownStyle = {
+  //   top: top - 10,
+  //   left: left - 10,
+  //   height: height + 20,
+  //   width: width + 20,
+  //   border: isShown ? "2px solid red" : "none",
+  // };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (canvasRef.current && !canvasRef.current.contains(event.target)) {
+        handleFinishIsShown();
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [canvasRef]);
+
   return (
+    // <div
+    //   className={styles["code-border"]}
+    //   style={isShownStyle}
+    //   ref={borderRef}
+    //   onDoubleClick={handleStartIsShown}
+    // >
     <div
+      // onDoubleClick={handleStartIsShown}
       className={styles["code-editor"]}
       onClick={() => {
         dispatch(setCodeEditorIndex(codeEditorIndex));
         setIsDoubleClicked(true);
-        dispatch(showEditPointer());
+        dispatch(showEditPointer(), handleStartIsShown());
       }}
       onBlur={() => {
         handleInput();
@@ -153,6 +196,7 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
         </div>
       ) : null}
     </div>
+    // </div>
   );
 };
 

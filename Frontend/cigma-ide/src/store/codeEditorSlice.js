@@ -10,6 +10,7 @@ const generateCodeEditor = (top, left) => ({
   isHidden: false,
   comments: [],
   filePath: "",
+  isShown: false,
 });
 
 const initialState = [generateCodeEditor(1000, 1000)];
@@ -135,6 +136,14 @@ const codeEditorSlice = createSlice({
       );
       state[commendIndex].comments.splice(codeEditorIndex, 1);
     },
+    setStartIsShown: (state, { payload }) => {
+      const codeEditorIndex = payload.codeEditorIndex;
+      state[codeEditorIndex].isShown = true;
+    },
+    setFinishIsShown: (state, { payload }) => {
+      const codeEditorIndex = payload.codeEditorIndex;
+      state[codeEditorIndex].isShown = false;
+    },
   },
 });
 
@@ -158,6 +167,8 @@ export const {
   deleteCodeEditor,
   addComment,
   deleteComment,
+  setStartIsShown,
+  setFinishIsShown,
 } = codeEditorSlice.actions;
 
 export default codeEditorSlice.reducer;
