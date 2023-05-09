@@ -136,7 +136,11 @@ export const CustomNodeAtom = (props) => {
     >
       {/* 파일의 타입에 따라 바뀌는 아이콘  */}
       <div className={styles.iconWrapper}>
-        <TypeIcon droppable={droppable} fileType={data?.fileType} />
+        <TypeIcon
+          droppable={droppable}
+          fileType={data?.fileType}
+          isOpen={props.isOpen}
+        />
       </div>
 
       {/* 파일 구조를 표시해주는 막대들 */}

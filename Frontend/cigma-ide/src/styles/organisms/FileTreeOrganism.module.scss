@@ -83,4 +83,20 @@
   &:active {
     background-color: $tertiary-500; /* hover 색상 */
   }
+  z-index: 1;
+}
+
+.guideComment {
+  text-align: center;
+  animation: upload 0.3s ease-in;
+}
+
+// 업로드 문구 애니메이션
+@keyframes upload {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
