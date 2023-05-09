@@ -5,7 +5,7 @@ import CodeEditor from "../organisms/CodeEditor";
 import { useEffect, useRef, useState } from "react";
 import useDragToScroll from "../../hooks/useDragToScroll";
 import useMockZoom from "../../hooks/useMockZoom";
-import { emptySelectedShapeIndexes } from "../../store/toolSlice";
+import { emptySelectedShapeIndexes, selectCurrentCodeEditorIndex } from "../../store/toolSlice";
 import useDrawCodeEditor from "../../hooks/useDrawCodeEditor";
 import useGlobalKeyboardShortCut from "../../hooks/useGlobalKeyboardShortCut";
 import useDrawText from "../../hooks/useDrawText";
@@ -66,8 +66,7 @@ const WorkSpacePage = (props) => {
     isFirstRender = false;
     boardRef.current.scrollTop = top - 100;
 
-    boardRef.current.scrollLeft =
-      left - boardRef.current.clientWidth / 2 + width / 2;
+    boardRef.current.scrollLeft = left - boardRef.current.clientWidth / 2 + width / 2;
   }, [codeEditors, textEditors]);
 
   useEffect(() => {
@@ -140,11 +139,7 @@ const WorkSpacePage = (props) => {
   }, [difference.current]);
 
   return (
-    <div
-      ref={boardRef}
-      className={styles["artboard-wrapper"]}
-      onPointerMove={handlePointMove}
-    >
+    <div ref={boardRef} className={styles["artboard-wrapper"]} onPointerMove={handlePointMove}>
       <div className={styles.artboard} ref={innerBoardRef}>
         {codeEditors.map((codeEditor, i) => (
           <CodeEditor
@@ -155,12 +150,7 @@ const WorkSpacePage = (props) => {
           />
         ))}
         {textEditors.map((textEditor, i) => (
-          <TextEditior
-            {...textEditor}
-            textIndex={i}
-            key={i}
-            artBoardRef={innerBoardRef}
-          />
+          <TextEditior {...textEditor} textIndex={i} key={i} artBoardRef={innerBoardRef} />
         ))}
       </div>
       {Array.from(users.entries()).map(([key, value]) => {
@@ -168,14 +158,7 @@ const WorkSpacePage = (props) => {
 
         if (!value.cursor || !value.color || !value.name) return null;
 
-        return (
-          <CursorAtom
-            key={key}
-            cursor={value.cursor}
-            color={value.color}
-            name={value.name}
-          />
-        );
+        return <CursorAtom key={key} cursor={value.cursor} color={value.color} name={value.name} />;
       })}
     </div>
   );

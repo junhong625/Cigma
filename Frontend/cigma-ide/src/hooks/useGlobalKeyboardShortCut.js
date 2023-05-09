@@ -1,11 +1,17 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 // import { ActionCreators } from "redux-undo";
 // import { useDispatch } from "react-redux";
-import { setCurrentTool } from "../store/toolSlice";
-
+import {
+  setCurrentTool,
+  selectCurrentCodeEditorIndex,
+  setCodeEditorIndex,
+} from "../store/toolSlice";
+import { deleteCodeEditor, selectCodeEditorLength } from "../store/codeEditorSlice";
 function useGlobalKeyboardShortCut() {
   const dispatch = useDispatch();
+  const editorCount = useSelector(selectCodeEditorLength);
+  const workingEditorIndex = useSelector(selectCurrentCodeEditorIndex);
   // const tools = { SELECTOR: "selector", TEXT: "text", CodeEditor: "code-editor" };
 
   // ctr + V
@@ -15,6 +21,16 @@ function useGlobalKeyboardShortCut() {
   // text로 변경
 
   useEffect(() => {
+    /**
+     * backspace 누르면 삭제
+     */
+    const deleteCanvasShortCut = (event) => {
+      if (event.key == "Backspace" && editorCount > 1) {
+        event.preventDefault();
+        dispatch(deleteCodeEditor(workingEditorIndex));
+        // dispatch(setCodeEditorIndex(0));
+      }
+    };
     /**
      * ctrl + N
      * 캔버스 새로 생성하기
@@ -52,15 +68,17 @@ function useGlobalKeyboardShortCut() {
         dispatch(setCurrentTool("selector"));
       }
     };
+    window.addEventListener("keydown", deleteCanvasShortCut);
     window.addEventListener("keydown", codeEditorShortCut);
     window.addEventListener("keydown", textToolShortCut);
     window.addEventListener("keydown", selectorToolShortCut);
     return () => {
+      window.removeEventListener("keydown", deleteCanvasShortCut);
       window.removeEventListener("keydown", codeEditorShortCut);
       window.removeEventListener("keydown", textToolShortCut);
       window.removeEventListener("keydown", selectorToolShortCut);
     };
-  }, [dispatch]);
+  }, [dispatch, editorCount, workingEditorIndex]);
 
   // return <div>useGlobalKeyboardShortCut</div>;
 }
