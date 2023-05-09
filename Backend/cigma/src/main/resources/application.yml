@@ -15,9 +15,9 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     # server
-    url: jdbc:mysql://k8a601.p.ssafy.io:3306/cigma?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
+#    url: jdbc:mysql://k8a601.p.ssafy.io:3306/cigma?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
     # local
-#    url: jdbc:mysql://localhost:3306/cigma?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/cigma?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
     username: ssafy
     password: ssafy
     hikari:
@@ -47,8 +47,8 @@ spring:
   # - redis 종료 시에는 RDB를 통해 스냅샷 생성
 
   redis:
-#    host: localhost # localhost 전용
-    host: redis # Server 전용
+    host: localhost # localhost 전용
+#    host: redis # Server 전용
     port: 6379
     password: ssafy8cigmapass
 

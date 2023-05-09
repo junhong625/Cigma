@@ -61,7 +61,7 @@ public class TeamServiceImpl implements TeamService{
     }
 
     @Override
-    public TeamGetResponse changeName(Team team, String teamName) {
+    public TeamGetResponse changeName(Team team, String teamName) throws TeamNotFoundException {
         // 유저 수정 권한 체크
         checkAuthorization(team.getTeamIdx());
         TeamUpdateRequest teamUpdateRequest = new TeamUpdateRequest(team);
@@ -70,7 +70,7 @@ public class TeamServiceImpl implements TeamService{
     }
 
     @Override
-    public TeamGetResponse changeImage(Team team, MultipartFile multipartFile) {
+    public TeamGetResponse changeImage(Team team, MultipartFile multipartFile) throws TeamNotFoundException {
         // 유저 수정 권한 체크
         checkAuthorization(team.getTeamIdx());
         TeamUpdateRequest teamUpdateRequest = new TeamUpdateRequest(team);
@@ -185,9 +185,14 @@ public class TeamServiceImpl implements TeamService{
     }
 
     // 팀 수정 권한이 있는 팀장인지 확인
-    public void checkAuthorization(Long teamIdx) {
+    public void checkAuthorization(Long teamIdx) throws TeamNotFoundException {
         UserPrincipal userPrincipal = SecurityUtils.getUserPrincipal();
-        Team team = findTeam(teamIdx);
+        Team team;
+        try {
+            team = findTeam(teamIdx);
+        } catch (Exception e) {
+            throw new TeamNotFoundException("존재하지 않는 팀입니다");
+        }
         if (userPrincipal.getUserIdx() != team.getTeamLeader().getUserIdx()) {
             throw new AuthorizationServiceException("권한이 없는 유저입니다");
         }

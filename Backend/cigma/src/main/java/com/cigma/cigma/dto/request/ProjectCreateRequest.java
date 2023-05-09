@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProjectCreateRequest {
+    private Long teamIdx;
     private String projectUrl;
-
     private String projectName;
     private String projectImage;
 }
