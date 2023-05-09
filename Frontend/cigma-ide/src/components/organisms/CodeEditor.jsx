@@ -11,6 +11,7 @@ import useDragCodeEditor from "../../hooks/useDragCodeEditor";
 import { useEffect, useRef, useState } from "react";
 import EditPointer from "../atoms/EditPointer";
 import computeSelectionBox from "../../tools/computeSelectionBox";
+import Comment from "./Comment";
 import {
   hideCodeEditor,
   selectAllCodeEditor,
@@ -35,7 +36,7 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   const dispatch = useDispatch();
   const canvasRef = useRef();
   const codeEditors = useSelector(selectAllCodeEditor);
-  const { top, left, width, height, isHidden, isShown } = codeEditor;
+  const { top, left, width, height, isHidden, comments, isShown } = codeEditor;
   // 더블클릭 -> 사이즈 조정
   const [isDoubleClicked, setIsDoubleClicked] = useState(false);
   // 에디터 상단 바
@@ -160,15 +161,13 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
       </div>
       {/* 댓글창 숨김처리 */}
       {!hideComment ? (
-        <div
-          style={{
-            top: 0,
-            left: width,
-            height,
-            width: commentWidth,
-          }}
-          className={styles.comment}
-        ></div>
+        <Comment
+          comments={comments}
+          codeEditorIndex={codeEditorIndex}
+          left={width}
+          height={height}
+          width={commentWidth}
+        />
       ) : null}
       {!isHidden ? (
         <div

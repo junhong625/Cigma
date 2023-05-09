@@ -1,3 +1,6 @@
+@import "../commonColor";
+@import "../colors";
+
 .root {
   border-radius: 5px;
   padding-left: 8px;
@@ -12,11 +15,11 @@
   padding-inline-end: 8px;
   cursor: pointer;
   &:hover {
-    background-color: #999999;
+    background-color: $object-button-grey-bg;
     .editButton {
       display: flex;
       &:hover {
-        color: #5c5c5c;
+        color: $netural-200;
       }
     }
   }
@@ -26,8 +29,7 @@
 }
 
 .root.isSelected {
-  background-color: #b3b3b3;
-  color: #2e2e2e;
+  background-color: $object-button-grey-bg;
 }
 
 .expandIconWrapper {
@@ -50,6 +52,7 @@
   align-items: center;
   display: flex;
   padding-left: 7px;
+  font-size: 16px;
 }
 .labelGridItem {
   padding-inline-start: 8px;

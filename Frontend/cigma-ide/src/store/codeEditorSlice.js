@@ -124,16 +124,13 @@ const codeEditorSlice = createSlice({
     addComment: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;
       const comment = payload.comment;
-      state[codeEditorIndex].append(comment);
+      state[codeEditorIndex].comments.push(comment);
     },
     deleteComment: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;
       const comment = payload.comment;
       // comment timestamp의 key로 index 찾기
-      const commendIndex = _.findIndex(
-        state[codeEditorIndex].comments,
-        comment.timestamp
-      );
+      const commendIndex = _.findIndex(state[codeEditorIndex].comments, comment.timestamp);
       state[commendIndex].comments.splice(codeEditorIndex, 1);
     },
     setStartIsShown: (state, { payload }) => {
