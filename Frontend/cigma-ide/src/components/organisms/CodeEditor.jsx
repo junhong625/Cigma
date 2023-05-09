@@ -13,8 +13,10 @@ import EditPointer from "../atoms/EditPointer";
 import computeSelectionBox from "../../tools/computeSelectionBox";
 import Comment from "./Comment";
 import {
+  changeShownColor,
   hideCodeEditor,
   selectAllCodeEditor,
+  setEditorPerson,
   setFinishIsShown,
   setStartIsShown,
   showCodeEditor,
@@ -36,7 +38,18 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   const dispatch = useDispatch();
   const canvasRef = useRef();
   const codeEditors = useSelector(selectAllCodeEditor);
-  const { top, left, width, height, isHidden, comments, isShown } = codeEditor;
+  const {
+    top,
+    left,
+    width,
+    height,
+    isHidden,
+    comments,
+    isShown,
+    shownColor,
+    editorPerson,
+  } = codeEditor;
+  const [myWorking, setMyWorking] = useState(null);
   // 더블클릭 -> 사이즈 조정
   const [isDoubleClicked, setIsDoubleClicked] = useState(false);
   // 에디터 상단 바
@@ -50,7 +63,6 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   // 모나코 들어갈 곳
   const myColor = awareness.getLocalState().color;
   const myName = awareness.getLocalState().name;
-
   const handleInput = (event) => {
     setIsDoubleClicked(false);
     dispatch(hideEditPointer);
@@ -73,12 +85,24 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   };
   const handleStartIsShown = () => {
     if (isDragScrolling) return;
+    if (isShown) return;
     dispatch(setStartIsShown({ codeEditorIndex: codeEditorIndex }));
+    dispatch(
+      changeShownColor({ color: myColor, codeEditorIndex: codeEditorIndex })
+    );
+    dispatch(
+      setEditorPerson({ name: myName, codeEditorIndex: codeEditorIndex })
+    );
+    setMyWorking(codeEditorIndex);
   };
   const handleFinishIsShown = () => {
     dispatch(setFinishIsShown({ codeEditorIndex: codeEditorIndex }));
+    dispatch(setEditorPerson({ name: null, codeEditorIndex: myWorking }));
+    dispatch(
+      changeShownColor({ color: null, codeEditorIndex: codeEditorIndex })
+    );
+    setMyWorking(null);
   };
-  const borderRef = useRef(null);
 
   // comment창 크기 설정
   const commentWidth = width / 2;
@@ -86,42 +110,36 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   const isHiddenStyle = {
     ...codeEditor,
     height: isHidden ? "30px" : height,
-    border: isShown ? `2px solid ${myColor}` : "none",
+    border: isShown ? `2px solid ${shownColor}` : "none",
   };
-  // const isShownStyle = {
-  //   top: top - 10,
-  //   left: left - 10,
-  //   height: height + 20,
-  //   width: width + 20,
-  //   border: isShown ? "2px solid red" : "none",
-  // };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (canvasRef.current && !canvasRef.current.contains(event.target)) {
-        handleFinishIsShown();
+        console.log(myWorking);
+        console.log(codeEditors[myWorking]);
+        if (codeEditors[myWorking].editorPerson !== myName) return;
+        handleFinishIsShown(myWorking);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [canvasRef]);
+  }, [canvasRef, myWorking]);
 
   return (
-    // <div
-    //   className={styles["code-border"]}
-    //   style={isShownStyle}
-    //   ref={borderRef}
-    //   onDoubleClick={handleStartIsShown}
-    // >
     <div
-      // onDoubleClick={handleStartIsShown}
       className={styles["code-editor"]}
       onClick={() => {
-        dispatch(setCodeEditorIndex(codeEditorIndex));
-        setIsDoubleClicked(true);
-        dispatch(showEditPointer(), handleStartIsShown());
+        handleStartIsShown();
+        if (isShown) {
+          if (editorPerson === null || myName === editorPerson) {
+            dispatch(setCodeEditorIndex(codeEditorIndex));
+            setIsDoubleClicked(true);
+            dispatch(showEditPointer());
+          }
+        }
       }}
       onBlur={() => {
         handleInput();
@@ -187,6 +205,7 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
 
           {/* monaco가 들어갈곳 */}
           <EditorOrganism
+            editorPerson={editorPerson}
             className={styles["monaco-editor"]}
             file={codeEditors[codeEditorIndex].canvasName}
             style={{ height: height - 30 }}
@@ -195,7 +214,6 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
         </div>
       ) : null}
     </div>
-    // </div>
   );
 };
 

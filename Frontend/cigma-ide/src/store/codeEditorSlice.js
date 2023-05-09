@@ -11,6 +11,8 @@ const generateCodeEditor = (top, left) => ({
   comments: [],
   filePath: "",
   isShown: false,
+  shownColor: null,
+  editorPerson: null,
 });
 
 const initialState = [generateCodeEditor(1000, 1000)];
@@ -130,7 +132,10 @@ const codeEditorSlice = createSlice({
       const codeEditorIndex = payload.codeEditorIndex;
       const comment = payload.comment;
       // comment timestamp의 key로 index 찾기
-      const commendIndex = _.findIndex(state[codeEditorIndex].comments, comment.timestamp);
+      const commendIndex = _.findIndex(
+        state[codeEditorIndex].comments,
+        comment.timestamp
+      );
       state[commendIndex].comments.splice(codeEditorIndex, 1);
     },
     setStartIsShown: (state, { payload }) => {
@@ -140,6 +145,16 @@ const codeEditorSlice = createSlice({
     setFinishIsShown: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;
       state[codeEditorIndex].isShown = false;
+    },
+    changeShownColor: (state, { payload }) => {
+      const codeEditorIndex = payload.codeEditorIndex;
+      const color = payload.color;
+      state[codeEditorIndex].shownColor = color;
+    },
+    setEditorPerson: (state, { payload }) => {
+      const codeEditorIndex = payload.codeEditorIndex;
+      const name = payload.name;
+      state[codeEditorIndex].editorPerson = name;
     },
   },
 });
@@ -166,6 +181,8 @@ export const {
   deleteComment,
   setStartIsShown,
   setFinishIsShown,
+  changeShownColor,
+  setEditorPerson,
 } = codeEditorSlice.actions;
 
 export default codeEditorSlice.reducer;

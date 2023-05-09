@@ -3,7 +3,7 @@ import Editor from "@monaco-editor/react";
 import { MonacoBinding } from "y-monaco";
 import { awareness, ydoc } from "../../store/initYDoc";
 
-const EditorOrganism = React.memo(({ file }) => {
+const EditorOrganism = React.memo(({ file, editorPerson }) => {
   const handleEditorDidMount = (editor, monaco) => {
     console.log("filename : ", file);
     const yText = ydoc.getText(file);
@@ -15,6 +15,7 @@ const EditorOrganism = React.memo(({ file }) => {
       awareness
     );
   };
+  const myName = awareness.getLocalState().name;
 
   return (
     <>
@@ -26,6 +27,7 @@ const EditorOrganism = React.memo(({ file }) => {
         options={{
           fontSize: 14,
           minimap: { enabled: true },
+          readOnly: myName === editorPerson ? false : true,
         }}
       />
     </>
