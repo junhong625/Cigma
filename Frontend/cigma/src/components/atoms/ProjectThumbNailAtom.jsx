@@ -4,6 +4,7 @@ import { BsTrashFill } from "react-icons/bs";
 import { BsPenFill } from "react-icons/bs";
 import { BsFillCheckCircleFill } from "react-icons/bs";
 import { BsFillReplyFill } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
 
 // 프로젝트 리스트에서 프로젝트 하나에 해당하는 Atom
 function ProjectThumbNailAtom({
@@ -73,6 +74,8 @@ function ProjectThumbNailAtom({
       changeName();
     }
   };
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (onCreate) {
@@ -145,7 +148,16 @@ function ProjectThumbNailAtom({
           )}
         </div>
       </div>
-      <img src={img} alt="thumb" className={styles.thumbnail} />
+      <img
+        src={img}
+        alt="thumb"
+        className={styles.thumbnail}
+        onClick={() => {
+          // 프로젝트 주소 할당을 통해 포트 번호를 가져옵니다. 이하는 임시.
+          const portNum = 1;
+          navigate("/test", { state: { portNum } });
+        }}
+      />
     </>
   );
 }

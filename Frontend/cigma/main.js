@@ -1,6 +1,7 @@
 import { app, BrowserWindow, Menu } from "electron";
 
 function createWindow() {
+  // 윈도우 크기 설정
   const win = new BrowserWindow({
     width: 1024,
     height: 768,
@@ -9,9 +10,14 @@ function createWindow() {
     },
   });
 
+  // 상단부 메뉴 비표시
   Menu.setApplicationMenu(null);
-  win.loadURL("http://localhost:5173");
 
+  //로딩할 Url
+  win.loadURL("http://localhost:5174/login");
+
+  // 개발자 도구 열기
+  // win.webContents.openDevTools();
 }
 
 app.whenReady().then(() => {

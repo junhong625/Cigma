@@ -5,11 +5,15 @@ import ButtonAtom from "../atoms/ButtonAtom";
 import NavLogo from "../atoms/NavLogo";
 import { NavLink, useNavigate } from "react-router-dom";
 import { login } from "../../api/account";
+import { useDispatch } from "react-redux";
+import { modifyUserToken } from "../../store/userToken";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const loginClick = async () => {
     if (email.trim() === "") {
       alert("이메일을 입력해주세요");
@@ -19,9 +23,10 @@ const LoginPage = () => {
       alert("비밀번호를 입력해주세요");
       return;
     }
-    const { status } = await login(email, password);
+    const { status, token } = await login(email, password);
     if (status === 200) {
       alert("로그인 되었습니다");
+      dispatch(modifyUserToken(token));
       navigate("/projects");
     } else {
       alert("유효하지 않는 정보입니다");

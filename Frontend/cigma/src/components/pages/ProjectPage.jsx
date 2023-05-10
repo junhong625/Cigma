@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { Transition } from "react-transition-group";
 import { Outlet } from "react-router-dom";
@@ -6,6 +6,8 @@ import ModalPortal from "../atoms/PortalAtom";
 import ModalFrameOrganism from "../organisms/ModalFrameOrganism";
 import SideBarOrganism from "../organisms/SideBarOrganism";
 import styles from "../../styles/pages/ProjectPage.module.scss";
+import { useSelector } from "react-redux";
+import { callTeams } from "../../api/team";
 
 function ProjectPage() {
   //모달 표시를 위한 함수 및 변수
@@ -28,26 +30,25 @@ function ProjectPage() {
     };
   });
 
+  //유저토큰
+  const userToken = useSelector((store) => store.userToken);
+
   // 유저가 갖고 있는 팀 리스트 호출 (현재는 임시데이터)
-  const [teamList, setTeamList] = useState([
-    "My Projects",
-    "Team 1",
-    "Team 2",
-    "Team 3",
-    "Team 4",
-    "Team 5",
-    "아주긴팀이름이나온다면? 어디까지? 잘라야할까?",
-    "Team 6",
-    "Team 7",
-    "Team 8",
-    "Team 9",
-    "Team 10",
-    "Team 11",
-    "Team 12",
-    "Team 13",
-    "Team 14",
-    "Team 15",
-  ]);
+  const [teamList, setTeamList] = useState([]);
+
+  const callTeamList = async () => {
+    const { status, teamList } = await callTeams(userToken);
+    if (status === 200) {
+      console.log("팀 리스트 호출완료");
+      setTeamList(teamList);
+    } else {
+      console.log("에러");
+    }
+  };
+
+  useEffect(() => {
+    callTeamList();
+  }, []);
 
   // 현재 팀 리스트
   const [selectedTeam, setSelectedTeam] = useState(0);
