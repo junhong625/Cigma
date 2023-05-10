@@ -37,7 +37,7 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.info("jwtFilter 진입 : =============================");
         String jwt = resolveAccessToken(request);
-
+        log.info("jwt 확인 : " + jwt);
         try {
             // 토큰이 있고 유효한 경우
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt, "access")) {
