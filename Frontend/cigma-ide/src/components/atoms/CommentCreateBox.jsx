@@ -22,12 +22,13 @@ const CommentCreateBox = ({ codeEditorIndex }) => {
     <div className={styles.commentBox}>
       <form className={styles.commentForm}>
         <input
+          style={ {border:"none",  backgroundColor: "inherit"}}
           type="text"
           onChange={(event) => setInputValue(event.target.value)}
           value={inputValue}
           placeholder="comment 작성하기"
         />
-        <button type="submit" onClick={add}>
+        <button style={{backgroundColor: "transparent", border: "none"} } type="submit" onClick={add}>
           <FiEdit />
         </button>
       </form>
