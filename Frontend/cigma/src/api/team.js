@@ -2,8 +2,7 @@ import createApi from "./api";
 
 // 팀 호출
 export const callTeams = async (token) => {
-  const api = createApi(token);
-
+  const api = createApi({ token });
   try {
     const response = await api.get(`/user/team`);
     return {

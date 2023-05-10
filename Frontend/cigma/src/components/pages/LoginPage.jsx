@@ -23,7 +23,7 @@ const LoginPage = () => {
       alert("비밀번호를 입력해주세요");
       return;
     }
-    const { status, token } = await login(email, password);
+    const { status, token, refreshToken } = await login(email, password);
     if (status === 200) {
       alert("로그인 되었습니다");
       dispatch(modifyUserToken(token));

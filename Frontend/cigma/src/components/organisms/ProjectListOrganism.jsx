@@ -1,7 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import { BsPersonFillAdd } from "react-icons/bs";
-import { BsFillFilePlusFill, BsTrashFill } from "react-icons/bs";
+import {
+  BsFillFilePlusFill,
+  BsTrashFill,
+  BsList,
+  BsPersonFillAdd,
+  BsPenFill,
+} from "react-icons/bs";
 import ProjectThumbNail from "../atoms/ProjectThumbNailAtom";
 import styles from "../../styles/organisms/ProjectListOrganism.module.scss";
 import { useSelector } from "react-redux";
@@ -17,9 +22,16 @@ function ProjectListOrganism() {
   //유저토큰
   const userToken = useSelector((store) => store.userToken);
   // 프로젝트 리스트 호출
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState([
+    {
+      name: "project1",
+      thumbnail:
+        "https://t1.daumcdn.net/cfile/tistory/999A233F5EE64AA229?original",
+    },
+  ]);
 
   const callProjectList = async () => {
+    console.log(team);
     const { status, projectList } = await callProjects(userToken, team.id);
     if (status === 200) {
       console.log("프로젝트 리스트 호출완료");
@@ -29,9 +41,10 @@ function ProjectListOrganism() {
     }
   };
 
-  useEffect(() => {
-    callProjectList();
-  }, []);
+  // useEffect(() => {
+  //   callProjectList();
+  // }, [team]);
+
   // 반환 리스트 형태 참고해서 프로퍼티 이름 수정할 것.
   // const projects = [
   //   {
@@ -56,14 +69,19 @@ function ProjectListOrganism() {
   //   },
   // ];
 
-  const hamberger = 1;
+  const [dropMenu, setDropMenu] = useState(false);
 
   const UserSearch = () => {
     openModal();
     setNowContent(1);
   };
 
-  const DeleteProject = () => {
+  const DeleteTeam = () => {
+    openModal();
+    setNowContent(3);
+  };
+
+  const EditTeam = () => {
     openModal();
     setNowContent(4);
   };
@@ -85,8 +103,8 @@ function ProjectListOrganism() {
   return (
     <div className={styles.container} ref={scrollRef}>
       {projects.length === 0 ? (
-        // 모든 프로젝트가 삭제되었거나, 처음 들어온 경우
-        // CreateTeam 기능이 있는 버튼 하나 추가
+        // 모든 프로젝트가 삭제되었거나, 처음 들어온 경우인 페이지
+        // CreateTeam 기능이 있는 버튼 추가 필요
         <div>
           <div>프로젝트를 진행할 팀이 없습니다</div>
           <div>만들기</div>
@@ -95,33 +113,59 @@ function ProjectListOrganism() {
         <div>
           <div className={styles.title}>
             {team}
-            <div className={styles.iconWrapper}>
-              <div
-                onClick={() => {
-                  UserSearch();
-                }}
-                className={styles.iconWrapper}
-              >
-                <BsPersonFillAdd />
-              </div>
-              <div
-                onClick={() => {
-                  DeleteProject();
-                }}
-                className={styles.iconWrapper}
-              >
-                <BsTrashFill />
-              </div>
-
-              <div
-                className={styles.iconWrapper}
-                onClick={() => {
-                  CreateProject();
-                }}
-              >
-                <BsFillFilePlusFill />
-              </div>
+            <div
+              className={styles.iconWrapper}
+              style={{ backgroundColor: dropMenu ? "gray" : "" }}
+              onClick={() => {
+                setDropMenu(true);
+              }}
+            >
+              <BsList />
             </div>
+            {dropMenu ? (
+              <>
+                <div
+                  className={styles.outSide}
+                  onClick={() => {
+                    setDropMenu(false);
+                  }}
+                ></div>
+                <div className={styles.dropMenu}>
+                  <div
+                    onClick={() => {
+                      UserSearch();
+                    }}
+                    className={styles.menuItem}
+                  >
+                    팀원 추가
+                  </div>
+                  <div
+                    className={styles.menuItem}
+                    onClick={() => {
+                      CreateProject();
+                    }}
+                  >
+                    프로젝트 추가
+                  </div>
+                  <div
+                    onClick={() => {
+                      EditTeam();
+                    }}
+                    className={styles.menuItem}
+                  >
+                    팀명 변경
+                  </div>
+                  <div
+                    onClick={() => {
+                      DeleteTeam();
+                    }}
+                    className={styles.menuItem}
+                  >
+                    팀 삭제
+                  </div>
+                </div>
+              </>
+            ) : null}
           </div>
           <hr />
           <div className={styles.projectContainer}>

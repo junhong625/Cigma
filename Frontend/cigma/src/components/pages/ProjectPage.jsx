@@ -34,12 +34,13 @@ function ProjectPage() {
   const userToken = useSelector((store) => store.userToken);
 
   // 유저가 갖고 있는 팀 리스트 호출 (현재는 임시데이터)
-  const [teamList, setTeamList] = useState([]);
+  const [teamList, setTeamList] = useState(["팀"]);
 
   const callTeamList = async () => {
     const { status, teamList } = await callTeams(userToken);
     if (status === 200) {
       console.log("팀 리스트 호출완료");
+      console.log(teamList);
       setTeamList(teamList);
     } else {
       console.log("에러");

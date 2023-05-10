@@ -5,12 +5,13 @@ export const login = async (userEmail, userPass) => {
   const api = createApi();
   try {
     const response = await api.post(`/user/login`, {
-      userEmail,
-      userPass,
+      userEmail: userEmail,
+      userPass: userPass,
     });
     return {
       status: response.status,
       token: response.data.accessToken,
+      R_token: response.data.refreshToken,
     };
   } catch (error) {
     console.error("login error", error);
