@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styles from "./CodeEditor.module.scss";
 import {
   hideEditPointer,
-  selectEditPointerVisible,
+  // selectEditPointerVisible,
   setCodeEditorIndex,
   showEditPointer,
 } from "../../store/toolSlice";
@@ -13,7 +13,7 @@ import computeSelectionBox from "../../tools/computeSelectionBox";
 import Comment from "./Comment";
 import { hideCodeEditor, selectAllCodeEditor, showCodeEditor } from "../../store/codeEditorSlice";
 import EditorOrganism from "./EditorOrganism";
-import useGlobalKeyboardShortCut from "../../hooks/useGlobalKeyboardShortCut";
+// import useGlobalKeyboardShortCut from "../../hooks/useGlobalKeyboardShortCut";
 
 const directions = {
   N: "n",
@@ -30,7 +30,9 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   const canvasRef = useRef();
   const codeEditors = useSelector(selectAllCodeEditor);
   const { top, left, width, height, isHidden, comments } = codeEditor;
-  // 더블클릭 -> 사이즈 조정
+  // 클릭 -> 사이즈 조정
+  const [isClicked, setIsClicked] = useState(false);
+  // 더블클릭 -> 에디터편집
   const [isDoubleClicked, setIsDoubleClicked] = useState(false);
   // 에디터 상단 바
   // const [isHidden, setIsHidden] = useState(false);
@@ -42,9 +44,17 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   useDragCodeEditor(codeEditorIndex, artBoardRef, canvasRef);
 
   // 단축키 추가
-  // useGlobalKeyboardShortCut();
+  // useGlobalKeyboardShortCut()
 
+  // 더블클릭 이벤트 처리
+  const handleDoubleClick = () => {
+    setIsDoubleClicked(true);
+  };
+
+  // div 포커스 해제되었을때 처리되는 핸들러
   const handleInput = (event) => {
+    console.log("blurred");
+    setIsClicked(false);
     setIsDoubleClicked(false);
     dispatch(hideEditPointer);
   };
@@ -77,9 +87,10 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
       className={styles["code-editor"]}
       onClick={() => {
         dispatch(setCodeEditorIndex(codeEditorIndex));
-        setIsDoubleClicked(true);
+        setIsClicked(true);
         dispatch(showEditPointer());
       }}
+      onDoubleClick={handleDoubleClick}
       onBlur={() => {
         handleInput();
       }}
@@ -128,10 +139,16 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
       ) : null}
       {!isHidden ? (
         <div
-          className={styles["code-editor"]}
-          style={{ top: 30, left: 0, width, height: height - 30 }}
+          style={{
+            top: 30,
+            left: 0,
+            width,
+            height: height - 30,
+            position: "absolute",
+            backgroundColor: "white",
+          }}
         >
-          {isDoubleClicked
+          {isClicked
             ? // EditPointer atoms 들어갈 자리.
               // 편집점 활성화될때 삭제도 가능
               Object.values(directions).map((direction) => (
@@ -147,6 +164,7 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
           <EditorOrganism
             className={styles["monaco-editor"]}
             file={codeEditors[codeEditorIndex].canvasName}
+            readOnly={!isDoubleClicked}
             style={{ height: height - 30 }}
           />
           {/* comment 화면 처리 */}
