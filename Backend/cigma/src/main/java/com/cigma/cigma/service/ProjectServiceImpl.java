@@ -6,6 +6,7 @@ import com.cigma.cigma.dto.request.ProjectPatchRequest;
 import com.cigma.cigma.dto.response.ProjectGetResponse;
 import com.cigma.cigma.entity.Project;
 import com.cigma.cigma.entity.Team;
+import com.cigma.cigma.handler.customException.ProjectExistException;
 import com.cigma.cigma.handler.customException.ProjectNotFoundException;
 import com.cigma.cigma.handler.customException.TeamNotFoundException;
 import com.cigma.cigma.jwt.UserPrincipal;
@@ -73,10 +74,12 @@ public class ProjectServiceImpl implements ProjectService{
     }
 
     @Override
-    public ProjectGetResponse save(ProjectCreateRequest projectCreateRequest) throws TeamNotFoundException {
-        // 유저가 팀장인지 권한 체크
+    public ProjectGetResponse save(ProjectCreateRequest projectCreateRequest) throws Exception {
+        // 권한 체크
         Long teamIdx = projectCreateRequest.getTeamIdx();
         teamService.checkAuthorization(teamIdx);
+        // 해당 팀에서 생성한 플젝 존재 여부 체크
+        checkExist(teamIdx);
         Team team = teamService.findTeam(teamIdx);
         String projectName = projectCreateRequest.getProjectName();
         // 도커 컨테이너 연결 후 연결된 컨테이너에서 실행된 URL 생성 필요
@@ -107,5 +110,13 @@ public class ProjectServiceImpl implements ProjectService{
             throw new ProjectNotFoundException("존재하지 않는 프로젝트입니다.");
         }
         teamService.checkAuthorization(project.getTeam().getTeamIdx());
+    }
+
+    // 팀에서 생성한 프로젝트가 있는지 확인
+    public void checkExist(Long teamIdx) throws Exception {
+        // 팀에서 생성한 프로젝트가 있을 경우
+        if (!projectRepository.findAllByTeam_TeamIdx(teamIdx).isEmpty()) {
+            throw new ProjectExistException("이미 팀에서 생성한 프로젝트가 존재합니다.");
+        }
     }
 }

@@ -32,8 +32,6 @@ import java.util.Optional;
 @Slf4j
 public class ProjectController {
     private final ProjectServiceImpl projectService;
-    private final UserServiceImpl userService;
-    private final ProjectRepository projectRepository;
 
     // 프로젝트 생성
     @PostMapping()

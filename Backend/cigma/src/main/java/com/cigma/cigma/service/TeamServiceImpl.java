@@ -89,7 +89,7 @@ public class TeamServiceImpl implements TeamService{
     }
 
     @Override
-    public void checkDuplicate(String teamName) throws TeamNameExistException {
+    public void checkExist(String teamName) throws TeamNameExistException {
         // 이미 존재하는 팀명이라면
         if (teamRepository.findByTeamName(teamName).isPresent()) {
             throw new TeamNameExistException("이미 존재하는 팀명입니다.");
@@ -130,9 +130,9 @@ public class TeamServiceImpl implements TeamService{
         log.info("members : " + members);
         log.info("포함 여부 : " + userEmail.equals(team.get().getTeamLeader().getUserEmail()));
         log.info("userEmail : " + userEmail + "/ teamLeader : " + team.get().getTeamLeader().getUserEmail());
-        // 무료 계정 팀 최대인원 4명
-        // 팀장을 빼고 가능한 팀당 인원 : 4 - 1 = 3
-        if (members.split(",").length == 3) {
+        // 무료 계정 팀 최대인원 6명
+        // 팀장을 빼고 가능한 팀당 인원 : 6 - 1 = 3
+        if (members.split(",").length == 5) {
             throw new TeamMateFullException("팀원이 가득찼습니다.");
         }
         // members 존재 여부에 따른 member 추가

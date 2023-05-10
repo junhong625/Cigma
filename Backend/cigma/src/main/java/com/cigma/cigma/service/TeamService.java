@@ -5,7 +5,6 @@ import com.cigma.cigma.dto.request.TeamUpdateRequest;
 import com.cigma.cigma.dto.response.ProjectGetResponse;
 import com.cigma.cigma.dto.response.TeamGetResponse;
 import com.cigma.cigma.entity.Team;
-import com.cigma.cigma.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -29,7 +28,7 @@ public interface TeamService {
 
     TeamGetResponse changeImage(Team team, MultipartFile multipartFile) throws Exception;
 
-    void checkDuplicate(String teamName) throws Exception;
+    void checkExist(String teamName) throws Exception;
 
     List<ProjectGetResponse> getMyTeamProjects(Long teamIdx, Boolean isDrop);
 }

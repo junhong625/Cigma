@@ -32,7 +32,7 @@ public class TeamController {
     @PostMapping()
     public CustomResponseEntity<? extends Object> createTeam(@RequestBody TeamUpdateRequest teamUpdateRequest) throws Exception {
         // 팀명 중복 체크
-        teamService.checkDuplicate(teamUpdateRequest.getTeamName());
+        teamService.checkExist(teamUpdateRequest.getTeamName());
         try {
             return ResponseHandler.generateResponse(true, "팀생성 성공", HttpStatus.CREATED, teamService.createTeam(teamUpdateRequest));
         } catch (Exception e) {
@@ -78,7 +78,7 @@ public class TeamController {
         if (user.getUserIdx() == team.getTeamLeader().getUserIdx()) {
             if (teamUpdateRequest.getTeamName() != null && !teamUpdateRequest.getTeamName().isBlank()) {
                 // 팀명 중복 체크
-                teamService.checkDuplicate(teamUpdateRequest.getTeamName());
+                teamService.checkExist(teamUpdateRequest.getTeamName());
                 return ResponseHandler.generateResponse(true, "팀명 변경 성공", HttpStatus.OK, teamService.changeName(team, teamUpdateRequest.getTeamName()));
             } else if (teamUpdateRequest.getTeamImage() != null && !teamUpdateRequest.getTeamImage().getContentType().isBlank()) {
                 return ResponseHandler.generateResponse(true, "팀사진 변경 성공", HttpStatus.OK, teamService.changeImage(team, teamUpdateRequest.getTeamImage()));

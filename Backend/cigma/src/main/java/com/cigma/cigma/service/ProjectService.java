@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public interface ProjectService {
 
-    ProjectGetResponse save(ProjectCreateRequest projectCreateRequest) throws TeamNotFoundException;
+    ProjectGetResponse save(ProjectCreateRequest projectCreateRequest) throws Exception;
 
     Optional<Project> findById(Long id);
 
