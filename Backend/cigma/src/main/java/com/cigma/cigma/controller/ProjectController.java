@@ -43,30 +43,9 @@ public class ProjectController {
 
     // 프로젝트 삭제
     @DeleteMapping("{id}")
-    public CustomResponseEntity<? extends Object> deleteProject(@PathVariable("id") Long projectIdx) throws IOException {
-        try {
-            UserPrincipal userPrincipal = SecurityUtils.getUserPrincipal();
-            Optional<User> user = userService.findById(userPrincipal.getUserIdx());
-
-            log.info(userPrincipal.getUserEmail() + " " + userPrincipal.getPassword() + " " + userPrincipal.getUserIdx());
-
-            if (user.isPresent()) {
-                Optional<Project> project = projectService.findById(projectIdx);
-                Team team = project.get().getTeam();
-                if (user.get() == team.getTeamLeader()) {  // 삭제하려는 사람이 팀리더면
-                    projectService.deleteById(projectIdx);  // 삭제
-                    return ResponseHandler.generateResponse(true, "프로젝트삭제 성공", HttpStatus.OK, null);
-                } else {  // 삭제하려는 사람이 리더가 아니면
-                    return ResponseHandler.generateResponse(false, "삭제 권한 없음", HttpStatus.UNAUTHORIZED, null);
-                }
-            } else {  // 존재하지 않는 유저
-                return ResponseHandler.generateResponse(false, "존재하지 않는 사용자입니다", HttpStatus.BAD_REQUEST, null);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseHandler.generateResponse(false, "프로젝트삭제 실패", HttpStatus.BAD_REQUEST, null);
-        }
+    public CustomResponseEntity<? extends Object> deleteProject(@PathVariable("id") Long projectIdx) throws Exception {
+        projectService.deleteById(projectIdx);
+        return ResponseHandler.generateResponse(true, "프로젝트 삭제", HttpStatus.OK, null);
     }
 
     // 프로젝트 이름 수정

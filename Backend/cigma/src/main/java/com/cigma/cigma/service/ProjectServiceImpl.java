@@ -45,17 +45,23 @@ public class ProjectServiceImpl implements ProjectService{
 
     @Override
     public ProjectGetResponse changeName(Long pjtIdx, ProjectPatchRequest projectPatchRequest) throws Exception {
+        log.info("권한 체크");
         checkAuthorization(pjtIdx);
-        projectPatchRequest.setProjectName(projectPatchRequest.getProjectName());
-        return new ProjectGetResponse(projectRepository.save(projectPatchRequest.toEntity()));
+        log.info("이름 변경 작업");
+        String projectName = projectPatchRequest.getProjectName();
+        ProjectPatchRequest request = new ProjectPatchRequest(projectRepository.findById(pjtIdx).get());
+        request.setProjectName(projectName);
+        log.info("프로젝트 저장");
+        return new ProjectGetResponse(projectRepository.save(request.toEntity()));
     }
 
     @Override
     public ProjectGetResponse changeImage(Long pjtIdx, ProjectPatchRequest projectPatchRequest) throws Exception {
         checkAuthorization(pjtIdx);
         MultipartFile projectImage = projectPatchRequest.getProjectImage();
-        projectPatchRequest.setProjectImageUrl(s3Service.save(projectImage, "project", pjtIdx));
-        return new ProjectGetResponse(projectRepository.save(projectPatchRequest.toEntity()));
+        ProjectPatchRequest request = new ProjectPatchRequest(projectRepository.findById(pjtIdx).get());
+        request.setProjectImageUrl(s3Service.save(projectImage, "project", pjtIdx));
+        return new ProjectGetResponse(projectRepository.save(request.toEntity()));
     }
 
     @Override
@@ -88,7 +94,8 @@ public class ProjectServiceImpl implements ProjectService{
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(Long id) throws Exception {
+        checkAuthorization(id);
         projectRepository.deleteById(id);
     }
 

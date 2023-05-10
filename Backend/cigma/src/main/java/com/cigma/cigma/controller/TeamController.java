@@ -71,7 +71,7 @@ public class TeamController {
 
     // 팀 정보 수정(이름, 사진)
     @PatchMapping("/{id}")
-    public CustomResponseEntity<Object> changeTeamInfo(@PathVariable("id") Long teamIdx, @ModelAttribute TeamUpdateRequest teamUpdateRequest) throws Exception {
+    public CustomResponseEntity<Object> changeTeamInfo(@PathVariable("id") Long teamIdx, @RequestBody TeamUpdateRequest teamUpdateRequest) throws Exception {
         User user = userService.getUserBySecurity();
         Team team = teamService.findTeam(teamIdx);
 
