@@ -42,20 +42,15 @@ const WorkSpacePage = (props) => {
   const innerBoardRef = useRef();
 
   const users = useUsers(awareness);
+
+  // artboard안에서의 마우스 위치 좌표 handler
   const handlePointMove = React.useCallback(
     (e) => {
       const artboardNode = innerBoardRef.current.getBoundingClientRect();
       awareness.setLocalStateField("cursor", {
-        x:
-          (((e.clientX - artboardNode.left) /
-            (artboardNode.right - artboardNode.left)) *
-            artboardNode.width) /
-          currentScale,
-        y:
-          ((e.clientY - artboardNode.top) /
-            (artboardNode.bottom - artboardNode.top)) *
-          artboardNode.height,
-      }) / currentScale;
+        x: (e.clientX - artboardNode.left) / currentScale,
+        y: (e.clientY - artboardNode.top) / currentScale,
+      });
     },
     [currentScale, innerBoardRef.current]
   );
@@ -173,22 +168,21 @@ const WorkSpacePage = (props) => {
             artBoardRef={innerBoardRef}
           />
         ))}
+        {Array.from(users.entries()).map(([key, value]) => {
+          if (key === awareness.clientID) return null;
+
+          if (!value.cursor || !value.color || !value.name) return null;
+
+          return (
+            <CursorAtom
+              key={key}
+              cursor={value.cursor}
+              color={value.color}
+              name={value.name}
+            />
+          );
+        })}
       </div>
-      {Array.from(users.entries()).map(([key, value]) => {
-        if (key === awareness.clientID) return null;
-
-        if (!value.cursor || !value.color || !value.name) return null;
-
-        return (
-          <CursorAtom
-            key={key}
-            cursor={value.cursor}
-            color={value.color}
-            name={value.name}
-            style={{ overflow: "hidden" }}
-          />
-        );
-      })}
     </div>
   );
 };
