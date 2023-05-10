@@ -3,7 +3,6 @@ const { VITE_WS_BACK } = import.meta.env;
 
 const createApi = (props) => {
   // 인자값으로 토큰을 받았을 떄
-  console.log(props.token);
   if (props != undefined) {
     const apiInstance = axios.create({
       baseURL: `${VITE_WS_BACK}/api`,
