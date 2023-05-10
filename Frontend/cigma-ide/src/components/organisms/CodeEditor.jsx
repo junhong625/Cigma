@@ -11,12 +11,9 @@ import { useRef, useState } from "react";
 import EditPointer from "../atoms/EditPointer";
 import computeSelectionBox from "../../tools/computeSelectionBox";
 import Comment from "./Comment";
-import {
-  hideCodeEditor,
-  selectAllCodeEditor,
-  showCodeEditor,
-} from "../../store/codeEditorSlice";
+import { hideCodeEditor, selectAllCodeEditor, showCodeEditor } from "../../store/codeEditorSlice";
 import EditorOrganism from "./EditorOrganism";
+import useGlobalKeyboardShortCut from "../../hooks/useGlobalKeyboardShortCut";
 
 const directions = {
   N: "n",
@@ -41,8 +38,11 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   // comment 우측
   const [hideComment, setHideComment] = useState(true);
 
-  useDragCodeEditor(codeEditorIndex, artBoardRef, canvasRef);
   // 모나코 들어갈 곳
+  useDragCodeEditor(codeEditorIndex, artBoardRef, canvasRef);
+
+  // 단축키 추가
+  // useGlobalKeyboardShortCut();
 
   const handleInput = (event) => {
     setIsDoubleClicked(false);
@@ -133,6 +133,7 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
         >
           {isDoubleClicked
             ? // EditPointer atoms 들어갈 자리.
+              // 편집점 활성화될때 삭제도 가능
               Object.values(directions).map((direction) => (
                 <EditPointer
                   direction={direction}

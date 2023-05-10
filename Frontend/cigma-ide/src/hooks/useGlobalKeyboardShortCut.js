@@ -25,7 +25,7 @@ function useGlobalKeyboardShortCut() {
      * backspace 누르면 삭제
      */
     const deleteCanvasShortCut = (event) => {
-      if (event.shiftKey && event.key == "Backspace" && editorCount > 1) {
+      if (event.key == "Backspace" && editorCount > 1) {
         event.preventDefault();
         dispatch(deleteCodeEditor(workingEditorIndex));
         // dispatch(setCodeEditorIndex(0));
