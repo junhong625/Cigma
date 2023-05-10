@@ -18,7 +18,7 @@ public class TeamGetResponse {
         teamIdx = team.getTeamIdx();
         teamLeader = team.getTeamLeader().getUserEmail();
         teamName = team.getTeamName();
-        teamMate = team.getMembers().replaceAll("[\\[\\]\\ ]", "").split(",");
+        teamMate = team.getMembers().replaceAll("[\\[\\] \"]", "").split(",");
         teamImageUrl = team.getTeamImageUrl();
     }
 }

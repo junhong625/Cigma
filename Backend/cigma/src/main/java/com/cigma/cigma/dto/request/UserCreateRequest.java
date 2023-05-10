@@ -8,7 +8,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Data
 @AllArgsConstructor
 public class UserCreateRequest {
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private String userEmail;
     private String userPass;
     private String userName;
@@ -18,7 +17,7 @@ public class UserCreateRequest {
         return User
                 .builder()
                 .userEmail(userEmail)
-                .userPass(passwordEncoder.encode(userPass))
+                .userPass(userPass)
                 .userName(userName)
                 .userImageUrl(userImageUrl)
                 .build();

@@ -2,11 +2,13 @@ package com.cigma.cigma.service;
 
 import com.cigma.cigma.dto.request.TeamMateRequest;
 import com.cigma.cigma.dto.request.TeamUpdateRequest;
+import com.cigma.cigma.dto.response.ProjectGetResponse;
 import com.cigma.cigma.dto.response.TeamGetResponse;
 import com.cigma.cigma.entity.Team;
 import com.cigma.cigma.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface TeamService {
@@ -18,8 +20,6 @@ public interface TeamService {
 
     Optional<Team> findById(Long teamIdx);
 
-    Optional<Team> findByTeamLeader(User user);
-
     TeamGetResponse getTeam(Long teamIdx);
 
     TeamGetResponse addTeamMate(Long teamIdx, TeamMateRequest teamMateRequest) throws Exception;
@@ -30,5 +30,7 @@ public interface TeamService {
 
     TeamGetResponse changeImage(Team team, MultipartFile multipartFile) throws Exception;
 
-    boolean checkDuplicate(String teamName) throws Exception;
+    void checkDuplicate(String teamName) throws Exception;
+
+    List<ProjectGetResponse> getMyTeamProjects(Long teamIdx);
 }

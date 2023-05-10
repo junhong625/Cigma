@@ -3,12 +3,14 @@ package com.cigma.cigma.controller;
 import com.cigma.cigma.common.CustomResponseEntity;
 import com.cigma.cigma.dto.request.UserLoginRequest;
 import com.cigma.cigma.dto.request.UserUpdateRequest;
+import com.cigma.cigma.dto.response.TeamGetResponse;
 import com.cigma.cigma.handler.ResponseHandler;
 import com.cigma.cigma.dto.request.UserCreateRequest;
 import com.cigma.cigma.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -157,8 +159,8 @@ public class UserController {
 
     ====================================
      */
-    @PutMapping
-    public CustomResponseEntity<?> changeUserPrincipal(@ModelAttribute UserUpdateRequest userUpdateRequest) {
+    @PatchMapping
+    public CustomResponseEntity<?> changeUserPrincipal(@RequestBody UserUpdateRequest userUpdateRequest) {
         try {
 //            log.info("type : " + userUpdateRequest.getUserImage().getContentType());
             // 이름 변경
@@ -169,8 +171,19 @@ public class UserController {
             } else if (userUpdateRequest.getUserPass() != null && !userUpdateRequest.getUserPass().isBlank()) {
                 log.info("비밀번호 변경");
                 return ResponseHandler.generateResponse(true, "비밀번호 변경 성공", HttpStatus.OK, userService.changePassword(userUpdateRequest.getUserPass()));
+            } else {
+                throw new IOException("변경사항이 없습니다.");
+            }
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse(false, "변경 실패 : " + e.getMessage(), HttpStatus.BAD_REQUEST, null);
+        }
+    }
+
+    @PatchMapping("/image")
+    public CustomResponseEntity<?> changeUserImage(@ModelAttribute UserUpdateRequest userUpdateRequest) {
+        try {
             // 이미지 변경
-            } else if (userUpdateRequest.getUserImage() != null && userUpdateRequest.getUserImage().getContentType().startsWith("image")){
+            if (userUpdateRequest.getUserImage() != null && userUpdateRequest.getUserImage().getContentType().startsWith("image")){
                 log.info("이미지 변경");
                 return ResponseHandler.generateResponse(true, "비밀번호 변경 성공", HttpStatus.OK, userService.changeImage(userUpdateRequest.getUserImage()));
             } else {
@@ -179,5 +192,10 @@ public class UserController {
         } catch (Exception e) {
             return ResponseHandler.generateResponse(false, "변경 실패 : " + e.getMessage(), HttpStatus.BAD_REQUEST, null);
         }
+    }
+
+    @GetMapping("/team")
+    public ResponseEntity<Object> getMyTeams() {
+        return ResponseHandler.generateResponse(true, "내가 속한 팀 모두 조회", HttpStatus.OK, userService.getMyTeams());
     }
 }

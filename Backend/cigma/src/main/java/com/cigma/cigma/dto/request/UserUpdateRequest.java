@@ -15,7 +15,6 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserUpdateRequest {
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private Long userIdx;
     private String userEmail;
     private String userName;
@@ -40,7 +39,7 @@ public class UserUpdateRequest {
                 .userIdx(userIdx)
                 .userEmail(userEmail)
                 .userName(userName)
-                .userPass(passwordEncoder.encode(userPass))
+                .userPass(userPass)
                 .isAdmin(isAdmin)
                 .userImageUrl(userImageUrl)
                 .createTime(createTime)

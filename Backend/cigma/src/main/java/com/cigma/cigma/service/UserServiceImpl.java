@@ -3,14 +3,17 @@ package com.cigma.cigma.service;
 import com.cigma.cigma.common.SecurityUtils;
 import com.cigma.cigma.dto.request.UserLoginRequest;
 import com.cigma.cigma.dto.request.UserUpdateRequest;
+import com.cigma.cigma.dto.response.TeamGetResponse;
 import com.cigma.cigma.dto.response.UserGetResponse;
 import com.cigma.cigma.dto.response.UserLoginResponse;
+import com.cigma.cigma.entity.Team;
 import com.cigma.cigma.entity.User;
 import com.cigma.cigma.jwt.Token;
 import com.cigma.cigma.jwt.TokenProvider;
 import com.cigma.cigma.jwt.UserPrincipal;
 import com.cigma.cigma.properties.ImageProperties;
 import com.cigma.cigma.properties.JwtProperties;
+import com.cigma.cigma.repository.TeamRepository;
 import com.cigma.cigma.repository.UserRepository;
 import com.cigma.cigma.dto.request.UserCreateRequest;
 import com.cigma.cigma.dto.response.UserCreateResponse;
@@ -21,10 +24,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -32,7 +37,9 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 @Slf4j
 public class UserServiceImpl implements UserService{
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final UserRepository userRepository;
+    private final TeamRepository teamRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final TokenProvider tokenProvider;
     private final JwtProperties jwtProperties;
@@ -41,10 +48,24 @@ public class UserServiceImpl implements UserService{
     private final ImageProperties imageProperties;
 
     @Override
+    public List<TeamGetResponse> getMyTeams() {
+        log.info("내팀찾기");
+        User user = getUserBySecurity();
+        log.info("쿼리문 시작");
+        List<TeamGetResponse> response = teamRepository.findAllByTeamLeader_UserIdxOrMembers(user.getUserIdx(), user.getUserEmail());
+        for (TeamGetResponse teamGetResponse : response) {
+            log.info(teamGetResponse.getTeamName());
+        }
+        return response;
+    }
+
+    @Override
     public UserCreateResponse signUp(UserCreateRequest userCreateRequest) {
         // email 유효성 검사
         checkDuplicateMemberEmail(userCreateRequest.getUserEmail());
         userCreateRequest.setUserImageUrl(imageProperties.getDefaultPath().getUser());
+        // 비밀번호 암호화
+        userCreateRequest.setUserPass(passwordEncoder.encode(userCreateRequest.getUserPass()));
         // 등록되지 않은 이메일일 경우 회원가입 진행
         return new UserCreateResponse(userRepository.save(userCreateRequest.toEntity()));
     }
@@ -59,8 +80,8 @@ public class UserServiceImpl implements UserService{
         // User 생성 권한
         UserUpdateRequest request = new UserUpdateRequest(user);
         log.info("요청 생성");
-        // 비밀번호 변경
-        request.setUserPass(password);
+        // 비밀번호 암호화 및 변경
+        request.setUserPass(passwordEncoder.encode(password));
         log.info("새로운 비밀번호 설정");
         // 변경 반영
         user = userRepository.save(request.toEntity());

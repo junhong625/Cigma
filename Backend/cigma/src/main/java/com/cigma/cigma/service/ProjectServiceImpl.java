@@ -1,16 +1,21 @@
 package com.cigma.cigma.service;
 
 import com.cigma.cigma.dto.request.ProjectCreateRequest;
+import com.cigma.cigma.dto.request.ProjectPatchRequest;
 import com.cigma.cigma.dto.response.ProjectGetResponse;
 import com.cigma.cigma.entity.Project;
 import com.cigma.cigma.entity.Team;
+import com.cigma.cigma.handler.customException.ProjectNotFoundException;
 import com.cigma.cigma.handler.customException.TeamNotFoundException;
 import com.cigma.cigma.properties.ImageProperties;
 import com.cigma.cigma.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,6 +25,31 @@ public class ProjectServiceImpl implements ProjectService{
     private final ProjectRepository projectRepository;
     private final TeamServiceImpl teamService;
     private final ImageProperties imageProperties;
+    private final S3ServiceImpl s3Service;
+
+    @Override
+    public ProjectGetResponse changeName(Long pjtIdx, ProjectPatchRequest projectPatchRequest) throws ProjectNotFoundException {
+        String projectName = projectPatchRequest.getProjectName();
+        try {
+            projectPatchRequest = new ProjectPatchRequest(projectRepository.findById(pjtIdx).get());
+        } catch (Exception e) {
+            throw new ProjectNotFoundException("존재하진 않는 팀입니다.");
+        }
+        projectPatchRequest.setProjectName(projectName);
+        return new ProjectGetResponse(projectRepository.save(projectPatchRequest.toEntity()));
+    }
+
+    @Override
+    public ProjectGetResponse changeImage(Long pjtIdx, ProjectPatchRequest projectPatchRequest) throws ProjectNotFoundException {
+        MultipartFile projectImage = projectPatchRequest.getProjectImage();
+        try {
+            projectPatchRequest = new ProjectPatchRequest(projectRepository.findById(pjtIdx).get());
+        } catch (Exception e) {
+            throw new ProjectNotFoundException("존재하진 않는 팀입니다.");
+        }
+        projectPatchRequest.setProjectImageUrl(s3Service.save(projectImage, "project", pjtIdx));
+        return new ProjectGetResponse(projectRepository.save(projectPatchRequest.toEntity()));
+    }
 
     @Override
     public ProjectGetResponse save(ProjectCreateRequest projectCreateRequest) throws TeamNotFoundException {

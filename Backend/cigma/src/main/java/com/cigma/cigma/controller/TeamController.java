@@ -33,11 +33,9 @@ public class TeamController {
 
     // 팀생성
     @PostMapping()
-    public CustomResponseEntity<? extends Object> createTeam(@ModelAttribute TeamUpdateRequest teamUpdateRequest) throws IOException {
+    public CustomResponseEntity<? extends Object> createTeam(@RequestBody TeamUpdateRequest teamUpdateRequest) throws Exception {
         // 팀명 중복 체크
-        if (teamService.checkDuplicate(teamUpdateRequest.getTeamName())) {
-            throw new IOException("이미 존재하는 팀명입니다."); // 이미 존재하는 팀명일 경우
-        }
+        teamService.checkDuplicate(teamUpdateRequest.getTeamName());
         try {
             return ResponseHandler.generateResponse(true, "팀생성 성공", HttpStatus.CREATED, teamService.createTeam(teamUpdateRequest));
         } catch (Exception e) {
@@ -48,7 +46,7 @@ public class TeamController {
 
     // 팀삭제
     @DeleteMapping("/{id}")
-    public CustomResponseEntity<? extends Object> deleteTeam(HttpServletRequest request, @PathVariable("id") Long teamIdx) throws IOException {
+    public CustomResponseEntity<? extends Object> deleteTeam(@PathVariable("id") Long teamIdx) throws IOException {
         try {
             UserPrincipal userPrincipal = SecurityUtils.getUserPrincipal();
             Optional<User> user = userService.findById(userPrincipal.getUserIdx());
@@ -60,7 +58,7 @@ public class TeamController {
 
                 if (user.get() == team.get().getTeamLeader()) {  // 삭제하려는 사람이 팀리더면
                     teamService.deleteById(teamIdx);  // 삭제
-                    return ResponseHandler.generateResponse(true, "팀삭제 성공", HttpStatus.CREATED, null);
+                    return ResponseHandler.generateResponse(true, "팀삭제 성공", HttpStatus.OK, null);
                 } else {  // 삭제하려는 사람이 리더가 아니면
                     return ResponseHandler.generateResponse(false, "삭제 권한 없음", HttpStatus.UNAUTHORIZED, null);
                 }
@@ -74,6 +72,7 @@ public class TeamController {
         }
     }
 
+    // 팀 정보 수정(이름, 사진)
     @PatchMapping("/{id}")
     public CustomResponseEntity<Object> changeTeamInfo(@PathVariable("id") Long teamIdx, @ModelAttribute TeamUpdateRequest teamUpdateRequest) throws Exception {
         User user = userService.getUserBySecurity();
@@ -82,9 +81,7 @@ public class TeamController {
         if (user.getUserIdx() == team.getTeamLeader().getUserIdx()) {
             if (teamUpdateRequest.getTeamName() != null && !teamUpdateRequest.getTeamName().isBlank()) {
                 // 팀명 중복 체크
-                if (teamService.checkDuplicate(teamUpdateRequest.getTeamName())) {
-                    throw new IOException("이미 존재하는 팀명입니다."); // 이미 존재하는 팀명일 경우
-                }
+                teamService.checkDuplicate(teamUpdateRequest.getTeamName());
                 return ResponseHandler.generateResponse(true, "팀명 변경 성공", HttpStatus.OK, teamService.changeName(team, teamUpdateRequest.getTeamName()));
             } else if (teamUpdateRequest.getTeamImage() != null && !teamUpdateRequest.getTeamImage().getContentType().isBlank()) {
                 return ResponseHandler.generateResponse(true, "팀사진 변경 성공", HttpStatus.OK, teamService.changeImage(team, teamUpdateRequest.getTeamImage()));
@@ -95,6 +92,7 @@ public class TeamController {
         throw new IOException("변경사항이 없습니다.");
     }
 
+    // 팀 정보 조회
     @GetMapping("/{id}")
     public CustomResponseEntity<Object> getTeam(@PathVariable("id") Long teamIdx) {
         try {
@@ -113,6 +111,12 @@ public class TeamController {
     // 팀원 삭제
     @PatchMapping("/{id}/pop")
     public CustomResponseEntity<Object> popMembers(@PathVariable("id") Long teamIdx, @RequestBody TeamMateRequest teamMateRequest) throws Exception {
-        return ResponseHandler.generateResponse(true, "추가 성공", HttpStatus.OK, teamService.popTeamMate(teamIdx, teamMateRequest));
+        return ResponseHandler.generateResponse(true, "삭제 성공", HttpStatus.OK, teamService.popTeamMate(teamIdx, teamMateRequest));
+    }
+
+    // 팀에 속한 프로젝트 모두 조회
+    @GetMapping("/project/{id}")
+    public CustomResponseEntity<? extends Object> getMyTeamProject(@PathVariable("id") Long teamIdx) {
+        return ResponseHandler.generateResponse(true, "팀 프로젝트 모두 조회", HttpStatus.OK, teamService.getMyTeamProjects(teamIdx));
     }
 }

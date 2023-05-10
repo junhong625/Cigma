@@ -8,6 +8,7 @@ import com.cigma.cigma.entity.Project;
 import com.cigma.cigma.entity.Team;
 import com.cigma.cigma.entity.User;
 import com.cigma.cigma.handler.ResponseHandler;
+import com.cigma.cigma.handler.customException.ProjectNotFoundException;
 import com.cigma.cigma.jwt.UserPrincipal;
 import com.cigma.cigma.properties.ImageProperties;
 import com.cigma.cigma.repository.ProjectRepository;
@@ -68,29 +69,12 @@ public class ProjectController {
     }
 
     @PatchMapping("/{id}")
-    public CustomResponseEntity<? extends Object> changeProjectName(@PathVariable("id") Long projectIdx, @RequestBody ProjectPatchRequest projectPatchRequest) throws IOException {
-        try {
-            UserPrincipal userPrincipal = SecurityUtils.getUserPrincipal();
-            Optional<User> user = userService.findById(userPrincipal.getUserIdx());
-
-            if (user.isPresent()) {
-                Optional<Project> project = projectService.findById(projectIdx);
-                Team team = project.get().getTeam();
-                if (user.get() == team.getTeamLeader()) {  // 변경하려는 사람이 팀리더면
-                    project.get().setProjectName(projectPatchRequest.getProjectName());
-                    projectRepository.save(project.get());
-                    return ResponseHandler.generateResponse(true, "플젝이름 변경 성공", HttpStatus.CREATED, null);
-                } else {  // 변경하려는 사람이 리더가 아니면
-                    return ResponseHandler.generateResponse(false, "변경 권한 없음", HttpStatus.UNAUTHORIZED, null);
-                }
-            } else {  // 존재하지 않는 유저
-                return ResponseHandler.generateResponse(false, "존재하지 않는 사용자입니다", HttpStatus.BAD_REQUEST, null);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseHandler.generateResponse(false, "플젝이름변경 실패", HttpStatus.BAD_REQUEST, null);
-        }
+    public CustomResponseEntity<? extends Object> changeProjectName(@PathVariable("id") Long projectIdx, @RequestBody ProjectPatchRequest projectPatchRequest) throws IOException, ProjectNotFoundException {
+        return ResponseHandler.generateResponse(true, "프로젝트 이름 변경", HttpStatus.OK, projectService.changeName(projectIdx, projectPatchRequest));
     }
 
+    @PatchMapping("/{id}/image")
+    public CustomResponseEntity<? extends Object> changeProjectImage(@PathVariable("id") Long projectIdx, @RequestBody ProjectPatchRequest projectPatchRequest) throws IOException, ProjectNotFoundException {
+        return ResponseHandler.generateResponse(true, "프로젝트 사진 변경", HttpStatus.OK, projectService.changeImage(projectIdx, projectPatchRequest));
+    }
 }
