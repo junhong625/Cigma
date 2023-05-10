@@ -6,7 +6,6 @@ import com.cigma.cigma.dto.request.UserUpdateRequest;
 import com.cigma.cigma.dto.response.TeamGetResponse;
 import com.cigma.cigma.dto.response.UserGetResponse;
 import com.cigma.cigma.dto.response.UserLoginResponse;
-import com.cigma.cigma.entity.Team;
 import com.cigma.cigma.entity.User;
 import com.cigma.cigma.jwt.Token;
 import com.cigma.cigma.jwt.TokenProvider;
@@ -16,7 +15,6 @@ import com.cigma.cigma.properties.JwtProperties;
 import com.cigma.cigma.repository.TeamRepository;
 import com.cigma.cigma.repository.UserRepository;
 import com.cigma.cigma.dto.request.UserCreateRequest;
-import com.cigma.cigma.dto.response.UserCreateResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -41,6 +39,14 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+
+    @Override
+    public UserGetResponse setDefaultImage() {
+        UserUpdateRequest userUpdateRequest = new UserUpdateRequest(getUserBySecurity());
+        userUpdateRequest.setUserImageUrl(imageProperties.getDefaultPath().getUser());
+        return new UserGetResponse(userRepository.save(userUpdateRequest.toEntity()));
+    }
+
     private final TokenProvider tokenProvider;
     private final JwtProperties jwtProperties;
     private final RedisTemplate redisTemplate;
@@ -60,18 +66,18 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserCreateResponse signUp(UserCreateRequest userCreateRequest) {
+    public UserGetResponse signUp(UserCreateRequest userCreateRequest) {
         // email 유효성 검사
         checkDuplicateMemberEmail(userCreateRequest.getUserEmail());
         userCreateRequest.setUserImageUrl(imageProperties.getDefaultPath().getUser());
         // 비밀번호 암호화
         userCreateRequest.setUserPass(passwordEncoder.encode(userCreateRequest.getUserPass()));
         // 등록되지 않은 이메일일 경우 회원가입 진행
-        return new UserCreateResponse(userRepository.save(userCreateRequest.toEntity()));
+        return new UserGetResponse(userRepository.save(userCreateRequest.toEntity()));
     }
 
     @Override
-    public UserCreateResponse changePassword(String password) {
+    public UserGetResponse changePassword(String password) {
         log.info("======================================");
         log.info("비밀번호 변경 시작");
         // SecurityContextHolder 에서 가져온 사용자 정보
@@ -86,11 +92,11 @@ public class UserServiceImpl implements UserService{
         // 변경 반영
         user = userRepository.save(request.toEntity());
         log.info("변경 완료");
-        return new UserCreateResponse(user);
+        return new UserGetResponse(user);
     }
 
     @Override
-    public UserCreateResponse changeName(String name) {
+    public UserGetResponse changeName(String name) {
         log.info("======================================");
         log.info("이름 변경 시작");
         // SecurityContextHolder 에서 가져온 사용자 정보
@@ -105,11 +111,11 @@ public class UserServiceImpl implements UserService{
         // 변경 반영
         user = userRepository.save(request.toEntity());
         log.info("변경 완료");
-        return new UserCreateResponse(user);
+        return new UserGetResponse(user);
     }
 
     @Override
-    public UserCreateResponse changeImage(MultipartFile multipartFile) {
+    public UserGetResponse changeImage(MultipartFile multipartFile) {
         log.info("======================================");
         log.info("유저 이미지 변경 시작");
         // SecurityContextHolder 에서 가져온 사용자 정보
@@ -125,7 +131,7 @@ public class UserServiceImpl implements UserService{
         // 변경 반영
         user = userRepository.save(request.toEntity());
         log.info("변경 완료");
-        return new UserCreateResponse(user);
+        return new UserGetResponse(user);
     }
 
     @Override

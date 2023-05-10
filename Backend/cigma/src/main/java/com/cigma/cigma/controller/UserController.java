@@ -185,13 +185,18 @@ public class UserController {
             // 이미지 변경
             if (userUpdateRequest.getUserImage() != null && userUpdateRequest.getUserImage().getContentType().startsWith("image")){
                 log.info("이미지 변경");
-                return ResponseHandler.generateResponse(true, "비밀번호 변경 성공", HttpStatus.OK, userService.changeImage(userUpdateRequest.getUserImage()));
+                return ResponseHandler.generateResponse(true, "이미지 변경 성공", HttpStatus.OK, userService.changeImage(userUpdateRequest.getUserImage()));
             } else {
-                throw new IOException("변경사항이 없습니다.");
+                return ResponseHandler.generateResponse(true, "이미지 변경 성공", HttpStatus.OK, userService.changeImage(userUpdateRequest.getUserImage()));
             }
         } catch (Exception e) {
             return ResponseHandler.generateResponse(false, "변경 실패 : " + e.getMessage(), HttpStatus.BAD_REQUEST, null);
         }
+    }
+
+    @DeleteMapping("/image")
+    public CustomResponseEntity<?> setDefaultImage(@ModelAttribute UserUpdateRequest userUpdateRequest) {
+        return ResponseHandler.generateResponse(true, "기본 이미지로 변경", HttpStatus.OK, userService.setDefaultImage());
     }
 
     @GetMapping("/team")
