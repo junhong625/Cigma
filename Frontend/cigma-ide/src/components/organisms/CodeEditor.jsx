@@ -13,7 +13,7 @@ import computeSelectionBox from "../../tools/computeSelectionBox";
 import Comment from "./Comment";
 import { hideCodeEditor, selectAllCodeEditor, showCodeEditor } from "../../store/codeEditorSlice";
 import EditorOrganism from "./EditorOrganism";
-// import useGlobalKeyboardShortCut from "../../hooks/useGlobalKeyboardShortCut";
+import useGlobalKeyboardShortCut from "../../hooks/useGlobalKeyboardShortCut";
 
 const directions = {
   N: "n",
@@ -44,7 +44,7 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   useDragCodeEditor(codeEditorIndex, artBoardRef, canvasRef);
 
   // 단축키 추가
-  // useGlobalKeyboardShortCut()
+  useGlobalKeyboardShortCut(isClicked);
 
   // 더블클릭 이벤트 처리
   const handleDoubleClick = () => {

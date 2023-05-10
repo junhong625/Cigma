@@ -8,7 +8,8 @@ import {
   setCodeEditorIndex,
 } from "../store/toolSlice";
 import { deleteCodeEditor, selectCodeEditorLength } from "../store/codeEditorSlice";
-function useGlobalKeyboardShortCut() {
+function useGlobalKeyboardShortCut(isClicked) {
+  console.log(`isClicked props:::${isClicked}`);
   const dispatch = useDispatch();
   const editorCount = useSelector(selectCodeEditorLength);
   const workingEditorIndex = useSelector(selectCurrentCodeEditorIndex);
@@ -25,14 +26,16 @@ function useGlobalKeyboardShortCut() {
      * backspace 누르면 삭제
      */
     const deleteCanvasShortCut = (event) => {
-      if (event.key == "Backspace" && editorCount > 1) {
+      console.log(`del key event${event}`);
+      if (isClicked && event.key == "Backspace" && editorCount > 1) {
         event.preventDefault();
+        // event.stopPropagation();
         dispatch(deleteCodeEditor(workingEditorIndex));
         // dispatch(setCodeEditorIndex(0));
       }
     };
     /**
-     * ctrl + N
+     * shiftKey + N
      * 캔버스 새로 생성하기
      * Selector code-editor로 설정
      */
@@ -46,7 +49,7 @@ function useGlobalKeyboardShortCut() {
     };
     /**
      *
-     * ctrl + T
+     * shiftKey + T
      * 텍스트 새로 생성하기
      * Selector text로 설정
      */
@@ -58,7 +61,7 @@ function useGlobalKeyboardShortCut() {
       }
     };
     /**
-     * ctrl + V
+     * shiftKey + V
      * 일반적인 selector로 설정
      */
     const selectorToolShortCut = (event) => {

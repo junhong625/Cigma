@@ -53,7 +53,7 @@ const WorkSpacePage = (props) => {
   useDrawCodeEditor(innerBoardRef);
 
   // 단축키 추가
-  useGlobalKeyboardShortCut();
+  // useGlobalKeyboardShortCut();
 
   // text 추가
   useDrawText(innerBoardRef);
