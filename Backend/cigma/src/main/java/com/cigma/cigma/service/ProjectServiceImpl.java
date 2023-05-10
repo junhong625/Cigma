@@ -1,5 +1,6 @@
 package com.cigma.cigma.service;
 
+import com.cigma.cigma.common.SecurityUtils;
 import com.cigma.cigma.dto.request.ProjectCreateRequest;
 import com.cigma.cigma.dto.request.ProjectPatchRequest;
 import com.cigma.cigma.dto.response.ProjectGetResponse;
@@ -7,6 +8,7 @@ import com.cigma.cigma.entity.Project;
 import com.cigma.cigma.entity.Team;
 import com.cigma.cigma.handler.customException.ProjectNotFoundException;
 import com.cigma.cigma.handler.customException.TeamNotFoundException;
+import com.cigma.cigma.jwt.UserPrincipal;
 import com.cigma.cigma.properties.ImageProperties;
 import com.cigma.cigma.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +51,14 @@ public class ProjectServiceImpl implements ProjectService{
         }
         projectPatchRequest.setProjectImageUrl(s3Service.save(projectImage, "project", pjtIdx));
         return new ProjectGetResponse(projectRepository.save(projectPatchRequest.toEntity()));
+    }
+
+    @Override
+    public ProjectGetResponse getProject(Long pjtIdx) throws TeamNotFoundException {
+        ProjectGetResponse projectGetResponse = new ProjectGetResponse(projectRepository.findById(pjtIdx).get());
+        // 해당 프로젝트를 조회할 권한이 있는지 체크
+        teamService.checkAuthorization(projectGetResponse.getTeamIdx());
+        return projectGetResponse;
     }
 
     @Override

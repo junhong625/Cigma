@@ -9,6 +9,7 @@ import com.cigma.cigma.entity.Team;
 import com.cigma.cigma.entity.User;
 import com.cigma.cigma.handler.ResponseHandler;
 import com.cigma.cigma.handler.customException.ProjectNotFoundException;
+import com.cigma.cigma.handler.customException.TeamNotFoundException;
 import com.cigma.cigma.jwt.UserPrincipal;
 import com.cigma.cigma.properties.ImageProperties;
 import com.cigma.cigma.repository.ProjectRepository;
@@ -76,5 +77,10 @@ public class ProjectController {
     @PatchMapping("/{id}/image")
     public CustomResponseEntity<? extends Object> changeProjectImage(@PathVariable("id") Long projectIdx, @RequestBody ProjectPatchRequest projectPatchRequest) throws IOException, ProjectNotFoundException {
         return ResponseHandler.generateResponse(true, "프로젝트 사진 변경", HttpStatus.OK, projectService.changeImage(projectIdx, projectPatchRequest));
+    }
+
+    @GetMapping("/{id}")
+    public CustomResponseEntity<? extends Object> getProject(@PathVariable("id") Long projectIdx) throws TeamNotFoundException {
+        return ResponseHandler.generateResponse(true, "프로젝트 조회", HttpStatus.OK, projectService.getProject(projectIdx));
     }
 }

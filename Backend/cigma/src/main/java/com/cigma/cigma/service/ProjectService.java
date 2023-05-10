@@ -23,4 +23,6 @@ public interface ProjectService {
     ProjectGetResponse changeName(Long pjtIdx, ProjectPatchRequest projectPatchRequest) throws ProjectNotFoundException;
 
     ProjectGetResponse changeImage(Long pjtIdx, ProjectPatchRequest projectPatchRequest) throws ProjectNotFoundException;
+
+    ProjectGetResponse getProject(Long pjtIdx) throws TeamNotFoundException;
 }
