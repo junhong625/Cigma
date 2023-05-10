@@ -69,18 +69,32 @@ public class ProjectController {
         }
     }
 
+    // 프로젝트 이름 수정
     @PatchMapping("/{id}")
-    public CustomResponseEntity<? extends Object> changeProjectName(@PathVariable("id") Long projectIdx, @RequestBody ProjectPatchRequest projectPatchRequest) throws IOException, ProjectNotFoundException {
+    public CustomResponseEntity<? extends Object> changeProjectName(@PathVariable("id") Long projectIdx, @RequestBody ProjectPatchRequest projectPatchRequest) throws Exception {
         return ResponseHandler.generateResponse(true, "프로젝트 이름 변경", HttpStatus.OK, projectService.changeName(projectIdx, projectPatchRequest));
     }
 
+    // 프로젝트 사진 수정
     @PatchMapping("/{id}/image")
-    public CustomResponseEntity<? extends Object> changeProjectImage(@PathVariable("id") Long projectIdx, @RequestBody ProjectPatchRequest projectPatchRequest) throws IOException, ProjectNotFoundException {
+    public CustomResponseEntity<? extends Object> changeProjectImage(@PathVariable("id") Long projectIdx, @RequestBody ProjectPatchRequest projectPatchRequest) throws Exception {
         return ResponseHandler.generateResponse(true, "프로젝트 사진 변경", HttpStatus.OK, projectService.changeImage(projectIdx, projectPatchRequest));
     }
 
+    // 프로젝트 조회
     @GetMapping("/{id}")
     public CustomResponseEntity<? extends Object> getProject(@PathVariable("id") Long projectIdx) throws TeamNotFoundException {
         return ResponseHandler.generateResponse(true, "프로젝트 조회", HttpStatus.OK, projectService.getProject(projectIdx));
+    }
+
+    // 프로젝트 휴지통에 넣기
+    @PatchMapping("/{id}/trash")
+    public CustomResponseEntity<? extends Object> insertTrashCan(@PathVariable("id") Long projectIdx) throws Exception {
+        return ResponseHandler.generateResponse(true, "프로젝트 조회", HttpStatus.OK, projectService.insertTrashCan(projectIdx));
+    }
+
+    @PatchMapping("/{id}/restore")
+    public CustomResponseEntity<? extends Object> restoreProject(@PathVariable("id") Long projectIdx) throws Exception {
+        return ResponseHandler.generateResponse(true, "프로젝트 조회", HttpStatus.OK, projectService.restoreProject(projectIdx));
     }
 }

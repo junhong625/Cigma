@@ -19,6 +19,7 @@ public class ProjectPatchRequest {
     private String projectName;
     private Timestamp createTime;
     private String projectImageUrl;
+    private Boolean inTrashCan;
     // 변경할 이미지
     private MultipartFile projectImage;
 
@@ -29,6 +30,7 @@ public class ProjectPatchRequest {
         this.projectName = project.getProjectName();
         this.createTime = project.getCreateTime();
         this.projectImageUrl = project.getProjectImageUrl();
+        this.inTrashCan = project.getInTrashCan();
     }
 
     public Project toEntity() {
@@ -38,6 +40,7 @@ public class ProjectPatchRequest {
                 .projectName(projectName)
                 .createTime(createTime)
                 .projectImageUrl(projectImageUrl)
+                .inTrashCan(inTrashCan)
                 .build();
     }
 }

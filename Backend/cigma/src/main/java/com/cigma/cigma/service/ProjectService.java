@@ -20,9 +20,13 @@ public interface ProjectService {
 
     void deleteById(Long id);
 
-    ProjectGetResponse changeName(Long pjtIdx, ProjectPatchRequest projectPatchRequest) throws ProjectNotFoundException;
+    ProjectGetResponse changeName(Long pjtIdx, ProjectPatchRequest projectPatchRequest) throws Exception;
 
-    ProjectGetResponse changeImage(Long pjtIdx, ProjectPatchRequest projectPatchRequest) throws ProjectNotFoundException;
+    ProjectGetResponse changeImage(Long pjtIdx, ProjectPatchRequest projectPatchRequest) throws Exception;
 
-    ProjectGetResponse getProject(Long pjtIdx) throws TeamNotFoundException;
+    ProjectGetResponse getProject(Long pjtIdx) throws Exception;
+
+    ProjectGetResponse insertTrashCan(Long pjtIdx) throws Exception;
+
+    ProjectGetResponse restoreProject(Long pjtIdx) throws Exception;
 }

@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TeamService {
-    void save(Team team);
 
     TeamGetResponse createTeam(TeamUpdateRequest teamUpdateRequest);
 
@@ -32,5 +31,5 @@ public interface TeamService {
 
     void checkDuplicate(String teamName) throws Exception;
 
-    List<ProjectGetResponse> getMyTeamProjects(Long teamIdx);
+    List<ProjectGetResponse> getMyTeamProjects(Long teamIdx, Boolean isDrop);
 }

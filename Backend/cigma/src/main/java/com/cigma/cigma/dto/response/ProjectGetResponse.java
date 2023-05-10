@@ -12,6 +12,7 @@ public class ProjectGetResponse {
     private String projectUrl;
     private String projectName;
     private String projectImageUrl;
+    private Boolean inTrashCan;
 
     public ProjectGetResponse(Project project) {
         this.projectIdx = project.getProjectIdx();
@@ -19,5 +20,6 @@ public class ProjectGetResponse {
         this.projectUrl = project.getProjectUrl();
         this.projectName = project.getProjectName();
         this.projectImageUrl = project.getProjectImageUrl();
+        this.inTrashCan = project.getInTrashCan().booleanValue();
     }
 }

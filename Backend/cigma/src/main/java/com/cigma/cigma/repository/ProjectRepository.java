@@ -11,5 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
-    List<Project> findAllByTeam_TeamIdx(Long teamIdx);
+    // 휴지통에 들어가 있지 않은 팀 프로젝트를 모두 가져오는 JPA
+    List<Project> findAllByTeam_TeamIdxAndInTrashCan(Long teamIdx, Boolean inTrashCan);
 }

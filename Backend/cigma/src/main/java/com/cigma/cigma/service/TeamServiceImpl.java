@@ -35,12 +35,6 @@ public class TeamServiceImpl implements TeamService{
     private final S3ServiceImpl s3Service;
     private final ImageProperties imageProperties;
 
-
-    @Override
-    public void save(Team team) {
-        teamRepository.save(team);
-    }
-
     @Override
     public TeamGetResponse createTeam(TeamUpdateRequest teamUpdateRequest) {
         UserPrincipal userPrincipal = SecurityUtils.getUserPrincipal();
@@ -201,8 +195,8 @@ public class TeamServiceImpl implements TeamService{
     }
 
     @Override
-    public List<ProjectGetResponse> getMyTeamProjects(Long teamIdx) {
-        List<Project> projectList = projectRepository.findAllByTeam_TeamIdx(teamIdx);
+    public List<ProjectGetResponse> getMyTeamProjects(Long teamIdx, Boolean isDrop) {
+        List<Project> projectList = projectRepository.findAllByTeam_TeamIdxAndInTrashCan(teamIdx, isDrop);
         List<ProjectGetResponse> response = new ArrayList<>();
         for (Project project : projectList) {
             response.add(new ProjectGetResponse(project));

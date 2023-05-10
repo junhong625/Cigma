@@ -4,8 +4,6 @@ import com.cigma.cigma.common.CustomResponseEntity;
 import com.cigma.cigma.common.SecurityUtils;
 import com.cigma.cigma.dto.request.TeamMateRequest;
 import com.cigma.cigma.dto.request.TeamUpdateRequest;
-import com.cigma.cigma.dto.request.TeamMembersRequest;
-import com.cigma.cigma.dto.request.TeamPatchRequest;
 import com.cigma.cigma.entity.Team;
 import com.cigma.cigma.entity.User;
 import com.cigma.cigma.handler.ResponseHandler;
@@ -18,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -115,8 +112,14 @@ public class TeamController {
     }
 
     // 팀에 속한 프로젝트 모두 조회
-    @GetMapping("/project/{id}")
-    public CustomResponseEntity<? extends Object> getMyTeamProject(@PathVariable("id") Long teamIdx) {
-        return ResponseHandler.generateResponse(true, "팀 프로젝트 모두 조회", HttpStatus.OK, teamService.getMyTeamProjects(teamIdx));
+    @GetMapping("/{id}/project")
+    public CustomResponseEntity<? extends Object> getMyTeamProjects(@PathVariable("id") Long teamIdx) {
+        return ResponseHandler.generateResponse(true, "팀 프로젝트 모두 조회", HttpStatus.OK, teamService.getMyTeamProjects(teamIdx, false));
+    }
+
+    // 팀에서 휴지통에 넣어둔 프로젝트 모두 조회
+    @GetMapping("/{id}/project/trash")
+    public CustomResponseEntity<? extends Object> getMyTeamDropProjects(@PathVariable("id") Long teamIdx) {
+        return ResponseHandler.generateResponse(true, "팀 프로젝트 모두 조회", HttpStatus.OK, teamService.getMyTeamProjects(teamIdx, true));
     }
 }

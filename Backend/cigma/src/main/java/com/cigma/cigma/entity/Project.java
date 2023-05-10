@@ -1,10 +1,13 @@
 package com.cigma.cigma.entity;
 
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -16,6 +19,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@DynamicInsert
 public class Project {
     //    프로젝트 index : Primary Key, Auto Increment
     @Id
@@ -49,11 +53,15 @@ public class Project {
     @Column(name = "project_image_url")
     private String projectImageUrl;
 
+    @Column(name = "in_trash_can")
+    private Boolean inTrashCan;
+
     @Builder
-    public Project(Team team, String projectUrl, String projectName, String projectImageUrl) {
+    public Project(Team team, String projectUrl, String projectName, String projectImageUrl, Boolean inTrashCan) {
         this.team = team;
         this.projectUrl = projectUrl;
         this.projectName = projectName;
         this.projectImageUrl = projectImageUrl;
+        this.inTrashCan = inTrashCan;
     }
 }

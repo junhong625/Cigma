@@ -16,8 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,25 +28,32 @@ public class ProjectServiceImpl implements ProjectService{
     private final S3ServiceImpl s3Service;
 
     @Override
-    public ProjectGetResponse changeName(Long pjtIdx, ProjectPatchRequest projectPatchRequest) throws ProjectNotFoundException {
-        String projectName = projectPatchRequest.getProjectName();
-        try {
-            projectPatchRequest = new ProjectPatchRequest(projectRepository.findById(pjtIdx).get());
-        } catch (Exception e) {
-            throw new ProjectNotFoundException("존재하진 않는 팀입니다.");
-        }
-        projectPatchRequest.setProjectName(projectName);
+    public ProjectGetResponse insertTrashCan(Long pjtIdx) throws Exception{
+        checkAuthorization(pjtIdx);
+        ProjectPatchRequest projectPatchRequest = new ProjectPatchRequest(projectRepository.findById(pjtIdx).get());
+        projectPatchRequest.setInTrashCan(true);
         return new ProjectGetResponse(projectRepository.save(projectPatchRequest.toEntity()));
     }
 
     @Override
-    public ProjectGetResponse changeImage(Long pjtIdx, ProjectPatchRequest projectPatchRequest) throws ProjectNotFoundException {
+    public ProjectGetResponse restoreProject(Long pjtIdx) throws Exception{
+        checkAuthorization(pjtIdx);
+        ProjectPatchRequest projectPatchRequest = new ProjectPatchRequest(projectRepository.findById(pjtIdx).get());
+        projectPatchRequest.setInTrashCan(false);
+        return new ProjectGetResponse(projectRepository.save(projectPatchRequest.toEntity()));
+    }
+
+    @Override
+    public ProjectGetResponse changeName(Long pjtIdx, ProjectPatchRequest projectPatchRequest) throws Exception {
+        checkAuthorization(pjtIdx);
+        projectPatchRequest.setProjectName(projectPatchRequest.getProjectName());
+        return new ProjectGetResponse(projectRepository.save(projectPatchRequest.toEntity()));
+    }
+
+    @Override
+    public ProjectGetResponse changeImage(Long pjtIdx, ProjectPatchRequest projectPatchRequest) throws Exception {
+        checkAuthorization(pjtIdx);
         MultipartFile projectImage = projectPatchRequest.getProjectImage();
-        try {
-            projectPatchRequest = new ProjectPatchRequest(projectRepository.findById(pjtIdx).get());
-        } catch (Exception e) {
-            throw new ProjectNotFoundException("존재하진 않는 팀입니다.");
-        }
         projectPatchRequest.setProjectImageUrl(s3Service.save(projectImage, "project", pjtIdx));
         return new ProjectGetResponse(projectRepository.save(projectPatchRequest.toEntity()));
     }
@@ -72,8 +77,9 @@ public class ProjectServiceImpl implements ProjectService{
         // port 번호 관리 필요
         // 제외될 port 번호 관리 필요
         String projectUrl = projectCreateRequest.getProjectUrl();
-            Project project = new Project(team, "asdasd", projectName, imageProperties.getDefaultPath().getProject());
-        return new ProjectGetResponse(projectRepository.save(project));
+        Project project = new Project(team, "asdasd", projectName, imageProperties.getDefaultPath().getProject(), false);
+        project = projectRepository.save(project);
+        return new ProjectGetResponse(project);
     }
 
     @Override
@@ -84,5 +90,15 @@ public class ProjectServiceImpl implements ProjectService{
     @Override
     public void deleteById(Long id) {
         projectRepository.deleteById(id);
+    }
+
+    public void checkAuthorization(Long pjtIdx) throws Exception {
+        Project project;
+        try {
+            project = projectRepository.findById(pjtIdx).get();
+        } catch (Exception e) {
+            throw new ProjectNotFoundException("존재하지 않는 프로젝트입니다.");
+        }
+        teamService.checkAuthorization(project.getTeam().getTeamIdx());
     }
 }
