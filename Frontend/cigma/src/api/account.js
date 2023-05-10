@@ -1,7 +1,8 @@
-import api from "./api";
+import createApi from "./api";
 
 // 로그인
 export const login = async (userEmail, userPass) => {
+  const api = createApi();
   try {
     const response = await api.post(`/user/login`, {
       userEmail,
@@ -9,6 +10,7 @@ export const login = async (userEmail, userPass) => {
     });
     return {
       status: response.status,
+      token: response.data.accessToken,
     };
   } catch (error) {
     console.error("login error", error);
@@ -20,6 +22,8 @@ export const login = async (userEmail, userPass) => {
 
 // 회원가입
 export const signup = async (userEmail, userPass, userName) => {
+  const api = createApi();
+
   try {
     const response = await api.post(`/user`, {
       userEmail,
@@ -36,6 +40,8 @@ export const signup = async (userEmail, userPass, userName) => {
 
 // 회원탈퇴
 export const signout = async () => {
+  const api = createApi();
+
   try {
     const response = await api.delete(`/user`);
     return {
