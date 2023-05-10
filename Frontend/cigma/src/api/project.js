@@ -2,8 +2,7 @@ import createApi from "./api";
 
 // 프로젝트 리스트
 export const callProjects = async (token, id) => {
-  const api = createApi(token);
-
+  const api = createApi({ token });
   try {
     const response = await api.get(`/team/projects/${id}`);
     return {
