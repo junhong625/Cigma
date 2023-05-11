@@ -9,10 +9,7 @@ import {
   selectIsInputFieldFocused,
   selectCurrentTool,
 } from "../store/toolSlice";
-import {
-  deleteCodeEditor,
-  selectCodeEditorLength,
-} from "../store/codeEditorSlice";
+import { deleteCodeEditor, selectCodeEditorLength } from "../store/codeEditorSlice";
 function useGlobalKeyboardShortCut(isClicked) {
   // console.log(`isClicked props:::${isClicked}`);
   const dispatch = useDispatch();
@@ -35,7 +32,7 @@ function useGlobalKeyboardShortCut(isClicked) {
     const deleteCanvasShortCut = (event) => {
       // console.log(`del key event${event}`);
       if (event.key == "Backspace" && editorCount > 1) {
-      // if (isClicked && event.key == "Backspace" && editorCount > 1) {
+        // if (isClicked && event.key == "Backspace" && editorCount > 1) {
         event.preventDefault();
         // event.stopPropagation();
         dispatch(deleteCodeEditor(workingEditorIndex));
@@ -90,7 +87,7 @@ function useGlobalKeyboardShortCut(isClicked) {
       window.removeEventListener("keydown", textToolShortCut);
       window.removeEventListener("keydown", selectorToolShortCut);
     };
-  }, [dispatch, editorCount, workingEditorIndex, isInputFieldFocused, currentTool]);
+  }, [dispatch, editorCount, workingEditorIndex, IsInputFieldFocused, currentTool]);
 
   // return <div>useGlobalKeyboardShortCut</div>;
 }
