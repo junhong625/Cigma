@@ -7,6 +7,7 @@ import {
   selectCurrentCodeEditorIndex,
   setCodeEditorIndex,
   selectIsInputFieldFocused,
+  selectCurrentTool,
 } from "../store/toolSlice";
 import {
   deleteCodeEditor,
@@ -18,6 +19,7 @@ function useGlobalKeyboardShortCut(isClicked) {
   const editorCount = useSelector(selectCodeEditorLength);
   const workingEditorIndex = useSelector(selectCurrentCodeEditorIndex);
   const IsInputFieldFocused = useSelector(selectIsInputFieldFocused);
+  const currentTool = useSelector(selectCurrentTool);
   // const tools = { SELECTOR: "selector", TEXT: "text", CodeEditor: "code-editor" };
 
   // ctr + V
@@ -25,7 +27,6 @@ function useGlobalKeyboardShortCut(isClicked) {
 
   // ctrl + t
   // text로 변경
-
   useEffect(() => {
     if (IsInputFieldFocused) return;
     /**
@@ -33,7 +34,8 @@ function useGlobalKeyboardShortCut(isClicked) {
      */
     const deleteCanvasShortCut = (event) => {
       // console.log(`del key event${event}`);
-      if (isClicked && event.key == "Backspace" && editorCount > 1) {
+      if (event.key == "Backspace" && editorCount > 1) {
+      // if (isClicked && event.key == "Backspace" && editorCount > 1) {
         event.preventDefault();
         // event.stopPropagation();
         dispatch(deleteCodeEditor(workingEditorIndex));
@@ -47,8 +49,9 @@ function useGlobalKeyboardShortCut(isClicked) {
      */
 
     const codeEditorShortCut = (event) => {
+      console.log(`event code${event.code}`);
       // if ((e.ctrlKey && e.code === "KeyN") || (e.metaKey && e.code === "KeyN")) return;
-      if (event.shiftKey && event.code === "KeyN") {
+      if (event.code === "KeyN") {
         event.preventDefault();
         dispatch(setCurrentTool("code-editor"));
       }
@@ -72,7 +75,7 @@ function useGlobalKeyboardShortCut(isClicked) {
      */
     const selectorToolShortCut = (event) => {
       // if ((e.ctrlKey && e.code === "KeyV") || (e.metaKey && e.code === "KeyV")) return;
-      if (event.shiftKey && event.code === "KeyV") {
+      if (event.keyCode === "keyV") {
         event.preventDefault();
         dispatch(setCurrentTool("selector"));
       }
@@ -87,7 +90,7 @@ function useGlobalKeyboardShortCut(isClicked) {
       window.removeEventListener("keydown", textToolShortCut);
       window.removeEventListener("keydown", selectorToolShortCut);
     };
-  }, [dispatch, editorCount, workingEditorIndex]);
+  }, [dispatch, editorCount, workingEditorIndex, isInputFieldFocused, currentTool]);
 
   // return <div>useGlobalKeyboardShortCut</div>;
 }
