@@ -6,28 +6,33 @@ import {
   setCurrentTool,
   selectCurrentCodeEditorIndex,
   setCodeEditorIndex,
+  selectIsInputFieldFocused,
+  selectCurrentTool,
 } from "../store/toolSlice";
 import { deleteCodeEditor, selectCodeEditorLength } from "../store/codeEditorSlice";
-function useGlobalKeyboardShortCut(isClicked) {
-  console.log(`isClicked props:::${isClicked}`);
+function useGlobalKeyboardShortCut() {
+  /**
+   * TODO: 파일트리 내에서 단축키 작동안하도록 체크 필요
+   */
   const dispatch = useDispatch();
   const editorCount = useSelector(selectCodeEditorLength);
   const workingEditorIndex = useSelector(selectCurrentCodeEditorIndex);
-  // const tools = { SELECTOR: "selector", TEXT: "text", CodeEditor: "code-editor" };
+  const isInputFieldFocused = useSelector(selectIsInputFieldFocused);
+  const currentTool = useSelector(selectCurrentTool);
 
   // ctr + V
   // selector로 설정
 
   // ctrl + t
   // text로 변경
-
   useEffect(() => {
+    if (isInputFieldFocused) return;
     /**
      * backspace 누르면 삭제
      */
     const deleteCanvasShortCut = (event) => {
-      console.log(`del key event${event}`);
-      if (isClicked && event.key == "Backspace" && editorCount > 1) {
+      // console.log(`del key event${event}`);
+      if (event.key == "Backspace" && editorCount > 1) {
         event.preventDefault();
         // event.stopPropagation();
         dispatch(deleteCodeEditor(workingEditorIndex));
@@ -41,8 +46,9 @@ function useGlobalKeyboardShortCut(isClicked) {
      */
 
     const codeEditorShortCut = (event) => {
+      console.log(`event code${event.code}`);
       // if ((e.ctrlKey && e.code === "KeyN") || (e.metaKey && e.code === "KeyN")) return;
-      if (event.shiftKey && event.code === "KeyN") {
+      if (event.code === "KeyN") {
         event.preventDefault();
         dispatch(setCurrentTool("code-editor"));
       }
@@ -55,7 +61,7 @@ function useGlobalKeyboardShortCut(isClicked) {
      */
     const textToolShortCut = (event) => {
       // if ((e.ctrlKey && e.code === "KeyT") || (e.metaKey && e.code === "KeyT")) return;
-      if (event.shiftKey && event.code === "KeyT") {
+      if (event.code === "keyT") {
         event.preventDefault();
         dispatch(setCurrentTool("text"));
       }
@@ -66,7 +72,7 @@ function useGlobalKeyboardShortCut(isClicked) {
      */
     const selectorToolShortCut = (event) => {
       // if ((e.ctrlKey && e.code === "KeyV") || (e.metaKey && e.code === "KeyV")) return;
-      if (event.shiftKey && event.code === "KeyV") {
+      if (event.keyCode === "keyV") {
         event.preventDefault();
         dispatch(setCurrentTool("selector"));
       }
@@ -81,7 +87,7 @@ function useGlobalKeyboardShortCut(isClicked) {
       window.removeEventListener("keydown", textToolShortCut);
       window.removeEventListener("keydown", selectorToolShortCut);
     };
-  }, [dispatch, editorCount, workingEditorIndex]);
+  }, [dispatch, editorCount, workingEditorIndex, isInputFieldFocused, currentTool]);
 
   // return <div>useGlobalKeyboardShortCut</div>;
 }
