@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styles from "./CodeEditor.module.scss";
 import {
   hideEditPointer,
+  // selectEditPointerVisible,
   selectEditPointerVisible,
   selectIsDragScrolling,
   setCodeEditorIndex,
@@ -12,6 +13,8 @@ import { useEffect, useRef, useState } from "react";
 import EditPointer from "../atoms/EditPointer";
 import computeSelectionBox from "../../tools/computeSelectionBox";
 import Comment from "./Comment";
+import useGlobalKeyboardShortCut from "../../hooks/useGlobalKeyboardShortCut";
+
 import {
   changeShownColor,
   hideCodeEditor,
@@ -38,19 +41,14 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   const dispatch = useDispatch();
   const canvasRef = useRef();
   const codeEditors = useSelector(selectAllCodeEditor);
-  const {
-    top,
-    left,
-    width,
-    height,
-    isHidden,
-    comments,
-    isShown,
-    shownColor,
-    editorPerson,
-  } = codeEditor;
+  // const { top, left, width, height, isHidden, comments } = codeEditor;
+  // 클릭 -> 사이즈 조정
+  const [isClicked, setIsClicked] = useState(false);
+
+  const { top, left, width, height, isHidden, comments, isShown, shownColor, editorPerson } =
+    codeEditor;
   const [myWorking, setMyWorking] = useState(null);
-  // 더블클릭 -> 사이즈 조정
+  // 더블클릭 -> 에디터편집
   const [isDoubleClicked, setIsDoubleClicked] = useState(false);
   // 에디터 상단 바
   // const [isHidden, setIsHidden] = useState(false);
@@ -59,11 +57,24 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   // comment 우측
   const [hideComment, setHideComment] = useState(true);
 
-  useDragCodeEditor(codeEditorIndex, artBoardRef, canvasRef);
   // 모나코 들어갈 곳
+  useDragCodeEditor(codeEditorIndex, artBoardRef, canvasRef);
+
+  // 단축키 추가
+  useGlobalKeyboardShortCut(isClicked);
+
+  // 더블클릭 이벤트 처리
+  const handleDoubleClick = () => {
+    setIsDoubleClicked(true);
+  };
+
+  // div 포커스 해제되었을때 처리되는 핸들러
   const myColor = awareness.getLocalState().color;
   const myName = awareness.getLocalState().name;
+
   const handleInput = (event) => {
+    console.log("blurred");
+    setIsClicked(false);
     setIsDoubleClicked(false);
     dispatch(hideEditPointer);
   };
@@ -87,20 +98,14 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
     if (isDragScrolling) return;
     if (isShown) return;
     dispatch(setStartIsShown({ codeEditorIndex: codeEditorIndex }));
-    dispatch(
-      changeShownColor({ color: myColor, codeEditorIndex: codeEditorIndex })
-    );
-    dispatch(
-      setEditorPerson({ name: myName, codeEditorIndex: codeEditorIndex })
-    );
+    dispatch(changeShownColor({ color: myColor, codeEditorIndex: codeEditorIndex }));
+    dispatch(setEditorPerson({ name: myName, codeEditorIndex: codeEditorIndex }));
     setMyWorking(codeEditorIndex);
   };
   const handleFinishIsShown = () => {
     dispatch(setFinishIsShown({ codeEditorIndex: codeEditorIndex }));
     dispatch(setEditorPerson({ name: null, codeEditorIndex: myWorking }));
-    dispatch(
-      changeShownColor({ color: null, codeEditorIndex: codeEditorIndex })
-    );
+    dispatch(changeShownColor({ color: null, codeEditorIndex: codeEditorIndex }));
     setMyWorking(null);
   };
 
@@ -136,11 +141,13 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
         if (isShown) {
           if (editorPerson === null || myName === editorPerson) {
             dispatch(setCodeEditorIndex(codeEditorIndex));
-            setIsDoubleClicked(true);
+            setIsClicked(true);
+            //setIsDoubleClicked(true);
             dispatch(showEditPointer());
           }
         }
       }}
+      onDoubleClick={handleDoubleClick}
       onBlur={() => {
         handleInput();
       }}
@@ -189,11 +196,18 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
       ) : null}
       {!isHidden ? (
         <div
-          className={styles["code-editor"]}
-          style={{ top: 30, left: 0, width, height: height - 30 }}
+          style={{
+            top: 30,
+            left: 0,
+            width,
+            height: height - 30,
+            position: "absolute",
+            backgroundColor: "white",
+          }}
         >
-          {isDoubleClicked
+          {isClicked
             ? // EditPointer atoms 들어갈 자리.
+              // 편집점 활성화될때 삭제도 가능
               Object.values(directions).map((direction) => (
                 <EditPointer
                   direction={direction}
@@ -208,6 +222,7 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
             editorPerson={editorPerson}
             className={styles["monaco-editor"]}
             file={codeEditors[codeEditorIndex].canvasName}
+            readOnly={!isDoubleClicked}
             style={{ height: height - 30 }}
           />
           {/* comment 화면 처리 */}

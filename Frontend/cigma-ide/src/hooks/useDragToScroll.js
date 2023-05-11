@@ -111,6 +111,13 @@ const useDragToScroll = (boardRef) => {
     };
 
     const handleSpaceKeyDown = (event) => {
+      // 이벤트 발생 확인
+      console.log(`event? ${event.target}`);
+      console.log(`boardRef? ${boardRef.current}`);
+      // code editor 편집하려고 할때는 space 이벤트 방지해야한다.
+      if (event.target.tagName.toLowerCase() === "textarea") {
+        return;
+      }
       // 스페이스바 눌렀을 때
       if (event.keyCode === 32) {
         // 스페이스 이벤트 취소
