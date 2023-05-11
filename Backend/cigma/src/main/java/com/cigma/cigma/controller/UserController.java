@@ -44,7 +44,8 @@ public class UserController {
     @PostMapping()
     public CustomResponseEntity<Object> signUp(@RequestBody UserCreateRequest userUpdateRequest) {
         try {
-            return ResponseHandler.generateResponse(true, "로그인 성공", HttpStatus.CREATED, userService.signUp(userUpdateRequest));
+            userService.signUp(userUpdateRequest);
+            return ResponseHandler.generateResponse(true, "로그인 성공", HttpStatus.CREATED, null);
         } catch (Exception e) {
             return ResponseHandler.generateResponse(false, "이미 등록된 이메일입니다.", HttpStatus.BAD_REQUEST, null);
         }
@@ -170,7 +171,8 @@ public class UserController {
             // 비밀번호 변경
             } else if (userUpdateRequest.getUserPass() != null && !userUpdateRequest.getUserPass().isBlank()) {
                 log.info("비밀번호 변경");
-                return ResponseHandler.generateResponse(true, "비밀번호 변경 성공", HttpStatus.OK, userService.changePassword(userUpdateRequest.getUserPass()));
+                userService.changePassword(userUpdateRequest.getUserPass());
+                return ResponseHandler.generateResponse(true, "비밀번호 변경 성공", HttpStatus.OK, null);
             } else {
                 throw new IOException("변경사항이 없습니다.");
             }

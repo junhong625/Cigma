@@ -67,11 +67,18 @@ public class ProjectController {
     // 프로젝트 휴지통에 넣기
     @PatchMapping("/{id}/trash")
     public CustomResponseEntity<? extends Object> insertTrashCan(@PathVariable("id") Long projectIdx) throws Exception {
-        return ResponseHandler.generateResponse(true, "프로젝트 조회", HttpStatus.OK, projectService.insertTrashCan(projectIdx));
+        projectService.insertTrashCan(projectIdx);
+        return ResponseHandler.generateResponse(true, "프로젝트 조회", HttpStatus.OK, null);
     }
 
     @PatchMapping("/{id}/restore")
     public CustomResponseEntity<? extends Object> restoreProject(@PathVariable("id") Long projectIdx) throws Exception {
-        return ResponseHandler.generateResponse(true, "프로젝트 조회", HttpStatus.OK, projectService.restoreProject(projectIdx));
+        projectService.restoreProject(projectIdx);
+        return ResponseHandler.generateResponse(true, "프로젝트 조회", HttpStatus.OK, null);
     }
+
+//    @GetMapping("/pods")
+//    public CustomResponseEntity<? extends Object> getPods() throws Exception {
+//        return ResponseHandler.generateResponse(true, "프로젝트 조회", HttpStatus.OK, null);
+//    }
 }

@@ -11,14 +11,14 @@ public class TeamGetResponse {
     private Long teamIdx;
     private String teamLeader;
     private String teamName;
-    private String[] teamMate;
+    private String[] members;
     private String teamImageUrl;
 
     public TeamGetResponse(Team team) {
         teamIdx = team.getTeamIdx();
         teamLeader = team.getTeamLeader().getUserEmail();
         teamName = team.getTeamName();
-        teamMate = team.getMembers().replaceAll("[\\[\\] \"]", "").split(",");
+        members = team.getMembers().replaceAll("[\\[\\] \"]", "").split(",");
         teamImageUrl = team.getTeamImageUrl();
     }
 }
