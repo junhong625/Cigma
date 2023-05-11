@@ -41,6 +41,8 @@
     "socket.io-client": "^4.6.1",
     "ws": "^8.13.0",
     "xterm": "^5.1.0",
+    "xterm-addon-attach": "^0.8.0",
+    "xterm-addon-fit": "^0.7.0",
     "y-leveldb": "^0.1.2",
     "y-monaco": "^0.1.4",
     "y-presence": "^0.2.3",

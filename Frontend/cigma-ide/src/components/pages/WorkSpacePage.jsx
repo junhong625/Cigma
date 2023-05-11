@@ -8,6 +8,7 @@ import useMockZoom from "../../hooks/useMockZoom";
 import {
   emptySelectedShapeIndexes,
   selectCurrentScale,
+  selectFileBarVisible,
 } from "../../store/toolSlice";
 import useDrawCodeEditor from "../../hooks/useDrawCodeEditor";
 import useGlobalKeyboardShortCut from "../../hooks/useGlobalKeyboardShortCut";
@@ -32,11 +33,12 @@ awareness.setLocalState({ name, color });
 
 let isFirstRender = true;
 
-const WorkSpacePage = (props) => {
+const WorkSpacePage = ({ widthLeft, heightBottom }) => {
   const dispatch = useDispatch();
   const codeEditors = useSelector(selectAllCodeEditor);
   const textEditors = useSelector(selectAllTextEditor);
   const currentScale = useSelector(selectCurrentScale);
+  const handleFileBar = useSelector(selectFileBarVisible);
   const boardRef = useRef();
   // innerboard ref 추가
   const innerBoardRef = useRef();
@@ -114,12 +116,12 @@ const WorkSpacePage = (props) => {
 
   // 왼쪽 사이드바 출력 on off 시 화면 스크롤을 통해 위치 유지
   useEffect(() => {
-    if (props.handleFileBar === true) {
-      boardRef.current.scrollLeft += props.widthLeft;
+    if (handleFileBar === true) {
+      boardRef.current.scrollLeft += widthLeft;
     } else {
-      boardRef.current.scrollLeft -= props.widthLeft;
+      boardRef.current.scrollLeft -= widthLeft;
     }
-  }, [props.handleFileBar]);
+  }, [handleFileBar]);
 
   // 왼쪽 사이드바 사이즈 변경 시 화면 스크롤을 통해 위치 유지
   const previousWidth = useRef(null);
@@ -135,11 +137,11 @@ const WorkSpacePage = (props) => {
 
   useEffect(() => {
     previousWidth.current = currentWidth.current;
-  }, [props.widthLeft]);
+  }, [widthLeft]);
 
   useEffect(() => {
-    currentWidth.current = props.widthLeft;
-  }, [props.widthLeft]);
+    currentWidth.current = widthLeft;
+  }, [widthLeft]);
 
   useEffect(() => {
     boardRef.current.scrollLeft += difference.current;

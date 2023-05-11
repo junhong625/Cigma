@@ -1,9 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import { XTerm } from "../../library/xterm-for-react";
 import styles from "../../styles/organisms/TermOrganism.module.scss";
-import { Resizable } from "re-resizable";
 
-const TermOrganism = (props) => {
+const TermOrganism = ({ editorPerson }) => {
   const xtermRef = useRef(null);
 
   useEffect(() => {
@@ -11,9 +10,9 @@ const TermOrganism = (props) => {
     xtermRef.current.terminal.reset();
   }, []);
   return (
-    <Resizable>
-      <XTerm ref={xtermRef} className={styles.xterm} />
-    </Resizable>
+    <div>
+      <XTerm ref={xtermRef} />
+    </div>
   );
 };
 

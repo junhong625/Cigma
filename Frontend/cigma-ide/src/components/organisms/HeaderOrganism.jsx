@@ -8,7 +8,11 @@ import {
 
 import styles from "../../styles/organisms/HeaderOrganism.module.scss";
 import { useDispatch } from "react-redux";
-import { setCurrentTool } from "../../store/toolSlice";
+import {
+  setCurrentTool,
+  setFileBarVisible,
+  setTermVisible,
+} from "../../store/toolSlice";
 /*
 추가적인 기능을 plugin 방식으로 추가할 경우
 해당 부분을 setting 관련 파일에서 plugin을 
@@ -16,7 +20,7 @@ import { setCurrentTool } from "../../store/toolSlice";
 하는 것 이 좋아보임
 */
 
-const HeaderOrganism = (props) => {
+const HeaderOrganism = () => {
   const dispatch = useDispatch();
   return (
     <>
@@ -24,7 +28,7 @@ const HeaderOrganism = (props) => {
         {/* plugin 추가 */}
         <HeaderBtnAtom
           onClick={() => {
-            props.setHandleFileBar(!props.handleFileBar);
+            dispatch(setFileBarVisible());
           }}
         >
           <BsFillFileEarmarkTextFill color="white" size={24} />
@@ -34,7 +38,7 @@ const HeaderOrganism = (props) => {
         </HeaderBtnAtom>
         <HeaderBtnAtom
           onClick={() => {
-            props.setHandleXtermBar(!props.handleXtermBar);
+            dispatch(setTermVisible());
           }}
         >
           <BsFillTerminalFill color="white" size={24} />

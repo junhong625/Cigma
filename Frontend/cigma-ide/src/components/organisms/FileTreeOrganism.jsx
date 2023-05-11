@@ -16,6 +16,7 @@ import { useDropzone } from "react-dropzone";
 import { useSelector, useDispatch } from "react-redux";
 import { modifyTreeData } from "../../store/TreeData";
 import { saveAs } from "file-saver";
+import { selectFileBarVisible } from "../../store/toolSlice";
 // 마지막 파일의 Id 값을 가져옴
 const getLastId = (treeData) => {
   const reversedArray = [...treeData].sort((a, b) => {
@@ -68,10 +69,11 @@ const getFilepathById = (id, nodes) => {
   return segments.join("/");
 };
 
-function FileTreeOrganism(props) {
+function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidth }) {
   // ============================ 트리용 데이터 리스트 생성=====================//
   const dispatch = useDispatch();
   const treeData = useSelector((state) => state.workbench.treeData);
+  const handleFileBar = useSelector(selectFileBarVisible);
 
   const fileTreeUpdate = () => {
     axios
@@ -372,8 +374,8 @@ function FileTreeOrganism(props) {
 
   return (
     <Resizable
-      size={{ width: props.widthLeft }}
-      minWidth={props.handleFileBar ? 240 : 0}
+      size={{ width: widthLeft }}
+      minWidth={handleFileBar ? 240 : 0}
       maxWidth={"50%"}
       enable={{
         top: false,
@@ -387,21 +389,21 @@ function FileTreeOrganism(props) {
       }}
       handleClasses={{ right: `${styles.handle}` }}
       onResizeStart={() => {
-        props.defaultWidth.current = props.widthLeft;
+        defaultWidth.current = widthLeft;
       }}
       onResize={(e, direction, ref, d) => {
-        props.setWidthLeft(props.defaultWidth.current + d.width);
+        setWidthLeft(defaultWidth.current + d.width);
       }}
       // 배경색
       style={{ backgroundColor: "#24282e" }}
-      className={props.handleFileBar ? "" : styles.hidden}
+      className={handleFileBar ? "" : styles.hidden}
       onClick={() => {
         setSelectedNode(null);
       }}
     >
       <div {...getRootProps({ className: `${styles.dropzone}` })}>
         <input {...getInputProps()} />
-        <div className={styles.app} style={{ width: props.widthLeft + "px" }}>
+        <div className={styles.app} style={{ width: widthLeft + "px" }}>
           <div
             className={styles.noBubble}
             onClick={(e) => {
