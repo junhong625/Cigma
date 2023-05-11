@@ -153,6 +153,9 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
       }}
       onDoubleClick={handleDoubleClick}
       onBlur={() => {
+        // TODO: 하이라이트 해제되었을 떄 수정 필요 (한나/윤진)
+        // handleFinishIsShown();
+        // handleInput();
         handleBlurred();
       }}
       ref={canvasRef}

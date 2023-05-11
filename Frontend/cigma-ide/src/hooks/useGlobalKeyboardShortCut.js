@@ -7,6 +7,7 @@ import {
   selectCurrentCodeEditorIndex,
   setCodeEditorIndex,
   selectIsInputFieldFocused,
+  selectCurrentTool,
 } from "../store/toolSlice";
 import {
   deleteCodeEditor,
@@ -25,7 +26,6 @@ function useGlobalKeyboardShortCut() {
 
   // ctrl + t
   // text로 변경
-
   useEffect(() => {
     if (isInputFieldFocused) return;
     /**
@@ -47,6 +47,7 @@ function useGlobalKeyboardShortCut() {
      */
 
     const codeEditorShortCut = (event) => {
+      console.log(`event code${event.code}`);
       // if ((e.ctrlKey && e.code === "KeyN") || (e.metaKey && e.code === "KeyN")) return;
       if (event.code === "KeyN") {
         event.preventDefault();
