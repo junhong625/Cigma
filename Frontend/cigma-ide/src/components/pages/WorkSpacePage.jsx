@@ -7,6 +7,7 @@ import useDragToScroll from "../../hooks/useDragToScroll";
 import useMockZoom from "../../hooks/useMockZoom";
 import {
   emptySelectedShapeIndexes,
+  selectCurrentCodeEditorIndex,
   selectCurrentScale,
   selectFileBarVisible,
 } from "../../store/toolSlice";
@@ -65,7 +66,7 @@ const WorkSpacePage = ({ widthLeft, heightBottom }) => {
   useDrawCodeEditor(innerBoardRef);
 
   // 단축키 추가
-  useGlobalKeyboardShortCut();
+  // useGlobalKeyboardShortCut();
 
   // text 추가
   useDrawText(innerBoardRef);
