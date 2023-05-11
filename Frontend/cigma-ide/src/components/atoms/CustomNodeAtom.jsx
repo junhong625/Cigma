@@ -60,7 +60,9 @@ export const CustomNodeAtom = (props) => {
     }
   };
 
-  const handleSelect = () => props.onSelect(props.node);
+  const handleSelect = () => {
+    props.onSelect(props.node);
+  };
   const TREE_X_OFFSET = 24;
   const depthList = Array.from({ length: props.depth }, () => 0);
   const dragOverProps = useDragOver(id, props.isOpen, props.onToggle);
@@ -136,7 +138,11 @@ export const CustomNodeAtom = (props) => {
     >
       {/* 파일의 타입에 따라 바뀌는 아이콘  */}
       <div className={styles.iconWrapper}>
-        <TypeIcon droppable={droppable} fileType={data?.fileType} />
+        <TypeIcon
+          droppable={droppable}
+          fileType={data?.fileType}
+          isOpen={props.isOpen}
+        />
       </div>
 
       {/* 파일 구조를 표시해주는 막대들 */}

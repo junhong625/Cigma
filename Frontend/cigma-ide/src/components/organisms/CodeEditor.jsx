@@ -3,17 +3,29 @@ import styles from "./CodeEditor.module.scss";
 import {
   hideEditPointer,
   // selectEditPointerVisible,
+  selectEditPointerVisible,
+  selectIsDragScrolling,
   setCodeEditorIndex,
   showEditPointer,
 } from "../../store/toolSlice";
 import useDragCodeEditor from "../../hooks/useDragCodeEditor";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import EditPointer from "../atoms/EditPointer";
 import computeSelectionBox from "../../tools/computeSelectionBox";
 import Comment from "./Comment";
-import { hideCodeEditor, selectAllCodeEditor, showCodeEditor } from "../../store/codeEditorSlice";
-import EditorOrganism from "./EditorOrganism";
 import useGlobalKeyboardShortCut from "../../hooks/useGlobalKeyboardShortCut";
+
+import {
+  changeShownColor,
+  hideCodeEditor,
+  selectAllCodeEditor,
+  setEditorPerson,
+  setFinishIsShown,
+  setStartIsShown,
+  showCodeEditor,
+} from "../../store/codeEditorSlice";
+import EditorOrganism from "./EditorOrganism";
+import { awareness } from "../../store/initYDoc";
 
 const directions = {
   N: "n",
@@ -32,10 +44,24 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   const { top, left, width, height, isHidden, comments } = codeEditor;
   // 클릭 -> 사이즈 조정
   const [isClicked, setIsClicked] = useState(false);
+
+  const {
+    top,
+    left,
+    width,
+    height,
+    isHidden,
+    comments,
+    isShown,
+    shownColor,
+    editorPerson,
+  } = codeEditor;
+  const [myWorking, setMyWorking] = useState(null);
   // 더블클릭 -> 에디터편집
   const [isDoubleClicked, setIsDoubleClicked] = useState(false);
   // 에디터 상단 바
   // const [isHidden, setIsHidden] = useState(false);
+  const isDragScrolling = useSelector(selectIsDragScrolling);
 
   // comment 우측
   const [hideComment, setHideComment] = useState(true);
@@ -52,6 +78,9 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   };
 
   // div 포커스 해제되었을때 처리되는 핸들러
+  const myColor = awareness.getLocalState().color;
+  const myName = awareness.getLocalState().name;
+
   const handleInput = (event) => {
     console.log("blurred");
     setIsClicked(false);
@@ -74,6 +103,26 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   const handleHideCommentClick = () => {
     setHideComment(true);
   };
+  const handleStartIsShown = () => {
+    if (isDragScrolling) return;
+    if (isShown) return;
+    dispatch(setStartIsShown({ codeEditorIndex: codeEditorIndex }));
+    dispatch(
+      changeShownColor({ color: myColor, codeEditorIndex: codeEditorIndex })
+    );
+    dispatch(
+      setEditorPerson({ name: myName, codeEditorIndex: codeEditorIndex })
+    );
+    setMyWorking(codeEditorIndex);
+  };
+  const handleFinishIsShown = () => {
+    dispatch(setFinishIsShown({ codeEditorIndex: codeEditorIndex }));
+    dispatch(setEditorPerson({ name: null, codeEditorIndex: myWorking }));
+    dispatch(
+      changeShownColor({ color: null, codeEditorIndex: codeEditorIndex })
+    );
+    setMyWorking(null);
+  };
 
   // comment창 크기 설정
   const commentWidth = width / 2;
@@ -81,14 +130,37 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   const isHiddenStyle = {
     ...codeEditor,
     height: isHidden ? "30px" : height,
+    border: isShown ? `2px solid ${shownColor}` : "none",
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (canvasRef.current && !canvasRef.current.contains(event.target)) {
+        console.log(myWorking);
+        console.log(codeEditors[myWorking]);
+        if (codeEditors[myWorking].editorPerson !== myName) return;
+        handleFinishIsShown(myWorking);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [canvasRef, myWorking]);
+
   return (
     <div
       className={styles["code-editor"]}
       onClick={() => {
-        dispatch(setCodeEditorIndex(codeEditorIndex));
-        setIsClicked(true);
-        dispatch(showEditPointer());
+        handleStartIsShown();
+        if (isShown) {
+          if (editorPerson === null || myName === editorPerson) {
+            dispatch(setCodeEditorIndex(codeEditorIndex));
+            setIsClicked(true);
+            //setIsDoubleClicked(true);
+            dispatch(showEditPointer());
+          }
+        }
       }}
       onDoubleClick={handleDoubleClick}
       onBlur={() => {
@@ -162,6 +234,7 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
 
           {/* monaco가 들어갈곳 */}
           <EditorOrganism
+            editorPerson={editorPerson}
             className={styles["monaco-editor"]}
             file={codeEditors[codeEditorIndex].canvasName}
             readOnly={!isDoubleClicked}

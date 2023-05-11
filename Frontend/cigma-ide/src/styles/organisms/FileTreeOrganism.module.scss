@@ -62,7 +62,7 @@
   gap: 10px;
   justify-content: flex-end;
   background-color: $black-600;
-  z-index: 99;
+  z-index: 0;
   > div {
     cursor: pointer;
     &:hover {
@@ -81,6 +81,22 @@
 .handle {
   background-color: transparent;
   &:active {
-    background-color: $tertiary-500; /* hover 색상 */
+    background-color: $tertiary-500; /* active 색상 */
+  }
+  z-index: 1;
+}
+
+.guideComment {
+  text-align: center;
+  animation: upload 0.3s ease-in;
+}
+
+// 업로드 문구 애니메이션
+@keyframes upload {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }

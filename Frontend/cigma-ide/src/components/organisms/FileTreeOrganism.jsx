@@ -1,11 +1,5 @@
-import React, { useState, useRef, useLayoutEffect } from "react";
-import { DndProvider } from "react-dnd";
-import {
-  Tree,
-  MultiBackend,
-  getDescendants,
-  getBackendOptions,
-} from "@minoru/react-dnd-treeview";
+import React, { useState, useRef, useCallback, useEffect } from "react";
+import { Tree, getDescendants } from "@minoru/react-dnd-treeview";
 import { CustomNodeAtom } from "../atoms/CustomNodeAtom";
 import { CustomDragPreviewAtom } from "../atoms/CustomDragPreviewAtom";
 import styles from "../../styles/organisms/FileTreeOrganism.module.scss";
@@ -14,11 +8,14 @@ import {
   BsArrowUpSquare,
   BsFileEarmarkPlus,
   BsFolderPlus,
+  BsDownload,
 } from "react-icons/bs";
 import { Resizable } from "re-resizable";
 import axios from "axios";
-import { useQuery } from "react-query";
-
+import { useDropzone } from "react-dropzone";
+import { useSelector, useDispatch } from "react-redux";
+import { modifyTreeData } from "../../store/TreeData";
+import { saveAs } from "file-saver";
 // 마지막 파일의 Id 값을 가져옴
 const getLastId = (treeData) => {
   const reversedArray = [...treeData].sort((a, b) => {
@@ -73,22 +70,23 @@ const getFilepathById = (id, nodes) => {
 
 function FileTreeOrganism(props) {
   // ============================ 트리용 데이터 리스트 생성=====================//
-  const [treeData, setTreeData] = useState([]);
+  const dispatch = useDispatch();
+  const treeData = useSelector((state) => state.workbench.treeData);
 
-  // const { data, isLoading, isError } = useQuery('treeData', async () => {
-  //   const response = await axios.get('/api');
-  //   setTreeData(data)
-  // });
-
-  useLayoutEffect(() => {
+  const fileTreeUpdate = () => {
     axios
       .get("/api")
       .then((response) => {
-        setTreeData(response.data);
+        dispatch(modifyTreeData(response.data));
       })
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  useEffect(() => {
+    // 최초 렌더링 시 파일 트리 업데이트
+    fileTreeUpdate();
   }, []);
 
   //=========================== 파일 이름 바꾸기=============================== //
@@ -118,7 +116,7 @@ function FileTreeOrganism(props) {
       }
       return node;
     });
-    setTreeData(newTree);
+    dispatch(modifyTreeData(newTree));
     axios
       .put("/api", data)
       .then((res) => {})
@@ -143,7 +141,7 @@ function FileTreeOrganism(props) {
         axios
           .delete(`/api/rmdir?name=${name}&path=${filepath}`)
           .then((response) => {
-            setTreeData(newTree);
+            dispatch(modifyTreeData(newTree));
           })
           .catch((error) => {
             console.log(error);
@@ -153,14 +151,14 @@ function FileTreeOrganism(props) {
         axios
           .delete(`/api?name=${name}&path=${filepath}`)
           .then((response) => {
-            setTreeData(newTree);
+            dispatch(modifyTreeData(newTree));
           })
           .catch((error) => {
             console.log(error);
           });
       }
     } else {
-      setTreeData(newTree);
+      dispatch(modifyTreeData(newTree));
     }
   };
   //========================= 새로운 파일/ 폴더 만들기=============================//
@@ -169,13 +167,15 @@ function FileTreeOrganism(props) {
   const handleCreate = (newNode) => {
     const lastId = getLastId(treeData) + 1;
     setLastCreated(lastId);
-    setTreeData([
-      ...treeData,
-      {
-        ...newNode,
-        id: lastId,
-      },
-    ]);
+    dispatch(
+      modifyTreeData([
+        ...treeData,
+        {
+          ...newNode,
+          id: lastId,
+        },
+      ])
+    );
   };
 
   // 현재 위치에 새로운 폴더를 만드는 함수
@@ -260,7 +260,7 @@ function FileTreeOrganism(props) {
       }
       return node;
     });
-    setTreeData(newTree);
+    dispatch(modifyTreeData(newTree));
     const filepath = getFilepathById(id, treeData);
     if (dir) {
       axios
@@ -293,7 +293,7 @@ function FileTreeOrganism(props) {
     // 현위치와 목표 위치를 정의
     const sourcePath = getFilepathById(dragSourceId, treeData);
     let destinationPath = getFilepathById(dropTargetId, treeData);
-
+    console.log(dropTargetId);
     // 최상단은 droptarget이 undefined로 입력되므로 조건문을 통해 경로를 추가
     if (dropTarget) {
       destinationPath += `/${dropTarget.text}`;
@@ -306,7 +306,7 @@ function FileTreeOrganism(props) {
         path: sourcePath,
         destination: destinationPath,
       });
-      setTreeData(newTree);
+      dispatch(modifyTreeData(newTree));
     } catch (err) {
       console.error(err);
     }
@@ -320,6 +320,55 @@ function FileTreeOrganism(props) {
   const ref = useRef(null);
   const handleCloseAll = () => ref.current?.closeAll();
   const handleOpenAll = () => ref.current?.openAll();
+
+  // 파일, 폴더 생성 이전에 선택 중인 폴더를 열기
+  const handleOpen = (node) => {
+    if (node != null) {
+      ref.current.open(node.id);
+    }
+  };
+
+  //==========파일을 드래그 앤 드롭하는 드롭 존 ===============//
+  const onDrop = useCallback(async (acceptedFiles) => {
+    console.log(acceptedFiles);
+    try {
+      await Promise.all(
+        acceptedFiles.map(async (file) => {
+          const formData = new FormData();
+          const encodedFilePath = encodeURIComponent(file.path);
+          formData.append("file", file);
+          formData.append("path", encodedFilePath);
+
+          console.log(file.path);
+
+          await axios.post("/api/upload", formData);
+          console.log("File upload successful");
+        })
+      );
+    } catch (error) {
+      console.error("File upload failed", error);
+    }
+
+    fileTreeUpdate();
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    noClick: true,
+  });
+  // =======================프로젝트 파일 다운로드=============================//
+  const projectDownload = async () => {
+    try {
+      const response = await axios.get("/api/download", {
+        responseType: "blob", // 서버에서 응답으로 받을 데이터 타입 설정
+      });
+
+      const blob = new Blob([response.data]); // Blob 객체 생성
+      saveAs(blob, "project.zip"); // 압축 파일 다운로드
+    } catch (error) {
+      console.error("Error downloading archive:", error);
+    }
+  };
 
   return (
     <Resizable
@@ -350,7 +399,8 @@ function FileTreeOrganism(props) {
         setSelectedNode(null);
       }}
     >
-      <DndProvider backend={MultiBackend} options={getBackendOptions()}>
+      <div {...getRootProps({ className: `${styles.dropzone}` })}>
+        <input {...getInputProps()} />
         <div className={styles.app} style={{ width: props.widthLeft + "px" }}>
           <div
             className={styles.noBubble}
@@ -359,6 +409,9 @@ function FileTreeOrganism(props) {
             }}
           >
             <div className={styles.buttonWapper}>
+              <div onClick={projectDownload}>
+                <BsDownload />
+              </div>
               <div onClick={handleOpenAll}>
                 <BsArrowDownSquare />
               </div>
@@ -367,6 +420,7 @@ function FileTreeOrganism(props) {
               </div>
               <div
                 onClick={() => {
+                  handleOpen(selectedNode);
                   CreateFile();
                 }}
               >
@@ -374,6 +428,7 @@ function FileTreeOrganism(props) {
               </div>
               <div
                 onClick={() => {
+                  handleOpen(selectedNode);
                   CreateFolder();
                 }}
               >
@@ -409,8 +464,13 @@ function FileTreeOrganism(props) {
               }}
             />
           </div>
+          {isDragActive ? (
+            <div className={styles.guideComment}>Upload</div>
+          ) : (
+            ""
+          )}
         </div>
-      </DndProvider>
+      </div>
     </Resizable>
   );
 }

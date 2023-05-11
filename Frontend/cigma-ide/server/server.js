@@ -1,13 +1,18 @@
 import express from "express";
 import path from "path";
-import { WebSocketServer } from "ws";
+import fs from "fs";
+import { WebSocketServer, WebSocket } from "ws";
 import http from "http";
 import router from "./fsRoute.js";
+import fileUpload from "express-fileupload";
 import { setupWSConnection } from "./socket/utils.js";
 
 // file server
 
 const app = express();
+
+//file upload
+app.use(fileUpload());
 
 // app.get("/", (req, res) => {
 //   res.send("hello world");
