@@ -7,8 +7,7 @@ import { BsFileTextFill } from "react-icons/bs";
 import { BsFillCupHotFill } from "react-icons/bs";
 import { AiFillHtml5 } from "react-icons/ai";
 import { DiSass } from "react-icons/di";
-import { SiJavascript } from "react-icons/si";
-import { SiTypescript } from "react-icons/si";
+import { SiJavascript, SiTypescript, SiPython } from "react-icons/si";
 import { SiCss3 } from "react-icons/si";
 
 export const TypeIcon = (props) => {
@@ -45,6 +44,8 @@ export const TypeIcon = (props) => {
       return <DiSass color=" rgb(255, 30, 154)" />;
     case "json":
       return <FcNeutralDecision />;
+    case "py":
+      return <SiPython color="rgb(55, 118, 171)" />;
 
     default:
       return null;
