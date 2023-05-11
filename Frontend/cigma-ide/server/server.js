@@ -1,7 +1,7 @@
 import express from "express";
 import path from "path";
 import fs from "fs";
-import { WebSocketServer, WebSocket } from "ws";
+import { WebSocketServer } from "ws";
 import http from "http";
 import router from "./fsRoute.js";
 import fileUpload from "express-fileupload";
@@ -39,12 +39,23 @@ server.on("upgrade", (request, socket, head) => {
 // websocket server end ==================================
 
 // term websocket server =================================
-const termPort = process.env.TERMPORT || 2222;
+const termPort = process.env.TERMPORT || 3333;
 const termServer = http.createServer(app);
 
 const termWs = new WebSocketServer({ noServer: true });
 
 termWs.on("connection", setupPty);
+
+termServer.on("upgrade", (request, socket, head) => {
+  // You may check auth of request here..
+  /**
+   * @param {any} ws
+   */
+  const handleAuth = (ws) => {
+    wss.emit("connection", ws, request);
+  };
+  wss.handleUpgrade(request, socket, head, handleAuth);
+});
 
 termServer.listen(termPort);
 console.log("Term server running on port : ", termPort);
