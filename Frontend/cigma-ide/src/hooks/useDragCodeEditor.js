@@ -15,7 +15,6 @@ import {
   selectIsDragScrolling,
 } from "../store/toolSlice";
 import computeSnapPosition from "../tools/computeSnapPosition";
-import { awareness } from "../store/initYDoc";
 
 const GRAVITY = 5;
 
@@ -26,11 +25,10 @@ function useDragCodeEditor(codeEditorIndex, artBoardRef, canvasRef) {
   const codeEditors = useSelector(selectAllCodeEditor);
   const workingCanvasIndex = useSelector(selectCurrentCodeEditorIndex);
   const isDragScrolling = useSelector(selectIsDragScrolling);
-  const myName = awareness.getLocalState().name;
 
   useEffect(() => {
     if (!canvasRef.current || !artBoardRef.current || isDragScrolling) return;
-    // 편집중일때 이동 못하도록 처리
+    // 코드 에디터를 누군가 선택시 이동 불가
     if (codeEditors[codeEditorIndex].editorPerson !== null) return;
 
     const artBoard = artBoardRef.current;
