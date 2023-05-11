@@ -1,8 +1,14 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { HOR_SNAP_LINE_STYLES, VER_SNAP_LINE_STYLES } from "../constants/styles";
-import { modifyCodeEditor, selectAllCodeEditor } from "../store/codeEditorSlice";
+import {
+  HOR_SNAP_LINE_STYLES,
+  VER_SNAP_LINE_STYLES,
+} from "../constants/styles";
+import {
+  modifyCodeEditor,
+  selectAllCodeEditor,
+} from "../store/codeEditorSlice";
 import {
   selectCurrentScale,
   selectCurrentCodeEditorIndex,
@@ -25,12 +31,7 @@ function useDragCodeEditor(codeEditorIndex, artBoardRef, canvasRef) {
   useEffect(() => {
     if (!canvasRef.current || !artBoardRef.current || isDragScrolling) return;
     // 편집중일때 이동 못하도록 처리
-    if (
-      codeEditors[codeEditorIndex].editorPerson !== null &&
-      codeEditors[codeEditorIndex].editorPerson !== myName
-    )
-      return;
-    if (codeEditors[codeEditorIndex].isEditing) return;
+    if (codeEditors[codeEditorIndex].editorPerson !== null) return;
 
     const artBoard = artBoardRef.current;
     const canvas = canvasRef.current;
@@ -41,7 +42,9 @@ function useDragCodeEditor(codeEditorIndex, artBoardRef, canvasRef) {
 
       // 현재 CanvasIndex
       const currentCanvasIndex =
-        Array.from(event.currentTarget.parentNode.childNodes).indexOf(event.currentTarget) / 2;
+        Array.from(event.currentTarget.parentNode.childNodes).indexOf(
+          event.currentTarget
+        ) / 2;
 
       // Canvas의 위치, 정보
       const originalElPositionTop = event.currentTarget.offsetTop;
@@ -118,7 +121,10 @@ function useDragCodeEditor(codeEditorIndex, artBoardRef, canvasRef) {
           canvas.style.left = nearestPossibleSnapAtX + "px";
           isLeftAttached = true;
           isRightAttached = false;
-        } else if (Math.abs(currentLeft + originalElWidth - nearestPossibleSnapAtX) < GRAVITY) {
+        } else if (
+          Math.abs(currentLeft + originalElWidth - nearestPossibleSnapAtX) <
+          GRAVITY
+        ) {
           canvas.style.left = nearestPossibleSnapAtX - originalElWidth + "px";
           isRightAttached = true;
           isLeftAttached = false;
@@ -132,7 +138,10 @@ function useDragCodeEditor(codeEditorIndex, artBoardRef, canvasRef) {
           canvas.style.top = nearestPossibleSnapAtY + "px";
           isTopAttached = true;
           isBottomAttached = false;
-        } else if (Math.abs(currentTop + originalElHeight - nearestPossibleSnapAtY) < GRAVITY) {
+        } else if (
+          Math.abs(currentTop + originalElHeight - nearestPossibleSnapAtY) <
+          GRAVITY
+        ) {
           canvas.style.top = nearestPossibleSnapAtY - originalElHeight + "px";
           isBottomAttached = true;
           isTopAttached = false;
