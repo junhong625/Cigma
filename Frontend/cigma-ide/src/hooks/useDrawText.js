@@ -33,7 +33,8 @@ const useDrawText = (elementRef) => {
     const handleClickText = (event) => {
       if (isDragScrolling) return;
 
-      // event.stopPropagation();
+      console.log("handleClickText");
+      event.stopPropagation();
       const form = document.createElement("form");
       const previewText = document.createElement("div");
       // 위치 값 불러오기
@@ -67,11 +68,13 @@ const useDrawText = (elementRef) => {
       // previewText.style.top = startTop - previewText.clientHeight + "px";
 
       dispatch(setInputFieldFocused());
+      console.log("isinput 변경");
       dispatch(setCurrentTool("selector"));
 
       const handBlur = () => {
         if (!previewText.innerText) {
           dispatch(setInputFieldBlurred());
+          console.log("blurred");
           previewText.remove();
           form.remove();
           return;
@@ -89,6 +92,7 @@ const useDrawText = (elementRef) => {
 
         dispatch(createText(coordinates));
         dispatch(setInputFieldBlurred());
+        console.log("blurred 처리");
         previewText.remove();
         form.remove();
       };

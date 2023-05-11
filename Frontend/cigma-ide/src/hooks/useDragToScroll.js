@@ -15,9 +15,9 @@ const useDragToScroll = (boardRef) => {
   const isInputFieldFocused = useSelector(selectIsInputFieldFocused);
 
   useEffect(() => {
-    console.log("render");
     // isInputFieldFocused가 true면 탈출
     if (!boardRef.current || isInputFieldFocused) return;
+    console.log("useDragToScroll");
 
     const board = boardRef.current;
 
@@ -112,19 +112,18 @@ const useDragToScroll = (boardRef) => {
 
     const handleSpaceKeyDown = (event) => {
       // 이벤트 발생 확인
-      console.log(`event? ${event.target}`);
-      console.log(`boardRef? ${boardRef.current}`);
-      // code editor 편집하려고 할때는 space 이벤트 방지해야한다.
-      if (event.target.tagName.toLowerCase() === "textarea") {
-        return;
-      }
+      // console.log(`event? ${event.target}`);
+      // console.log(`boardRef? ${boardRef.current}`);
+      // // code editor 편집하려고 할때는 space 이벤트 방지해야한다.
+      // if (event.target.tagName.toLowerCase() === "textarea") {
+      //   return;
+      // }
       // 스페이스바 눌렀을 때
       if (event.keyCode === 32) {
         // 스페이스 이벤트 취소
         event.preventDefault();
         // isDragScrolling 값 true
         dispatch(startDragScroll());
-        console.log("working3");
         board.style.cursor = "grab";
         // 마우스 클릭 이벤트 추가
         board.addEventListener("mousedown", handleMouseDown);

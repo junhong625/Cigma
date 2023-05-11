@@ -28,8 +28,8 @@ function useDragCodeEditor(codeEditorIndex, artBoardRef, canvasRef) {
 
   useEffect(() => {
     if (!canvasRef.current || !artBoardRef.current || isDragScrolling) return;
-
-    // if (codeEditors[codeEditorIndex].isShown) return
+    // 코드 에디터를 누군가 선택시 이동 불가
+    if (codeEditors[codeEditorIndex].editorPerson !== null) return;
 
     const artBoard = artBoardRef.current;
     const canvas = canvasRef.current;
