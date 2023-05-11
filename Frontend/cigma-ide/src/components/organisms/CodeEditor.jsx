@@ -6,6 +6,8 @@ import {
   selectEditPointerVisible,
   selectIsDragScrolling,
   setCodeEditorIndex,
+  setInputFieldBlurred,
+  setInputFieldFocused,
   showEditPointer,
 } from "../../store/toolSlice";
 import useDragCodeEditor from "../../hooks/useDragCodeEditor";
@@ -45,9 +47,18 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   // 클릭 -> 사이즈 조정
   const [isClicked, setIsClicked] = useState(false);
 
-  const { top, left, width, height, isHidden, comments, isShown, shownColor, editorPerson } =
-    codeEditor;
-  const [myWorking, setMyWorking] = useState(null);
+  const {
+    top,
+    left,
+    width,
+    height,
+    isHidden,
+    comments,
+    isShown,
+    shownColor,
+    editorPerson,
+  } = codeEditor;
+  // const [myWorking, setMyWorking] = useState(null);
   // 더블클릭 -> 에디터편집
   const [isDoubleClicked, setIsDoubleClicked] = useState(false);
   // 에디터 상단 바
@@ -72,11 +83,13 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   const myColor = awareness.getLocalState().color;
   const myName = awareness.getLocalState().name;
 
-  const handleInput = (event) => {
+  const handleBlurred = (event) => {
     console.log("blurred");
     setIsClicked(false);
     setIsDoubleClicked(false);
     dispatch(hideEditPointer);
+    if (editorPerson !== myName) return;
+    handleFinishIsShown();
   };
   // editor 숨기기
   const handleHideClick = () => {
@@ -98,15 +111,21 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
     if (isDragScrolling) return;
     if (isShown) return;
     dispatch(setStartIsShown({ codeEditorIndex: codeEditorIndex }));
-    dispatch(changeShownColor({ color: myColor, codeEditorIndex: codeEditorIndex }));
-    dispatch(setEditorPerson({ name: myName, codeEditorIndex: codeEditorIndex }));
-    setMyWorking(codeEditorIndex);
+    dispatch(
+      changeShownColor({ color: myColor, codeEditorIndex: codeEditorIndex })
+    );
+    dispatch(
+      setEditorPerson({ name: myName, codeEditorIndex: codeEditorIndex })
+    );
+    dispatch(setInputFieldFocused());
   };
   const handleFinishIsShown = () => {
     dispatch(setFinishIsShown({ codeEditorIndex: codeEditorIndex }));
-    dispatch(setEditorPerson({ name: null, codeEditorIndex: myWorking }));
-    dispatch(changeShownColor({ color: null, codeEditorIndex: codeEditorIndex }));
-    setMyWorking(null);
+    dispatch(setEditorPerson({ name: null, codeEditorIndex: codeEditorIndex }));
+    dispatch(
+      changeShownColor({ color: null, codeEditorIndex: codeEditorIndex })
+    );
+    dispatch(setInputFieldBlurred());
   };
 
   // comment창 크기 설정
@@ -117,21 +136,6 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
     height: isHidden ? "30px" : height,
     border: isShown ? `2px solid ${shownColor}` : "none",
   };
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (canvasRef.current && !canvasRef.current.contains(event.target)) {
-        console.log(myWorking);
-        console.log(codeEditors[myWorking]);
-        if (codeEditors[myWorking].editorPerson !== myName) return;
-        handleFinishIsShown(myWorking);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [canvasRef, myWorking]);
 
   return (
     <div
@@ -149,9 +153,11 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
       }}
       onDoubleClick={handleDoubleClick}
       onBlur={() => {
+
         // TODO: 하이라이트 해제되었을 떄 수정 필요 (한나/윤진)
         // handleFinishIsShown();
-        handleInput();
+        // handleInput();
+        handleBlurred();
       }}
       ref={canvasRef}
       tabIndex={0}

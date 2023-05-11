@@ -9,16 +9,18 @@ import {
   selectIsInputFieldFocused,
   selectCurrentTool,
 } from "../store/toolSlice";
-import { deleteCodeEditor, selectCodeEditorLength } from "../store/codeEditorSlice";
-function useGlobalKeyboardShortCut() {
-  /**
-   * TODO: 파일트리 내에서 단축키 작동안하도록 체크 필요
-   */
+import {
+  deleteCodeEditor,
+  selectCodeEditorLength,
+} from "../store/codeEditorSlice";
+function useGlobalKeyboardShortCut(isClicked) {
+  // console.log(`isClicked props:::${isClicked}`);
   const dispatch = useDispatch();
   const editorCount = useSelector(selectCodeEditorLength);
   const workingEditorIndex = useSelector(selectCurrentCodeEditorIndex);
-  const isInputFieldFocused = useSelector(selectIsInputFieldFocused);
+  const IsInputFieldFocused = useSelector(selectIsInputFieldFocused);
   const currentTool = useSelector(selectCurrentTool);
+  // const tools = { SELECTOR: "selector", TEXT: "text", CodeEditor: "code-editor" };
 
   // ctr + V
   // selector로 설정
@@ -26,13 +28,14 @@ function useGlobalKeyboardShortCut() {
   // ctrl + t
   // text로 변경
   useEffect(() => {
-    if (isInputFieldFocused) return;
+    if (IsInputFieldFocused) return;
     /**
      * backspace 누르면 삭제
      */
     const deleteCanvasShortCut = (event) => {
       // console.log(`del key event${event}`);
       if (event.key == "Backspace" && editorCount > 1) {
+      // if (isClicked && event.key == "Backspace" && editorCount > 1) {
         event.preventDefault();
         // event.stopPropagation();
         dispatch(deleteCodeEditor(workingEditorIndex));
@@ -61,7 +64,7 @@ function useGlobalKeyboardShortCut() {
      */
     const textToolShortCut = (event) => {
       // if ((e.ctrlKey && e.code === "KeyT") || (e.metaKey && e.code === "KeyT")) return;
-      if (event.code === "keyT") {
+      if (event.code === "KeyT") {
         event.preventDefault();
         dispatch(setCurrentTool("text"));
       }
