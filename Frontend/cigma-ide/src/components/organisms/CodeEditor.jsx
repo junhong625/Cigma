@@ -15,7 +15,7 @@ import { useEffect, useRef, useState } from "react";
 import EditPointer from "../atoms/EditPointer";
 import computeSelectionBox from "../../tools/computeSelectionBox";
 import Comment from "./Comment";
-import useGlobalKeyboardShortCut from "../../hooks/useGlobalKeyboardShortCut";
+// import useGlobalKeyboardShortCut from "../../hooks/useGlobalKeyboardShortCut";
 
 import {
   changeShownColor,
@@ -72,7 +72,7 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   useDragCodeEditor(codeEditorIndex, artBoardRef, canvasRef);
 
   // 단축키 추가
-  useGlobalKeyboardShortCut(isClicked);
+  // useGlobalKeyboardShortCut(isClicked);
 
   // 더블클릭 이벤트 처리
   const handleDoubleClick = () => {

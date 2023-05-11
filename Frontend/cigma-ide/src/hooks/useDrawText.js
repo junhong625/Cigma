@@ -33,7 +33,8 @@ const useDrawText = (elementRef) => {
     const handleClickText = (event) => {
       if (isDragScrolling) return;
 
-      // event.stopPropagation();
+      console.log("handleClickText");
+      event.stopPropagation();
       const form = document.createElement("form");
       const previewText = document.createElement("div");
       // 위치 값 불러오기
