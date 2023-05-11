@@ -1,5 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
-import { selectDefaultColor, selectDefaultFontSize } from "../../store/defaultTextSlice";
+import {
+  selectDefaultColor,
+  selectDefaultFontSize,
+} from "../../store/defaultTextSlice";
 import { useEffect, useRef, useState } from "react";
 import {
   deactivateSelector,

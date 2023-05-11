@@ -17,6 +17,7 @@ const useDragToScroll = (boardRef) => {
   useEffect(() => {
     // isInputFieldFocused가 true면 탈출
     if (!boardRef.current || isInputFieldFocused) return;
+    console.log("useDragToScroll");
 
     const board = boardRef.current;
 
