@@ -41,21 +41,12 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   const dispatch = useDispatch();
   const canvasRef = useRef();
   const codeEditors = useSelector(selectAllCodeEditor);
-  const { top, left, width, height, isHidden, comments } = codeEditor;
+  // const { top, left, width, height, isHidden, comments } = codeEditor;
   // 클릭 -> 사이즈 조정
   const [isClicked, setIsClicked] = useState(false);
 
-  const {
-    top,
-    left,
-    width,
-    height,
-    isHidden,
-    comments,
-    isShown,
-    shownColor,
-    editorPerson,
-  } = codeEditor;
+  const { top, left, width, height, isHidden, comments, isShown, shownColor, editorPerson } =
+    codeEditor;
   const [myWorking, setMyWorking] = useState(null);
   // 더블클릭 -> 에디터편집
   const [isDoubleClicked, setIsDoubleClicked] = useState(false);
@@ -107,20 +98,14 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
     if (isDragScrolling) return;
     if (isShown) return;
     dispatch(setStartIsShown({ codeEditorIndex: codeEditorIndex }));
-    dispatch(
-      changeShownColor({ color: myColor, codeEditorIndex: codeEditorIndex })
-    );
-    dispatch(
-      setEditorPerson({ name: myName, codeEditorIndex: codeEditorIndex })
-    );
+    dispatch(changeShownColor({ color: myColor, codeEditorIndex: codeEditorIndex }));
+    dispatch(setEditorPerson({ name: myName, codeEditorIndex: codeEditorIndex }));
     setMyWorking(codeEditorIndex);
   };
   const handleFinishIsShown = () => {
     dispatch(setFinishIsShown({ codeEditorIndex: codeEditorIndex }));
     dispatch(setEditorPerson({ name: null, codeEditorIndex: myWorking }));
-    dispatch(
-      changeShownColor({ color: null, codeEditorIndex: codeEditorIndex })
-    );
+    dispatch(changeShownColor({ color: null, codeEditorIndex: codeEditorIndex }));
     setMyWorking(null);
   };
 
