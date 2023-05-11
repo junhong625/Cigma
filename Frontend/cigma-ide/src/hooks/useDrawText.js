@@ -67,11 +67,13 @@ const useDrawText = (elementRef) => {
       // previewText.style.top = startTop - previewText.clientHeight + "px";
 
       dispatch(setInputFieldFocused());
+      console.log("isinput 변경");
       dispatch(setCurrentTool("selector"));
 
       const handBlur = () => {
         if (!previewText.innerText) {
           dispatch(setInputFieldBlurred());
+          console.log("blurred");
           previewText.remove();
           form.remove();
           return;
@@ -89,6 +91,7 @@ const useDrawText = (elementRef) => {
 
         dispatch(createText(coordinates));
         dispatch(setInputFieldBlurred());
+        console.log("blurred 처리");
         previewText.remove();
         form.remove();
       };
