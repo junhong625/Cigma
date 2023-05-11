@@ -5,7 +5,12 @@ import CodeEditor from "../organisms/CodeEditor";
 import { useEffect, useRef, useState } from "react";
 import useDragToScroll from "../../hooks/useDragToScroll";
 import useMockZoom from "../../hooks/useMockZoom";
-import { emptySelectedShapeIndexes, selectCurrentCodeEditorIndex } from "../../store/toolSlice";
+import {
+  emptySelectedShapeIndexes,
+  selectCurrentCodeEditorIndex,
+  selectCurrentScale,
+  selectFileBarVisible,
+} from "../../store/toolSlice";
 import useDrawCodeEditor from "../../hooks/useDrawCodeEditor";
 import useGlobalKeyboardShortCut from "../../hooks/useGlobalKeyboardShortCut";
 import useDrawText from "../../hooks/useDrawText";
@@ -15,7 +20,7 @@ import TextEditior from "../organisms/TextEditior";
 import React from "react";
 import { useUsers } from "y-presence";
 import CursorAtom from "../atoms/CursorAtom";
-import { provider, awareness, yLocs } from "../../store/initYDoc";
+import { provider, awareness } from "../../store/initYDoc";
 import { USER_NAMES, USER_COLORS } from "../../constants";
 
 const random = (arr) => {
@@ -29,21 +34,29 @@ awareness.setLocalState({ name, color });
 
 let isFirstRender = true;
 
-const WorkSpacePage = (props) => {
+const WorkSpacePage = ({ widthLeft, heightBottom }) => {
   const dispatch = useDispatch();
   const codeEditors = useSelector(selectAllCodeEditor);
   const textEditors = useSelector(selectAllTextEditor);
+  const currentScale = useSelector(selectCurrentScale);
+  const handleFileBar = useSelector(selectFileBarVisible);
   const boardRef = useRef();
   // innerboard ref 추가
   const innerBoardRef = useRef();
 
   const users = useUsers(awareness);
-  const handlePointMove = React.useCallback((e) => {
-    awareness.setLocalStateField("cursor", {
-      x: e.clientX,
-      y: e.clientY,
-    });
-  }, []);
+
+  // artboard안에서의 마우스 위치 좌표 handler
+  const handlePointMove = React.useCallback(
+    (e) => {
+      const artboardNode = innerBoardRef.current.getBoundingClientRect();
+      awareness.setLocalStateField("cursor", {
+        x: (e.clientX - artboardNode.left) / currentScale,
+        y: (e.clientY - artboardNode.top) / currentScale,
+      });
+    },
+    [currentScale, innerBoardRef.current]
+  );
 
   // 스크롤
   useDragToScroll(boardRef);
@@ -66,7 +79,8 @@ const WorkSpacePage = (props) => {
     isFirstRender = false;
     boardRef.current.scrollTop = top - 100;
 
-    boardRef.current.scrollLeft = left - boardRef.current.clientWidth / 2 + width / 2;
+    boardRef.current.scrollLeft =
+      left - boardRef.current.clientWidth / 2 + width / 2;
   }, [codeEditors, textEditors]);
 
   useEffect(() => {
@@ -82,10 +96,6 @@ const WorkSpacePage = (props) => {
     // provider.on("sync", onSync);
     // return () => provider.off("sync", onSync);
   }, []);
-
-  // useEffect(() => {
-  //   yLocs.set("codeEditors", codeEditors);
-  // }, [codeEditors]);
 
   /**
    * @todo innerBoardRef관련 useEffect?
@@ -107,12 +117,12 @@ const WorkSpacePage = (props) => {
 
   // 왼쪽 사이드바 출력 on off 시 화면 스크롤을 통해 위치 유지
   useEffect(() => {
-    if (props.handleFileBar === true) {
-      boardRef.current.scrollLeft += props.widthLeft;
+    if (handleFileBar === true) {
+      boardRef.current.scrollLeft += widthLeft;
     } else {
-      boardRef.current.scrollLeft -= props.widthLeft;
+      boardRef.current.scrollLeft -= widthLeft;
     }
-  }, [props.handleFileBar]);
+  }, [handleFileBar]);
 
   // 왼쪽 사이드바 사이즈 변경 시 화면 스크롤을 통해 위치 유지
   const previousWidth = useRef(null);
@@ -128,18 +138,22 @@ const WorkSpacePage = (props) => {
 
   useEffect(() => {
     previousWidth.current = currentWidth.current;
-  }, [props.widthLeft]);
+  }, [widthLeft]);
 
   useEffect(() => {
-    currentWidth.current = props.widthLeft;
-  }, [props.widthLeft]);
+    currentWidth.current = widthLeft;
+  }, [widthLeft]);
 
   useEffect(() => {
     boardRef.current.scrollLeft += difference.current;
   }, [difference.current]);
 
   return (
-    <div ref={boardRef} className={styles["artboard-wrapper"]} onPointerMove={handlePointMove}>
+    <div
+      ref={boardRef}
+      className={styles["artboard-wrapper"]}
+      onPointerMove={handlePointMove}
+    >
       <div className={styles.artboard} ref={innerBoardRef}>
         {codeEditors.map((codeEditor, i) => (
           <CodeEditor
@@ -150,16 +164,28 @@ const WorkSpacePage = (props) => {
           />
         ))}
         {textEditors.map((textEditor, i) => (
-          <TextEditior {...textEditor} textIndex={i} key={i} artBoardRef={innerBoardRef} />
+          <TextEditior
+            {...textEditor}
+            textIndex={i}
+            key={i}
+            artBoardRef={innerBoardRef}
+          />
         ))}
+        {Array.from(users.entries()).map(([key, value]) => {
+          if (key === awareness.clientID) return null;
+
+          if (!value.cursor || !value.color || !value.name) return null;
+
+          return (
+            <CursorAtom
+              key={key}
+              cursor={value.cursor}
+              color={value.color}
+              name={value.name}
+            />
+          );
+        })}
       </div>
-      {Array.from(users.entries()).map(([key, value]) => {
-        if (key === awareness.clientID) return null;
-
-        if (!value.cursor || !value.color || !value.name) return null;
-
-        return <CursorAtom key={key} cursor={value.cursor} color={value.color} name={value.name} />;
-      })}
     </div>
   );
 };

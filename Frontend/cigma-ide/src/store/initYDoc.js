@@ -7,8 +7,6 @@ const roomName = VITE_WS_ROOMNAME || "WorkSpace";
 const port = VITE_WS_PORT || "4444";
 const wsIP = VITE_WS_IP || "localhost";
 
-console.log(wsIP);
-
 export const ydoc = new Y.Doc();
 
 export const provider = new WebsocketProvider(
@@ -17,8 +15,5 @@ export const provider = new WebsocketProvider(
   ydoc
 );
 export const awareness = provider.awareness;
-console.log("clientID : ", awareness.clientID);
-export const yMap = ydoc.getMap();
 
-// codeEditor 위치 공유 배열
-export const yLocs = ydoc.getMap("Locs");
+console.log("clientID : ", awareness.clientID);

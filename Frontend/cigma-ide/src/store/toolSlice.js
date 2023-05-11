@@ -13,6 +13,8 @@ const initialState = {
   workingCodeEditorIndex: 0,
   workingTextEditorIndex: 0,
   isEditPointerVisible: false,
+  isFileBarVisible: false,
+  isTermVisible: false,
 };
 
 const toolSlice = createSlice({
@@ -64,10 +66,19 @@ const toolSlice = createSlice({
     hideEditPointer: (state) => {
       state.isEditPointerVisible = false;
     },
+    // 파일 바 표시 여부
+    setFileBarVisible: (state) => {
+      state.isFileBarVisible = !state.isFileBarVisible;
+    },
+    // 터미널 표시 여부
+    setTermVisible: (state) => {
+      state.isTermVisible = !state.isTermVisible;
+    },
   },
 });
 
-export const selectIsInputFieldFocused = (state) => state.tool.isInputFieldFocused;
+export const selectIsInputFieldFocused = (state) =>
+  state.tool.isInputFieldFocused;
 
 export const selectCurrentScale = (state) => state.tool.currentScale;
 
@@ -75,13 +86,21 @@ export const selectCurrentTool = (state) => state.tool.currentTool;
 
 export const selectIsDragScrolling = (state) => state.tool.isDragScrolling;
 
-export const selectCurrentCodeEditorIndex = (state) => state.tool.workingCodeEditorIndex;
+export const selectCurrentCodeEditorIndex = (state) =>
+  state.tool.workingCodeEditorIndex;
 
-export const selectCurrentTextEditorIndex = (state) => state.tool.workingTextEditorIndex;
+export const selectCurrentTextEditorIndex = (state) =>
+  state.tool.workingTextEditorIndex;
 
-export const selectIsSelectorActivated = (state) => state.tool.isSelectorActivated;
+export const selectIsSelectorActivated = (state) =>
+  state.tool.isSelectorActivated;
 // 편집 포인터 숨김 여부 관련
-export const selectEditPointerVisible = (state) => state.tool.isEditPointerVisible;
+export const selectEditPointerVisible = (state) =>
+  state.tool.isEditPointerVisible;
+
+export const selectFileBarVisible = (state) => state.tool.isFileBarVisible;
+
+export const selectTermVisible = (state) => state.tool.isTermVisible;
 
 export const {
   activateSelector,
@@ -97,6 +116,8 @@ export const {
   setTextEditorIndex,
   showEditPointer,
   hideEditPointer,
+  setFileBarVisible,
+  setTermVisible,
 } = toolSlice.actions;
 
 export default toolSlice.reducer;
