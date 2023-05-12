@@ -11,88 +11,95 @@ import {
   BsDownload,
 } from "react-icons/bs";
 import { Resizable } from "re-resizable";
-import axios from "axios";
+// import axios from "axios";
 import { useDropzone } from "react-dropzone";
 import { useSelector, useDispatch } from "react-redux";
 import { modifyTreeData } from "../../store/TreeData";
-import { saveAs } from "file-saver";
+// import { saveAs } from "file-saver";
 import { selectFileBarVisible } from "../../store/toolSlice";
-// 마지막 파일의 Id 값을 가져옴
-const getLastId = (treeData) => {
-  const reversedArray = [...treeData].sort((a, b) => {
-    if (a.id < b.id) {
-      return 1;
-    } else if (a.id > b.id) {
-      return -1;
-    }
+import {
+  deleteFile,
+  deleteFolder,
+  expressFile,
+  expressFolder,
+  fileMoveUpdate,
+  fileTextUpdate,
+  fileTreeUpdate,
+  fileUpdate,
+  projectDownload,
+} from "../../api/FileTree";
 
-    return 0;
-  });
+// // 마지막 파일의 Id 값을 가져옴
+// const getLastId = (treeData) => {
+//   const reversedArray = [...treeData].sort((a, b) => {
+//     if (a.id < b.id) {
+//       return 1;
+//     } else if (a.id > b.id) {
+//       return -1;
+//     }
+//     return 0;
+//   });
 
-  if (reversedArray.length > 0) {
-    return reversedArray[0].id;
-  }
+//   if (reversedArray.length > 0) {
+//     return reversedArray[0].id;
+//   }
+//   return 0;
+// };
 
-  return 0;
-};
+// //id에 해당하는 노드를 찾기 위한 재귀 함수
+// const findNodeById = (id, nodes) => {
+//   for (let i = 0; i < nodes.length; i++) {
+//     const node = nodes[i];
+//     if (node.id === id) {
+//       return node;
+//     } else if (node.children) {
+//       const foundNode = findNodeById(id, node.children);
+//       if (foundNode) {
+//         return foundNode;
+//       }
+//     }
+//   }
+//   return null;
+// };
 
-//id에 해당하는 노드를 찾기 위한 재귀 함수
-const findNodeById = (id, nodes) => {
-  for (let i = 0; i < nodes.length; i++) {
-    const node = nodes[i];
-    if (node.id === id) {
-      return node;
-    } else if (node.children) {
-      const foundNode = findNodeById(id, node.children);
-      if (foundNode) {
-        return foundNode;
-      }
-    }
-  }
-  return null;
-};
+// //id를 기반으로 파일 경로를 구성하는 함수
+// const getFilepathById = (id, nodes) => {
+//   const node = findNodeById(id, nodes);
+//   if (!node) {
+//     return "/";
+//   }
+//   const segments = [];
+//   let parent = findNodeById(node.parent, nodes);
+//   while (parent) {
+//     segments.unshift(parent.text);
+//     parent = findNodeById(parent.parent, nodes);
+//   }
+//   return segments.join("/");
+// };
 
-//id를 기반으로 파일 경로를 구성하는 함수
-const getFilepathById = (id, nodes) => {
-  const node = findNodeById(id, nodes);
-  if (!node) {
-    return "/";
-  }
-
-  const segments = [];
-  let parent = findNodeById(node.parent, nodes);
-  while (parent) {
-    segments.unshift(parent.text);
-    parent = findNodeById(parent.parent, nodes);
-  }
-
-  return segments.join("/");
-};
-
-function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidth }) {
+function FileTreeOrganism({
+  widthLeft,
+  setWidthLeft,
+  defaultWidth,
+  getFilepathById,
+  getLastId,
+  findNodeById,
+}) {
   // ============================ 트리용 데이터 리스트 생성=====================//
   const dispatch = useDispatch();
   const treeData = useSelector((state) => state.workbench.treeData);
   const handleFileBar = useSelector(selectFileBarVisible);
 
-  const fileTreeUpdate = () => {
-    axios
-      .get("/api")
-      .then((response) => {
-        dispatch(modifyTreeData(response.data));
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
   useEffect(() => {
     // 최초 렌더링 시 파일 트리 업데이트
-    fileTreeUpdate();
+    const { status, data } = fileTreeUpdate();
+    if (status) {
+      dispatch(modifyTreeData(data));
+    }
   }, []);
 
   //=========================== 파일 이름 바꾸기=============================== //
-  const handleTextChange = (id, value, type) => {
+  const handleTextChange = async (id, value, type) => {
     // 파일 경로 확보
     const filepath = getFilepathById(id, treeData);
     const node = findNodeById(id, treeData);
@@ -119,17 +126,11 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidth }) {
       return node;
     });
     dispatch(modifyTreeData(newTree));
-    axios
-      .put("/api", data)
-      .then((res) => {})
-      .catch((err) => {
-        console.error(err);
-        // 파일 이름 변경에 실패한 경우
-      });
+    await fileTextUpdate();
   };
 
   // ===============================파일 삭제================================= //
-  const handleDelete = (id, name, dir, created = false) => {
+  const handleDelete = async (id, name, dir, created = false) => {
     // 파일 경로
     const filepath = getFilepathById(id, treeData);
     const deleteIds = [
@@ -140,24 +141,16 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidth }) {
     if (created != true) {
       // 폴더일 경우
       if (dir) {
-        axios
-          .delete(`/api/rmdir?name=${name}&path=${filepath}`)
-          .then((response) => {
-            dispatch(modifyTreeData(newTree));
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+        const { status } = await deleteFolder(name, filepath, newTree);
+        if (status) {
+          dispatch(modifyTreeData(newTree));
+        }
       } else {
         //파일일 경우
-        axios
-          .delete(`/api?name=${name}&path=${filepath}`)
-          .then((response) => {
-            dispatch(modifyTreeData(newTree));
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+        const { status } = await deleteFile(name, filepath, newTree, dispatch);
+        if (status) {
+          dispatch(modifyTreeData(newTree));
+        }
       }
     } else {
       dispatch(modifyTreeData(newTree));
@@ -241,7 +234,7 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidth }) {
   };
 
   // 실제 Express 서버에 요청을 보내는 함수
-  const createSignal = (id, name, dir, type) => {
+  const createSignal = async (id, name, dir, type) => {
     const newTree = treeData.map((node) => {
       // 유효한 파일 타입 확장자를 입력 받았을 때
       if (node.id === id && type != undefined) {
@@ -264,24 +257,11 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidth }) {
     });
     dispatch(modifyTreeData(newTree));
     const filepath = getFilepathById(id, treeData);
+    console.log(filepath);
     if (dir) {
-      axios
-        .post("api/folder", { name: name, path: filepath })
-        .then((response) => {
-          console.log(response.data.message);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      await expressFolder(name, filepath);
     } else {
-      axios
-        .post("api/file", { name: name, path: filepath })
-        .then((response) => {
-          console.log(response.data.message);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      await expressFile(name, filepath);
     }
   };
 
@@ -300,17 +280,14 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidth }) {
     if (dropTarget) {
       destinationPath += `/${dropTarget.text}`;
     }
-
     //axios 처리 후 Tree 수정
-    try {
-      await axios.put("/api/move", {
-        name: dragSource.text,
-        path: sourcePath,
-        destination: destinationPath,
-      });
+    const { status } = await fileMoveUpdate(
+      dragSource.text,
+      sourcePath,
+      destinationPath
+    );
+    if (status) {
       dispatch(modifyTreeData(newTree));
-    } catch (err) {
-      console.error(err);
     }
   };
 
@@ -343,7 +320,7 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidth }) {
 
           console.log(file.path);
 
-          await axios.post("/api/upload", formData);
+          await fileUpdate(formData);
           console.log("File upload successful");
         })
       );
@@ -351,26 +328,13 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidth }) {
       console.error("File upload failed", error);
     }
 
-    fileTreeUpdate();
+    fileTreeUpdate(dispatch);
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     noClick: true,
   });
-  // =======================프로젝트 파일 다운로드=============================//
-  const projectDownload = async () => {
-    try {
-      const response = await axios.get("/api/download", {
-        responseType: "blob", // 서버에서 응답으로 받을 데이터 타입 설정
-      });
-
-      const blob = new Blob([response.data]); // Blob 객체 생성
-      saveAs(blob, "project.zip"); // 압축 파일 다운로드
-    } catch (error) {
-      console.error("Error downloading archive:", error);
-    }
-  };
 
   return (
     <Resizable
