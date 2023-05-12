@@ -8,7 +8,12 @@ import { selectTermVisible } from "../../store/toolSlice";
 import { FitAddon } from "xterm-addon-fit";
 import { AttachAddon } from "xterm-addon-attach";
 
-const socket = new WebSocket("ws://70.12.247.116:3333");
+const { VITE_WS_PORT } = import.meta.env;
+
+const termPort = VITE_WS_PORT || 5000;
+const socket = new WebSocket(
+  `ws://${window.location.hostname}:${termPort}/terminal`
+);
 
 const TermOrganism = ({ widthRight, setWidthRight, defaultWidthRight }) => {
   const attachAddon = new AttachAddon(socket);
