@@ -4,7 +4,7 @@ import path from "path";
 import archiver from "archiver";
 
 const router = express.Router();
-
+const __dirname = path.resolve();
 const ROOT_FOLDER = "../../workspace/project";
 
 //루트폴더가 없을경우 생성
@@ -69,6 +69,11 @@ router.get("/", (req, res) => {
   traverseDir(ROOT_FOLDER, 0);
 
   res.json(result);
+});
+
+// 파일 데이터 받기
+router.get("/file/data", (req, res) => {
+  res.sendFile(path.join(__dirname, ROOT_FOLDER + "/test.txt"));
 });
 
 // 파일 생성

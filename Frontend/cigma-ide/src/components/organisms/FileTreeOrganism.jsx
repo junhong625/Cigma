@@ -77,7 +77,7 @@ const getFilepathById = (id, nodes) => {
   return segments.join("/");
 };
 
-function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidth }) {
+function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
   // ============================ 트리용 데이터 리스트 생성=====================//
   const dispatch = useDispatch();
   const treeData = useSelector((state) => state.workbench.treeData);
@@ -339,7 +339,7 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidth }) {
     <Resizable
       size={{ width: widthLeft }}
       minWidth={handleFileBar ? 240 : 0}
-      maxWidth={"50%"}
+      maxWidth={"30%"}
       enable={{
         top: false,
         right: true,
@@ -352,10 +352,11 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidth }) {
       }}
       handleClasses={{ right: `${styles.handle}` }}
       onResizeStart={() => {
-        defaultWidth.current = widthLeft;
+        defaultWidthLeft.current = widthLeft;
       }}
       onResize={(e, direction, ref, d) => {
-        setWidthLeft(defaultWidth.current + d.width);
+        const nextWidth = defaultWidthLeft.current + d.width;
+        setWidthLeft(nextWidth);
       }}
       // 배경색
       style={{ backgroundColor: "#24282e" }}
