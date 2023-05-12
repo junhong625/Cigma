@@ -85,6 +85,7 @@ const useDrawCodeEditor = (elementRef) => {
         const coordinates = {
           top: canvasPreview.offsetTop,
           left: canvasPreview.offsetLeft,
+          canvasName: "",
         };
 
         // codeEditor 추가하기
