@@ -55,3 +55,19 @@ export const signout = async () => {
     };
   }
 };
+
+// 로그아웃
+export const logout = async (token) => {
+  const api = createApi({ token });
+  try {
+    const response = await api.post(`/user/logout`);
+    return {
+      status: response.status,
+    };
+  } catch (error) {
+    console.log(`logout error${error}`);
+    return {
+      status: error.response.status,
+    };
+  }
+};
