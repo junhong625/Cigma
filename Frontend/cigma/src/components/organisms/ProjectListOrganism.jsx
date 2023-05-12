@@ -172,8 +172,8 @@ function ProjectListOrganism() {
             {projects.map((project, index) => (
               <div key={"project" + index} className={styles.project}>
                 <ProjectThumbNail
-                  name={project.name}
-                  img={project.thumbnail}
+                  name={project.projectName}
+                  img={project.projectImageUrl}
                   openModal={openModal}
                   setNowContent={setNowContent}
                   setToDo={setToDo}

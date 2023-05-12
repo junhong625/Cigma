@@ -11,6 +11,7 @@ import { logout } from "../../api/account";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteUserToken } from "../../store/userToken";
 import { persistor } from "../../store/store";
+import { createTeams } from "../../api/team";
 
 function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
   const [firstClick, setFirstClick] = useState(false);
   const [onCreate, setOnCreate] = useState(false);
   const newTeamName = useRef();
-  const pressEnter = (event) => {
+  const pressEnter = async (event) => {
     if (event.key === "Enter") {
       // 새로운 팀을 생성하는 코드 (API)
       // 요금제에 따른 생성 갯수 제한?
@@ -56,7 +57,10 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
         setOnCreate(false);
         return;
       }
-      setTeamList([...teamList, newTeamName.current.value]);
+      const { status } = await createTeams(userToken, newTeamName.current.value);
+      if (status === 201) {
+        setTeamList([...teamList, newTeamName.current.value]);
+      }
       // 그 후 입력값 초기화
       newTeamName.current.value = "";
       setOnCreate(false);
@@ -79,7 +83,6 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
     }
   }, [onCreate]);
 
-  teamList.map((team, index) => console.log(`${team.teamName} ||| ${index}`));
   return (
     <div className={styles.blockContainer}>
       <div className={styles.sideBarContainer}>
