@@ -4,7 +4,6 @@ import os from "os";
 const shell = os.platform() === "win32" ? "powershell.exe" : "bash";
 
 export const setupPty = (conn, req) => {
-  console.log("connected");
   const term = pty.spawn(shell, [], {
     name: "xterm-color",
     cols: 80,

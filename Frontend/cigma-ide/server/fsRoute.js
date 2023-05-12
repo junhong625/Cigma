@@ -72,8 +72,15 @@ router.get("/", (req, res) => {
 });
 
 // 파일 데이터 받기
-router.get("/file/data", (req, res) => {
-  res.sendFile(path.join(__dirname, ROOT_FOLDER + "/test.txt"));
+router.post("/file/data", (req, res) => {
+  const { path: filePath } = req.body;
+
+  const data = fs.readFileSync(
+    path.join(__dirname, ROOT_FOLDER + filePath),
+    "utf-8"
+  );
+  res.send(data.toString());
+  // res.sendFile(path.join(__dirname, ROOT_FOLDER + "/test.txt"));
 });
 
 // 파일 생성
