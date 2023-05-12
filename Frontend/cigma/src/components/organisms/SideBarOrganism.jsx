@@ -58,6 +58,7 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
     }
   }, [onCreate]);
 
+  teamList.map((team, index) => console.log(`${team.teamName} ||| ${index}`));
   return (
     <div className={styles.blockContainer}>
       <div className={styles.sideBarContainer}>
@@ -69,13 +70,7 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
             }}
           >
             <img src={"/img/Logo.png"} alt="logo" />
-            <div
-              className={`${styles.logoTitle} ${
-                openTeams ? "" : styles.noTitle
-              }`}
-            >
-              Cigma
-            </div>
+            <div className={`${styles.logoTitle} ${openTeams ? "" : styles.noTitle}`}>Cigma</div>
           </div>
 
           <div
@@ -83,9 +78,7 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
               changeTeamArc();
             }}
             className={`${styles.menu} ${
-              pathname === "/projects" && openTeams
-                ? `${styles.menuActivate}`
-                : ""
+              pathname === "/projects" && openTeams ? `${styles.menuActivate}` : ""
             }`}
           >
             <IconTextAtom
@@ -93,22 +86,14 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
               text={"Projects"}
               openTeams={openTeams}
             />
-            <div
-              className={`${styles.dropArrow} ${
-                openTeams ? "" : styles.noArrow
-              }`}
-            >
+            <div className={`${styles.dropArrow} ${openTeams ? "" : styles.noArrow}`}>
               {openTeams ? "▼" : "▶"}
             </div>
           </div>
 
           <div
             className={`${styles.dropDown} ${
-              firstClick
-                ? openTeams
-                  ? `${styles.openTeams}`
-                  : `${styles.closeTeams}`
-                : ""
+              firstClick ? (openTeams ? `${styles.openTeams}` : `${styles.closeTeams}`) : ""
             }`}
           >
             {teamList.map((team, index) => (
@@ -118,12 +103,10 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
                   changeTeam(index);
                 }}
                 className={`${styles.teamButton} ${
-                  selectedTeam === index && pathname === "/projects"
-                    ? `${styles.activate}`
-                    : ""
+                  selectedTeam === index && pathname === "/projects" ? `${styles.activate}` : ""
                 }`}
               >
-                {team}
+                {team.teamName}
               </div>
             ))}
             {onCreate ? (
@@ -157,23 +140,11 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
               pathname === "/projects/trashcan" ? `${styles.menuActivate}` : ""
             }`}
           >
-            <IconTextAtom
-              icon={<BsTrashFill />}
-              text={"Recycle Bin"}
-              openTeams={openTeams}
-            />
+            <IconTextAtom icon={<BsTrashFill />} text={"Recycle Bin"} openTeams={openTeams} />
           </div>
           <div className={styles.menu}>
-            <a
-              href="/docs"
-              target="_blank"
-              style={{ textDecoration: "none", color: "white" }}
-            >
-              <IconTextAtom
-                icon={<BsJournalBookmarkFill />}
-                text={"Docs"}
-                openTeams={openTeams}
-              />
+            <a href="/docs" target="_blank" style={{ textDecoration: "none", color: "white" }}>
+              <IconTextAtom icon={<BsJournalBookmarkFill />} text={"Docs"} openTeams={openTeams} />
             </a>
           </div>
         </div>
@@ -183,11 +154,7 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
             className={styles.menu}
             // onclick 시 확인 후(?) 로그아웃 후 메인 페이지로 돌아감 or 프로그램 종료?
           >
-            <IconTextAtom
-              icon={<BsBoxArrowRight />}
-              text={"Log Out"}
-              openTeams={openTeams}
-            />
+            <IconTextAtom icon={<BsBoxArrowRight />} text={"Log Out"} openTeams={openTeams} />
           </div>
           <div
             className={styles.menu}
@@ -196,11 +163,7 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
             }}
           >
             {/* 유저 프로필 이미지를 불러와야 함 */}
-            <IconTextAtom
-              icon={<BsPersonFill />}
-              text={"Profile"}
-              openTeams={openTeams}
-            />
+            <IconTextAtom icon={<BsPersonFill />} text={"Profile"} openTeams={openTeams} />
           </div>
         </div>
       </div>
