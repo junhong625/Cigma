@@ -13,17 +13,13 @@ import okhttp3.OkHttpClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 @Service
 @Slf4j
 public class CanvasServiceImpl implements CanvasService{
-    @Value("${kubernetes.api.server}")
-    private String basePath;
     private CoreV1Api api;
 
     public CanvasServiceImpl() throws Exception {

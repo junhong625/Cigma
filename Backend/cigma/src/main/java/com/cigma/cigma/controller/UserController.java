@@ -193,7 +193,7 @@ public class UserController {
     }
 
     @DeleteMapping("/image")
-    public CustomResponseEntity<?> setDefaultImage(@ModelAttribute UserUpdateRequest userUpdateRequest) {
+    public CustomResponseEntity<?> setDefaultImage() {
         return ResponseHandler.generateResponse(true, "기본 이미지로 변경", HttpStatus.OK, userService.setDefaultImage());
     }
 
