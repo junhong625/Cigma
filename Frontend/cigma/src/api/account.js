@@ -40,7 +40,7 @@ export const signup = async (userEmail, userPass, userName) => {
 };
 
 // 회원탈퇴
-export const signout = async () => {
+export const withdraw = async () => {
   const api = createApi();
 
   try {
