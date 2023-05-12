@@ -7,10 +7,15 @@ import { BsJournalBookmarkFill } from "react-icons/bs";
 import { BsPersonFill } from "react-icons/bs";
 import { BsBoxArrowRight } from "react-icons/bs";
 import styles from "../../styles/organisms/SideBarOrganism.module.scss";
+import { logout } from "../../api/account";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteUserToken } from "../../store/userToken";
+import { persistor } from "../../store/store";
 
 function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
   const pathname = location.pathname;
   const toHome = () => {
     navigate("/");
@@ -20,6 +25,22 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
   };
   const toProfile = () => {
     navigate("/profilemodify");
+  };
+
+  // 유저토큰 정보 가져오기
+  const userToken = useSelector((store) => store.userToken);
+
+  /**
+   * @description 로그아웃버튼 누르고 로그인화면으로 이동시키기
+   */
+  const toMain = async () => {
+    const { status } = await logout(userToken);
+    if (status === 200) {
+      alert("로그아웃 되었습니다");
+      dispatch(deleteUserToken);
+      persistor.purge(); // 토큰 초기화
+      navigate("/login");
+    }
   };
 
   const [openTeams, setOpenTeams] = useState(false);
@@ -153,6 +174,10 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
           <div
             className={styles.menu}
             // onclick 시 확인 후(?) 로그아웃 후 메인 페이지로 돌아감 or 프로그램 종료?
+            // TODO: 로그아웃처리
+            onClick={() => {
+              toMain();
+            }}
           >
             <IconTextAtom icon={<BsBoxArrowRight />} text={"Log Out"} openTeams={openTeams} />
           </div>

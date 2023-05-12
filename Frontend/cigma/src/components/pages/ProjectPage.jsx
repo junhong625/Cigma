@@ -38,7 +38,6 @@ function ProjectPage() {
 
   const callTeamList = async () => {
     const { status, teamList } = await callTeams(userToken);
-    console.log(`status${status}`);
     if (status === 200) {
       console.log("팀 리스트 호출완료");
       console.log(teamList);
