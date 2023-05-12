@@ -266,7 +266,7 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
     const filepath = getFilepathById(id, treeData);
     if (dir) {
       axios
-        .post("api/folder", { name: name, path: filepath })
+        .post("/api/folder", { name: name, path: filepath })
         .then((response) => {
           console.log(response.data.message);
         })
@@ -275,7 +275,7 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
         });
     } else {
       axios
-        .post("api/file", { name: name, path: filepath })
+        .post("/api/file", { name: name, path: filepath })
         .then((response) => {
           console.log(response.data.message);
         })
