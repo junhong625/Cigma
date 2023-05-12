@@ -27,7 +27,7 @@ import {
   fileTreeUpdate,
   fileUpdate,
   projectDownload,
-} from "../../api/FileTree";
+} from "../../api/fileTree";
 
 // 마지막 파일의 Id 값을 가져옴
 const getLastId = (treeData) => {

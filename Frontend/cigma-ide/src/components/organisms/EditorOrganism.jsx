@@ -4,12 +4,13 @@ import { MonacoBinding } from "y-monaco";
 import { awareness, ydoc } from "../../store/initYDoc";
 import { loadFileContent } from "../../api/fileTree";
 
-const EditorOrganism = React.memo(({ file, readOnly, editorPerson, file }) => {
+const EditorOrganism = React.memo(({ file, readOnly, editorPerson }) => {
   // readOnly -> 더블클릭여부에 따라 편집가능하게끔 처리
-  const [content, setContent] = useState("");
   useEffect(() => {
     const contentLoad = async () => {
-      await loadFileContent(file);
+      const { data } = await loadFileContent(file);
+      const yText = ydoc.getText(file);
+      yText.insert(0, data);
     };
     contentLoad();
   }, []);

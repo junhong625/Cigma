@@ -85,7 +85,7 @@ export const fileMoveUpdate = async (name, path, destination) => {
 // express 관련
 export const expressFolder = async (name, path) => {
   try {
-    const response = await axios.post("api/folder", { name, path });
+    const response = await axios.post("/api/folder", { name, path });
     console.log(response.data.message);
   } catch (error) {
     console.error("expressFolder error", error);
@@ -94,7 +94,7 @@ export const expressFolder = async (name, path) => {
 
 export const expressFile = async (name, path) => {
   try {
-    const response = await axios.post("api/file", { name, path });
+    const response = await axios.post("/api/file", { name, path });
     console.log(response.data.message);
   } catch (error) {
     console.error("expressFile error", error);
@@ -102,10 +102,12 @@ export const expressFile = async (name, path) => {
 };
 
 // 모나코에 넣을 내용 불러오기
-export const loadFileContent = async () => {
+export const loadFileContent = async (path) => {
   try {
-    const response = await axios.post("api/file/data", { path });
-    console.log(response.data);
+    const response = await axios.post("/api/file/data", { path: "/" + path });
+    return {
+      data: response.data,
+    };
   } catch (error) {
     console.error("loadFileContent error", error);
   }
