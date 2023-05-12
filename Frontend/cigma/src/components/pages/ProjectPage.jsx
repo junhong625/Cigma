@@ -34,8 +34,11 @@ function ProjectPage() {
   const userToken = useSelector((store) => store.userToken);
 
   // 유저가 갖고 있는 팀 리스트 호출 (현재는 임시데이터)
-  const [teamList, setTeamList] = useState(["팀"]);
+  const [teamList, setTeamList] = useState([]);
 
+  const updateTeamList = (newTeamList) => {
+    setTeamList(newTeamList);
+  };
   const callTeamList = async () => {
     const { status, teamList } = await callTeams(userToken);
     if (status === 200) {
@@ -49,6 +52,7 @@ function ProjectPage() {
 
   useEffect(() => {
     callTeamList();
+    console.log(`projectlist outlet set: ${teamList[selectedTeam]}`);
   }, []);
 
   // 현재 팀 리스트
@@ -58,20 +62,14 @@ function ProjectPage() {
   return (
     <div className={styles.ContainerA}>
       <SideBarOrganism
-        setTeamList={setTeamList}
+        setTeamList={updateTeamList}
         teamList={teamList}
         setSelectedTeam={setSelectedTeam}
         selectedTeam={selectedTeam}
         setNowContent={setNowContent}
       />
       <Outlet
-        context={[
-          openModal,
-          teamList[selectedTeam],
-          setNowContent,
-          setToDo,
-          setPropFunction,
-        ]}
+        context={[openModal, teamList[selectedTeam], setNowContent, setToDo, setPropFunction]}
       />
       <ModalPortal>
         <Transition unmountOnExit in={modalOn} timeout={500}>

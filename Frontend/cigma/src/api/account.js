@@ -40,7 +40,7 @@ export const signup = async (userEmail, userPass, userName) => {
 };
 
 // 회원탈퇴
-export const signout = async () => {
+export const withdraw = async () => {
   const api = createApi();
 
   try {
@@ -50,6 +50,22 @@ export const signout = async () => {
     };
   } catch (error) {
     console.error("signout error:", error);
+    return {
+      status: error.response.status,
+    };
+  }
+};
+
+// 로그아웃
+export const logout = async (token) => {
+  const api = createApi({ token });
+  try {
+    const response = await api.post(`/user/logout`);
+    return {
+      status: response.status,
+    };
+  } catch (error) {
+    console.log(`logout error${error}`);
     return {
       status: error.response.status,
     };

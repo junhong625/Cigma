@@ -13,37 +13,37 @@ import { useSelector } from "react-redux";
 import { callProjects } from "../../api/project";
 
 function ProjectListOrganism() {
-  const [openModal, team, setNowContent, setToDo, setPropFunction] =
-    useOutletContext();
+  const [openModal, team, setNowContent, setToDo, setPropFunction] = useOutletContext();
   // team=== 해당 프로젝트를 가져온 팀 명.
   // API상 필요한 정보를 context에 담아 가져올 것.
   // API 호출을 통해 해당 팀의 프로젝트를 리스트로 가져왔다고 가정
 
+  /**test */
+  console.log(`project list organism team info?${JSON.stringify(team)}`);
   //유저토큰
   const userToken = useSelector((store) => store.userToken);
   // 프로젝트 리스트 호출
   const [projects, setProjects] = useState([
-    {
-      name: "project1",
-      thumbnail:
-        "https://t1.daumcdn.net/cfile/tistory/999A233F5EE64AA229?original",
-    },
+    // {
+    //   name: "project1",
+    //   thumbnail: "https://t1.daumcdn.net/cfile/tistory/999A233F5EE64AA229?original",
+    // },
   ]);
 
   const callProjectList = async () => {
-    console.log(team);
-    const { status, projectList } = await callProjects(userToken, team.id);
+    const { status, projectList } = await callProjects(userToken, team.teamIdx);
     if (status === 200) {
       console.log("프로젝트 리스트 호출완료");
       setProjects(projectList);
     } else {
-      console.log("에러");
+      console.log("프로젝트 리스트 호출 에러");
     }
   };
 
-  // useEffect(() => {
-  //   callProjectList();
-  // }, [team]);
+  useEffect(() => {
+    callProjectList();
+    console.log(`result ${projects}`);
+  }, [team]);
 
   // 반환 리스트 형태 참고해서 프로퍼티 이름 수정할 것.
   // const projects = [
@@ -112,7 +112,7 @@ function ProjectListOrganism() {
       ) : (
         <div>
           <div className={styles.title}>
-            {team}
+            {team.teamName}
             <div
               className={styles.iconWrapper}
               style={{ backgroundColor: dropMenu ? "gray" : "" }}
@@ -172,8 +172,8 @@ function ProjectListOrganism() {
             {projects.map((project, index) => (
               <div key={"project" + index} className={styles.project}>
                 <ProjectThumbNail
-                  name={project.name}
-                  img={project.thumbnail}
+                  name={project.projectName}
+                  img={project.projectImageUrl}
                   openModal={openModal}
                   setNowContent={setNowContent}
                   setToDo={setToDo}

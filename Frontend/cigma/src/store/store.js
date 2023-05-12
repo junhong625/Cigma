@@ -1,11 +1,8 @@
-import {
-  configureStore,
-  combineReducers,
-  getDefaultMiddleware,
-} from "@reduxjs/toolkit";
+import { configureStore, combineReducers, getDefaultMiddleware } from "@reduxjs/toolkit";
 import sessionStorage from "redux-persist/es/storage/session";
 import { persistReducer } from "redux-persist";
 import userToken from "./userToken";
+import persistStore from "redux-persist/es/persistStore";
 
 const persistConfig = {
   key: "root",
@@ -25,3 +22,5 @@ export const store = configureStore({
     serializableCheck: false,
   }),
 });
+
+export const persistor = persistStore(store);
