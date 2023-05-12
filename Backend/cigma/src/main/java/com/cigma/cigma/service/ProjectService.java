@@ -16,8 +16,6 @@ public interface ProjectService {
 
     ProjectGetResponse save(ProjectCreateRequest projectCreateRequest) throws Exception;
 
-    Optional<Project> findById(Long id);
-
     void deleteById(Long id) throws Exception;
 
     ProjectGetResponse changeName(Long pjtIdx, ProjectPatchRequest projectPatchRequest) throws Exception;

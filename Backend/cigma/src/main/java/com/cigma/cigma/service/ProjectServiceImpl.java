@@ -92,11 +92,6 @@ public class ProjectServiceImpl implements ProjectService{
     }
 
     @Override
-    public Optional<Project> findById(Long id) {
-        return projectRepository.findById(id);
-    }
-
-    @Override
     public void deleteById(Long id) throws Exception {
         checkAuthorization(id);
         projectRepository.deleteById(id);

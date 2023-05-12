@@ -35,7 +35,7 @@ public class ProjectController {
 
     // 프로젝트 생성
     @PostMapping()
-    public CustomResponseEntity<? extends Object> createProject(@ModelAttribute ProjectCreateRequest projectCreateRequest) throws Exception {
+    public CustomResponseEntity<? extends Object> createProject(@RequestBody ProjectCreateRequest projectCreateRequest) throws Exception {
         return ResponseHandler.generateResponse(true, "프로젝트 생성 성공", HttpStatus.CREATED, projectService.save(projectCreateRequest));
     }
 
@@ -71,14 +71,10 @@ public class ProjectController {
         return ResponseHandler.generateResponse(true, "프로젝트 조회", HttpStatus.OK, null);
     }
 
+    // 프로젝트 복원하기
     @PatchMapping("/{id}/restore")
     public CustomResponseEntity<? extends Object> restoreProject(@PathVariable("id") Long projectIdx) throws Exception {
         projectService.restoreProject(projectIdx);
         return ResponseHandler.generateResponse(true, "프로젝트 조회", HttpStatus.OK, null);
     }
-
-//    @GetMapping("/pods")
-//    public CustomResponseEntity<? extends Object> getPods() throws Exception {
-//        return ResponseHandler.generateResponse(true, "프로젝트 조회", HttpStatus.OK, null);
-//    }
 }
