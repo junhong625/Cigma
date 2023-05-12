@@ -2,14 +2,28 @@ import React, { useEffect, useRef, useState } from "react";
 import Editor from "@monaco-editor/react";
 import { MonacoBinding } from "y-monaco";
 import { awareness, ydoc } from "../../store/initYDoc";
+import { loadFileContent } from "../../api/fileTree";
 
-const EditorOrganism = React.memo(({ file, readOnly, editorPerson }) => {
+const EditorOrganism = React.memo(({ file, readOnly, editorPerson, file }) => {
   // readOnly -> 더블클릭여부에 따라 편집가능하게끔 처리
+  const [content, setContent] = useState("");
+  useEffect(() => {
+    const contentLoad = async () => {
+      await loadFileContent(file);
+    };
+    contentLoad();
+  }, []);
+
   const handleEditorDidMount = (editor, monaco) => {
     console.log("filename : ", file);
     const yText = ydoc.getText(file);
 
-    const monacoBinding = new MonacoBinding(yText, editor.getModel(), new Set([editor]), awareness);
+    const monacoBinding = new MonacoBinding(
+      yText,
+      editor.getModel(),
+      new Set([editor]),
+      awareness
+    );
   };
   const myName = awareness.getLocalState().name;
 
