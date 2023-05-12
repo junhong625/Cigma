@@ -1,7 +1,7 @@
 package com.cigma.cigma.controller;
 
 import com.cigma.cigma.common.CustomResponseEntity;
-import com.cigma.cigma.dto.request.CanvasCreateRequest;
+import com.cigma.cigma.dto.request.CanvasJoinRequest;
 import com.cigma.cigma.handler.ResponseHandler;
 import com.cigma.cigma.service.CanvasServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -17,19 +17,30 @@ public class CanvasController {
 
     private final CanvasServiceImpl canvasService;
 
-    @GetMapping()
+    @GetMapping("/all")
     public CustomResponseEntity<? extends Object> getPods() throws Exception {
-        return ResponseHandler.generateResponse(true, "컨테이너 조회", HttpStatus.OK, canvasService.getPort());
+        return ResponseHandler.generateResponse(true, "컨테이너 조회", HttpStatus.OK, canvasService.getPods());
     }
 
     @PostMapping()
-    public CustomResponseEntity<? extends Object> createPod(@RequestBody CanvasCreateRequest request) throws Exception {
-        return ResponseHandler.generateResponse(true, "Pod 생성", HttpStatus.OK, canvasService.createPod(request.getName()));
+    public CustomResponseEntity<? extends Object> joinCanvas(@RequestBody CanvasJoinRequest request) throws Exception {
+        return ResponseHandler.generateResponse(true, "캔버스 접속", HttpStatus.OK, canvasService.joinCanvas(request));
     }
 
-    @DeleteMapping()
-    public CustomResponseEntity<? extends Object> deletePod(@RequestBody CanvasCreateRequest request) throws Exception {
-        canvasService.deletePod(request.getName());
-        return ResponseHandler.generateResponse(true, "Pod 삭제", HttpStatus.OK, null);
-    }
+//    @PostMapping()
+//    public CustomResponseEntity<? extends Object> setCanvas(@RequestBody CanvasCreateRequest request) throws Exception {
+//        return ResponseHandler.generateResponse(true, "접속 Port 조회", HttpStatus.OK, canvasService.getPort(request.getName()));
+//    }
+
+
+//    @PostMapping()
+//    public CustomResponseEntity<? extends Object> createPod(@RequestBody CanvasCreateRequest request) throws Exception {
+//        return ResponseHandler.generateResponse(true, "Pod 생성", HttpStatus.OK, canvasService.createPod(request.getName()));
+//    }
+//
+//    @DeleteMapping()
+//    public CustomResponseEntity<? extends Object> deletePod(@RequestBody CanvasCreateRequest request) throws Exception {
+//        canvasService.deletePod(request.getName());
+//        return ResponseHandler.generateResponse(true, "Pod 삭제", HttpStatus.OK, null);
+//    }
 }

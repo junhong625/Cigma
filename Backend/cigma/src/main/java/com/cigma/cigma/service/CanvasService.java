@@ -1,11 +1,13 @@
 package com.cigma.cigma.service;
 
+import com.cigma.cigma.dto.request.CanvasJoinRequest;
+import com.cigma.cigma.dto.response.CanvasGetResponse;
 import com.cigma.cigma.dto.response.PodsGetResponse;
 
-import java.io.IOException;
-
 public interface CanvasService {
-    PodsGetResponse getPort() throws Exception;
+    PodsGetResponse getPods() throws Exception;
+
+    CanvasGetResponse joinCanvas(CanvasJoinRequest request) throws Exception;
 
     PodsGetResponse createPod(String name) throws Exception;
 

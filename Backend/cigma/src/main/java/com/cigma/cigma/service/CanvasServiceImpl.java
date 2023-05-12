@@ -1,6 +1,13 @@
 package com.cigma.cigma.service;
 
+import com.amazonaws.services.ec2.AmazonEC2Client;
+import com.cigma.cigma.dto.request.CanvasJoinRequest;
+import com.cigma.cigma.dto.response.CanvasGetResponse;
 import com.cigma.cigma.dto.response.PodsGetResponse;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 import io.kubernetes.client.custom.IntOrString;
 import io.kubernetes.client.openapi.ApiClient;
 import io.kubernetes.client.openapi.ApiException;
@@ -13,6 +20,8 @@ import okhttp3.OkHttpClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,10 +89,21 @@ public class CanvasServiceImpl implements CanvasService{
         log.info("service 삭제 완료");
     }
 
+    @Override
+    public CanvasGetResponse joinCanvas(CanvasJoinRequest request) throws Exception {
+        String name = request.getTeamName() + "_" + request.getPjtName();
+        createFolder(name);
+        V1Service service = api.readNamespacedService(name + "-service", "default", null);
+        return CanvasGetResponse.builder()
+                .name(name)
+                .port(service.getSpec().getPorts().get(0).getNodePort())
+                .build();
+    }
+
     // Kubernetes에서 관리 중인 Pods(컨테이너 가져오기)
     // Pods내에는 여러개의 컨테이너 존재도 가능
     @Override
-    public PodsGetResponse getPort() throws Exception {
+    public PodsGetResponse getPods() throws Exception {
         List<String> pods = new ArrayList<>();
         V1PodList list = api.listNamespacedPod("default", null, null, null, null, null, null, null, null, null, null);
         for (V1Pod item : list.getItems()) {
@@ -122,5 +142,42 @@ public class CanvasServiceImpl implements CanvasService{
 
     public void deleteService(String name) throws Exception{
         V1Service deletedServcie = api.deleteNamespacedService(name + "-service", "default", null, null, null, null, null, null);
+    }
+
+    public void createFolder(String name) throws Exception {
+        String host = "k8a601.p.ssafy.io";
+        String username = "ubuntu";
+        String privateKeyPath = "C:\\Users\\SSAFY\\Downloads\\K8A601T.pem";
+        int port = 22;
+
+        try {
+            JSch jSch = new JSch();
+
+            // SSH private key 로드
+            jSch.addIdentity(privateKeyPath);
+            log.info("SSH private key 로드 : " + privateKeyPath);
+
+            // 세션 생성 및 접속
+            Session session = jSch.getSession(username, host, port);
+            session.setConfig("StrictHostKeyChecking", "no"); // 호스트 키 검증 비활성화
+            session.connect();
+            log.info("세션 생성 및 접속");
+
+            // 명령 실행
+            ChannelExec channel = (ChannelExec) session.openChannel("exec");
+            channel.setCommand("cd /; sudo mkdir" + name);
+            channel.connect();
+            log.info("명령 실행");
+
+            // 명령어 실행 결과 출력
+            // 예를 들어, command = "cd /; mkdir test_test"의 경우, 해당 디렉토리가 생성됩니다.
+            System.out.println("Command executed successfully.");
+
+            // 연결 종료
+            channel.disconnect();
+            session.disconnect();
+        } catch (JSchException e) {
+            e.printStackTrace();
+        }
     }
 }
