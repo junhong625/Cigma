@@ -1,17 +1,22 @@
 # bash image
-FROM openjdk:11-slim
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND noninteractive
 
 ### GET GIT AND OTHER PACKAGE
-RUN apt-get install -y git apt-utils curl
+RUN apt-get update && apt-get install --no-install-recommends -y git apt-utils curl
+
+### GET JAVA
+RUN apt-get install --no-install-recommends -y openjdk-11-jre-headless
 
 ### GET PYTHON, PIP
-RUN apt-get install -y software-properties-common \
+RUN apt-get install --no-install-recommends -y software-properties-common \
 && add-apt-repository ppa:deadsnakes/ppa \
 && apt-get update \
-&& apt-get install -y python3.9
+&& apt-get install --no-install-recommends -y python3.9
 
 ### GET NODEJS
-RUN curl -fsSL https://deb.nodesource.com/setup_18.15 | bash - && apt-get install -y nodejs npm build-essential \
+RUN curl -fsSL https://deb.nodesource.com/setup_18.15 | bash - && apt-get install --no-install-recommends -y nodejs npm build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 ### MAKE ROOT DIR
