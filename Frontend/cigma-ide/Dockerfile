@@ -4,13 +4,11 @@ FROM ubuntu:22.04
 ENV DEBIAN_FRONTEND noninteractive
 
 ### GET DEFAULT PACKAGE
-RUN apt-get update && apt-get install --no-install-recommends -y apt-utils
-
-### GET OTHER PACKAGE
-RUN apt-get install --no-install-recommends -y gnupg git curl
+RUN apt-get update && apt-get install --no-install-recommends -y apt-utils gnupg git curl
 
 ### GET JAVA
-RUN mkdir -p /etc/ssl/certs/java \
+RUN rmdir /etc/ssl/certs/java \
+&& mkdir -p /etc/ssl/certs/java \
 && apt-get install --no-install-recommends -y openjdk-11-jre-headless
 
 ### GET PYTHON, PIP
