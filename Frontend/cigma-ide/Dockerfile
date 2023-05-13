@@ -5,11 +5,10 @@ ENV DEBIAN_FRONTEND noninteractive
 
 ### GET GIT AND OTHER PACKAGE
 RUN apt-get update && apt-get install --no-install-recommends -y apt-utils \
-&& apt-get install --no-install-recommends -y git curl
+&& apt-get install --no-install-recommends -y git curl gnupg
 
 ### GET JAVA
-RUN dpkg --purge --force-depends ca-certificates-java \
-&& apt-get install ca-certificates-java \
+RUN apt-get install --no-install-recommends -y ca-certificates-java \
 && apt-get install --no-install-recommends -y openjdk-11-jre-headless
 
 ### GET PYTHON, PIP
