@@ -6,8 +6,11 @@ ENV DEBIAN_FRONTEND noninteractive
 ### GET DEFAULT PACKAGE
 RUN apt-get update && apt-get install --no-install-recommends -y apt-utils
 
-### GET GIT AND OTHER PACKAGE
-RUN apt-get install --no-install-recommends -y git curl gnupg ca-certificates-java && /var/lib/dpkg/info/ca-certificates-java.postinst configure
+### GET OTHER PACKAGE
+RUN apt-get install --no-install-recommends -y gnupg ca-certificates-java && /var/lib/dpkg/info/ca-certificates-java.postinst configure
+
+### GET GIT AND CURL
+RUN apt-get install --no-install-recommends -y git curl
 
 ### GET JAVA
 RUN apt-get install --no-install-recommends -y openjdk-11-jre-headless
@@ -16,7 +19,7 @@ RUN apt-get install --no-install-recommends -y openjdk-11-jre-headless
 RUN apt-get install --no-install-recommends -y python3.10
 
 ### GET NODEJS
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && apt-get install --no-install-recommends -y nodejs npm build-essential \
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && apt-get install --no-install-recommends -y nodejs build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 ### MAKE ROOT DIR
