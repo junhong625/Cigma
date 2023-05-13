@@ -4,8 +4,7 @@ FROM ubuntu:22.04
 ENV DEBIAN_FRONTEND noninteractive
 
 ### GET DEFAULT PACKAGE
-RUN apt-get update && apt-get install --no-install-recommends -y apt-utils gnupg git curl \
-&& rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install --no-install-recommends -y apt-utils gnupg git curl
 
 ### GET JAVA AND PYTHON
 RUN apt-get install --no-install-recommends -y openjdk-11-jre-headless python3.10
