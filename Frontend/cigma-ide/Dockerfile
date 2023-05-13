@@ -7,13 +7,11 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get install --no-install-recommends -y apt-utils
 
 ### GET OTHER PACKAGE
-RUN apt-get install --no-install-recommends -y gnupg ca-certificates-java && /var/lib/dpkg/info/ca-certificates-java.postinst configure
-
-### GET GIT AND CURL
-RUN apt-get install --no-install-recommends -y git curl
+RUN apt-get install --no-install-recommends -y gnupg git curl
 
 ### GET JAVA
-RUN apt-get install --no-install-recommends -y openjdk-11-jre-headless
+RUN mkdir -p /etc/ssl/certs/java \
+&& apt-get install --no-install-recommends -y openjdk-11-jre-headless
 
 ### GET PYTHON, PIP
 RUN apt-get install --no-install-recommends -y python3.10
@@ -30,7 +28,7 @@ COPY . .
 
 ### START CIGMA-IDE SERVER
 RUN npm install \
-    && npm run build \
-    && rm -r node_modules
+&& npm run build \
+&& rm -r node_modules
 
 CMD ["npm", "run", "server"]
