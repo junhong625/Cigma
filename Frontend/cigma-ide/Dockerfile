@@ -1,14 +1,15 @@
 # bash image
-FROM node:18.15-slim
+FROM ubuntu:22.04
 
 # make root dir
 RUN mkdir /cigma
 WORKDIR /cigma
 
-RUN apt-get update && apt-get install software-properties-common
 RUN add-apt-repository ppa:deadsnakes/ppa
-RUN apt-get update && apt-get install -y git \
-                                        python3.10 \
-                                        openjdk-11-jdk
+RUN apt update && apt install -y git \
+                                python3.10 \
+                                openjdk-11-jdk \
+                                curl
+RUN curl -fsSL https://rpm.nodesource.com/setup_lts.15 | bash - && apt install -y nodejs build-essential
 
 COPY . .
