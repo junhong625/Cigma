@@ -4,17 +4,15 @@ FROM ubuntu:22.04
 ENV DEBIAN_FRONTEND noninteractive
 
 ### GET DEFAULT PACKAGE
-RUN apt-get update && apt-get install --no-install-recommends -y apt-utils gnupg git curl
+RUN apt-get update && apt-get install --no-install-recommends -y apt-utils gnupg git curl \
+&& rm -rf /var/lib/apt/lists/*
 
-### GET JAVA
-RUN apt-get install --no-install-recommends -y openjdk-11-jre-headless
-
-### GET PYTHON, PIP
-RUN apt-get install --no-install-recommends -y python3.10
+### GET JAVA AND PYTHON
+RUN apt-get install --no-install-recommends -y openjdk-11-jre-headless python3.10
 
 ### GET NODEJS
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && apt-get install --no-install-recommends -y nodejs build-essential \
-    && rm -rf /var/lib/apt/lists/*
+&& rm -rf /var/lib/apt/lists/*
 
 ### MAKE ROOT DIR
 RUN mkdir /cigma
@@ -24,7 +22,6 @@ COPY . .
 
 ### START CIGMA-IDE SERVER
 RUN npm install \
-&& npm run build \
-&& rm -r node_modules
+&& npm run build
 
 CMD ["npm", "run", "server"]
