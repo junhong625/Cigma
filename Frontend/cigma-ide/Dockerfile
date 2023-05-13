@@ -1,24 +1,26 @@
 # bash image
-FROM ubuntu:22.04
+FROM node:18.15-slim
 
-# make root dir
+### GET JAVA
+RUN apt-get update && apt-get install -y openjdk-11-jre-headless
+
+
+### GET PYTHON, PIP
+RUN apt-get install -y software-properties-common apt-utils \
+&& add-apt-repository ppa:deadsnakes/ppa \
+&& apt-get update \
+&& apt-get install -y python3.9
+
+### GET GIT
+RUN apt-get install -y git
+
+### MAKE ROOT DIR
 RUN mkdir /cigma
 WORKDIR /cigma
 
-ARG DEBIAN_FRONTEND=noninteractive
-ENV TZ=Etc/UTC
-
-RUN apt-get update && apt-get install -y software-properties-common apt-utils
-RUN add-apt-repository ppa:deadsnakes/ppa \
-    && apt-get update && apt-get install -y git \
-                                python3.9 \
-                                openjdk-11-jdk \
-                                curl
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && apt-get install -y nodejs npm build-essential \
-    && rm -rf /var/lib/apt/lists/*
-
 COPY . .
 
+### START CIGMA-IDE SERVER
 RUN npm install \
     && npm build \
     && rm -r node_modules
