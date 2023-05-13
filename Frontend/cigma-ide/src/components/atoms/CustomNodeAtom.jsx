@@ -5,6 +5,12 @@ import { BsTriangleFill } from "react-icons/bs";
 import { BsFillPenFill } from "react-icons/bs";
 import { BsFillTrashFill } from "react-icons/bs";
 import styles from "../../styles/atoms/CustomNodeAtom.module.scss";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addCodeEditor,
+  selectAllCodeEditor,
+} from "../../store/codeEditorSlice";
+import _ from "lodash";
 
 export const CustomNodeAtom = (props) => {
   const { droppable, data } = props.node;
@@ -16,6 +22,10 @@ export const CustomNodeAtom = (props) => {
   const indent = props.depth * 24;
   const inputRef = useRef();
   const newRef = useRef();
+  const treeData = useSelector((state) => state.workbench.treeData);
+  const getFilepathById = props.getFilepathById;
+  const dispatch = useDispatch();
+  const codeEditors = useSelector(selectAllCodeEditor);
 
   const handleToggle = (e) => {
     props.onToggle(props.node.id);
@@ -24,6 +34,22 @@ export const CustomNodeAtom = (props) => {
   // 입력란 표기를 위한 State
   const handleShowInput = () => {
     setVisibleInput(true);
+  };
+
+  // workspace에 생성 시키기
+  const handleDoubleClick = () => {
+    if (droppable) return;
+    let filepath = getFilepathById(id, treeData);
+    filepath += `/${text}`;
+    const codeEditor = _.find(codeEditors, { canvasName: filepath });
+    if (codeEditor) return;
+    dispatch(
+      addCodeEditor({
+        top: 1000 + 10 * id,
+        left: 1000 + 10 * id,
+        canvasName: filepath,
+      })
+    );
   };
 
   // 입력란 랜더링 후 focus
@@ -134,6 +160,9 @@ export const CustomNodeAtom = (props) => {
       onClick={() => {
         handleSelect();
         handleToggle();
+      }}
+      onDoubleClick={() => {
+        handleDoubleClick();
       }}
     >
       {/* 파일의 타입에 따라 바뀌는 아이콘  */}
