@@ -4,7 +4,7 @@ FROM ubuntu:22.04
 ENV DEBIAN_FRONTEND noninteractive
 
 ### GET DEFAULT PACKAGE
-RUN apt-get update && apt-get install --no-recommends -y apt-utils
+RUN apt-get update && apt-get install --no-install-recommends -y apt-utils
 
 ### GET GIT AND OTHER PACKAGE
 RUN apt-get install --no-install-recommends -y git curl gnupg ca-certificates-java && /var/lib/dpkg/info/ca-certificates-java.postinst configure
