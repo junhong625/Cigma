@@ -7,8 +7,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get install --no-install-recommends -y apt-utils gnupg git curl
 
 ### GET JAVA
-RUN rmdir /etc/ssl/certs/java \
-&& mkdir -p /etc/ssl/certs/java \
+RUN mkdir -p /etc/ssl/certs/java/cacerts \
 && apt-get install --no-install-recommends -y openjdk-11-jre-headless
 
 ### GET PYTHON, PIP
