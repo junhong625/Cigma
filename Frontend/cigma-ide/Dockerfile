@@ -1,5 +1,5 @@
 # bash image
-FROM node:18.15-alpine
+FROM node:18.15-slim
 
 # make root dir
 RUN mkdir /cigma
