@@ -214,7 +214,7 @@ public class CanvasServiceImpl implements CanvasService{
     }
 
     public void connect() throws Exception {
-        ApiClient client = Config.defaultClient();
+        ApiClient client = Config.defaultClient().setBasePath("http://k8a601.p.ssafy.io");
         Configuration.setDefaultApiClient(client);
         api = new CoreV1Api();
         log.info("connect k3s");
