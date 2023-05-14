@@ -173,15 +173,18 @@ public class CanvasServiceImpl implements CanvasService{
     public void binding(String podName, String folderName, String canvasName) throws Exception{
         // pod 조회
         V1Pod pod = api.readNamespacedPod(podName, "default", null);
+        log.info("pod 조회");
         // pod 내부의 컨테이너에 바인딩 설정
         V1PodSpec spec = pod.getSpec();
         if (spec != null & spec.getContainers() != null) {
             for (V1Container container : spec.getContainers()) {
+                log.info("pod 내부 container : " + container.getName());
                 // 컨테이너에 바인딩 설정
                 container.setVolumeMounts(Collections.singletonList(
                         new V1VolumeMount()
                                 .name(folderName)
                                 .mountPath("/" + canvasName)));
+                log.info("바인딩 설정");
             }
         }
         // 바인딩 반영
