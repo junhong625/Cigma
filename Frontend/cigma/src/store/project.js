@@ -34,3 +34,7 @@ export default function projectInfo(state = initialState, action) {
       return state;
   }
 }
+
+// selector 추가
+export const selectProjectIndex = (state) => state.project.projectIndex;
+export const selectProjectName = (state) => state.project.projectName;
