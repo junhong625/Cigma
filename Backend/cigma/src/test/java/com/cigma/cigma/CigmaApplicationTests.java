@@ -15,7 +15,6 @@ import io.kubernetes.client.openapi.Configuration;
 import io.kubernetes.client.openapi.apis.CoreV1Api;
 import io.kubernetes.client.openapi.models.V1Pod;
 import io.kubernetes.client.openapi.models.V1PodList;
-import io.kubernetes.client.util.ClientBuilder;
 import io.kubernetes.client.util.Config;
 import io.kubernetes.client.util.KubeConfig;
 import org.junit.jupiter.api.DisplayName;
@@ -166,10 +165,11 @@ class CigmaApplicationTests {
 	@Test
 	@DisplayName("connect k3s")
 	public void connectK3s() throws IOException, ApiException {
-		ApiClient client = ClientBuilder.kubeconfig(KubeConfig.loadKubeConfig(new FileReader("/Users/ahnjunhong/Downloads/k3s.yaml"))).build();
-		Configuration.setDefaultApiClient(client);
+//		Config config = Config.fromConfig(KubeConfig.loadKubeConfig(new FileReader("/Users/ahnjunhong/Downloads/k3s.yaml")));
+//		ApiClient client = Config.defaultClient(config);
+//		Configuration.setDefaultApiClient(client);
 		CoreV1Api api = new CoreV1Api();
-		System.out.println("connect k3s");
+		System.out.println("connect : k3s");
 		V1PodList v1PodList = api.listNamespacedPod("default", null, null, null, null, null, null, null, null, null, null);
 		for (V1Pod pod : v1PodList.getItems()) {
 			System.out.println(pod.getMetadata().getName());

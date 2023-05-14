@@ -35,6 +35,8 @@ services:
     restart: always
     depends_on:
       - database
+    extra_hosts:
+      - host.docker.internal
       
 
   redis:
