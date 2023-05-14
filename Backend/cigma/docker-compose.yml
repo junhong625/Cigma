@@ -24,10 +24,9 @@ services:
 
   application:
     build: .
-#    networks:
-#      - default
-#      - nginx_proxy_net
-    network_mode: host
+    networks:
+      - default
+      - nginx_proxy_net
     volumes:
       - ~/canvas:/canvas
       - ~/k3s/config:/k3s/config
@@ -47,9 +46,8 @@ services:
       - ./redis/data:/data
       - ./redis/conf/redis.conf:/usr/local/etc/redis/redis.conf
       - ./redis/acl/users.acl:/etc/redis/users.acl
-#    networks:
-#      - default
-    network_mode: host
+    networks:
+      - default
     ports:
       - 6379:6379
 
