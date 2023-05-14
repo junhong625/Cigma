@@ -237,6 +237,7 @@ public class CanvasServiceImpl implements CanvasService{
         int port = 22;
 
         try {
+            log.info("폴더 생성 시작");
             JSch jSch = new JSch();
 
             // SSH private key 로드
