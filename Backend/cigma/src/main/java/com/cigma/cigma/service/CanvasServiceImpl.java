@@ -99,36 +99,45 @@ public class CanvasServiceImpl implements CanvasService{
 
     @Override
     public CanvasGetResponse joinCanvas(CanvasJoinRequest request) throws Exception {
+        log.info("=================join Canvas================");
         connect();
         ProjectGetResponse project = projectService.getProject(request.getPjtIdx());
         TeamGetResponse team = teamService.getTeam(project.getTeamIdx());
         // 접속하려는 pjt가 해당 유저의 pjt가 맞는지 확인
         projectService.checkAuthorization(project.getProjectIdx());
+        log.info("Authorization OK");
         // folder 이름
         String name = team.getTeamName() + "_" + project.getProjectName();
         // 현재 누가 이미 캔버스에 접속했는지 확인
         // 누가 접속하지 않았다면
         if (!isUsingCanvas(name)) {
+            log.info("Using Canvas!");
             // 폴더 생성
             String folderName = createFolder(name);
+            log.info("Create Folder!");
             // 접속 가능한 pod 찾기
             String podName = findingPod(name);
+            log.info("Find Empty Pod!");
             // 바인딩
             binding(podName, folderName);
+            log.info("Binding OK!");
             // 해당 바인딩에 서비스 생성
             createService(new HashMap<String, String>() {{
                 put("app", podName);}}, name);
             // redis에 해당 key : 서비스 이름, value : 접속한 유저들의 idx 리스트
             redisTemplate.opsForValue().set(name, new ArrayList<>());
+            log.info("add connect List!");
         }
         // nodePort 조회할 service
         V1Service service = api.readNamespacedService(name, "default", null);
+        log.info("get Service!");
         // 유저 정보
         UserPrincipal userPrincipal = SecurityUtils.getUserPrincipal();
         // redis에 유저의 서비스 접속 여부 표시
         ArrayList<Integer> connectMembers = (ArrayList<Integer>) redisTemplate.opsForValue().get(name);
         connectMembers.add(userPrincipal.getUserIdx().intValue());
         redisTemplate.opsForValue().set(name,connectMembers);
+        log.info("add connect List Redis!");
         return CanvasGetResponse.builder()
                 .name(name)
                 .port(service.getSpec().getPorts().get(0).getNodePort())
