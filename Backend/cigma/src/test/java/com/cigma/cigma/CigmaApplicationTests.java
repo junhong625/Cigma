@@ -18,6 +18,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.io.File;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -101,6 +102,16 @@ class CigmaApplicationTests {
 			}
 		}
 		System.out.println(members);
+	}
+
+	@Test
+	@DisplayName("Test mkdirs")
+	void mkdirs() {
+		String folderPath = "/Users/ahnjunhong/k3s/project";
+
+		File folder = new File(folderPath);
+
+		System.out.println(folder.mkdirs());
 	}
 
 	@Test

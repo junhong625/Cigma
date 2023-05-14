@@ -232,7 +232,7 @@ public class CanvasServiceImpl implements CanvasService{
     }
 
     public String createFolder(String name) throws Exception {
-        String folderPath = "/k3s/project/" + name;
+        String folderPath = "/home/ubuntu/k3s/project/" + name;
 
         File folder = new File(folderPath);
 
