@@ -1,5 +1,8 @@
 import pty from "node-pty";
+import path from "path";
 import os from "os";
+
+const __dirname = path.resolve();
 
 const shell = os.platform() === "win32" ? "powershell.exe" : "bash";
 
@@ -8,15 +11,14 @@ export const setupPty = (conn, req) => {
     name: "xterm-color",
     cols: 80,
     rows: 30,
-    cwd: process.env.HOME,
-    env: process.env,
+    cwd: "../../workspace/project",
   });
 
   term.onData((data) => {
-    conn.emit("output", data);
+    conn.send(data);
   });
 
-  conn.on("input", (data) => {
+  conn.on("message", (data) => {
     term.write(data);
   });
 

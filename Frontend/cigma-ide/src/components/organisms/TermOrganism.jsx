@@ -1,12 +1,11 @@
-import React, { useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { XTerm } from "../../library/xterm-for-react";
 import styles from "../../styles/organisms/TermOrganism.module.scss";
 import { Resizable } from "re-resizable";
 import { useSelector } from "react-redux";
 import { selectTermVisible } from "../../store/toolSlice";
-
-import { FitAddon } from "xterm-addon-fit";
-import { AttachAddon } from "xterm-addon-attach";
+import useTermWs from "../../hooks/useTermWs";
+import { fitAddon } from "../../store/initTermAddons";
 
 const { VITE_WS_PORT } = import.meta.env;
 
@@ -16,14 +15,16 @@ const socket = new WebSocket(
 );
 
 const TermOrganism = ({ widthRight, setWidthRight, defaultWidthRight }) => {
-  const attachAddon = new AttachAddon(socket);
-  const fitAddon = new FitAddon();
   const xtermRef = useRef(null);
   const handleTerm = useSelector(selectTermVisible);
+  const onData = useTermWs(socket);
 
   useEffect(() => {
-    xtermRef.current.terminal.resize(10, 60);
+    // xtermRef.current.terminal.resize(30, 60);
     xtermRef.current.terminal.cursorBlink = true;
+    socket.onmessage = (e) => {
+      xtermRef.current.terminal.write(e.data);
+    };
     // xtermRef.current.terminal.write("Hello World");
     // xtermRef.current.terminal.reset();
   }, []);
@@ -31,7 +32,7 @@ const TermOrganism = ({ widthRight, setWidthRight, defaultWidthRight }) => {
     <Resizable
       size={{ width: widthRight, height: "100%" }}
       minWidth={handleTerm ? 240 : 0}
-      maxWidth={"30%"}
+      maxWidth={"35%"}
       enable={{
         top: false,
         right: false,
@@ -47,18 +48,18 @@ const TermOrganism = ({ widthRight, setWidthRight, defaultWidthRight }) => {
       }}
       onResize={(e, direction, ref, d) => {
         const nextWidth = defaultWidthRight.current + d.width;
+        fitAddon.fit();
         setWidthRight(nextWidth);
       }}
       className={handleTerm ? "" : styles.hidden}
-      style={{ marginLeft: 3 }}
+      style={{ marginLeft: 3, overflow: "hidden", height: "100%" }}
     >
       <XTerm
         ref={xtermRef}
-        addons={[fitAddon, attachAddon]}
+        onData={onData}
+        addons={[fitAddon]}
         className={styles.xterm}
-        onResize={() => {
-          fitAddon.fit();
-        }}
+        onResize={() => {}}
       />
     </Resizable>
   );

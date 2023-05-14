@@ -7,12 +7,16 @@ import {
 } from "react-icons/bs";
 
 import styles from "../../styles/organisms/HeaderOrganism.module.scss";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setCurrentTool,
   setFileBarVisible,
   setTermVisible,
 } from "../../store/toolSlice";
+import {
+  selectProjectName,
+  selectTeamName,
+} from "../../store/defaultSettingSlice";
 /*
 추가적인 기능을 plugin 방식으로 추가할 경우
 해당 부분을 setting 관련 파일에서 plugin을 
@@ -22,6 +26,9 @@ import {
 
 const HeaderOrganism = () => {
   const dispatch = useDispatch();
+  const teamName = useSelector(selectTeamName);
+  const projectName = useSelector(selectProjectName);
+
   return (
     <>
       <div className={styles.headerLeftDiv}>
@@ -44,7 +51,9 @@ const HeaderOrganism = () => {
           <BsFillTerminalFill color="white" size={24} />
         </HeaderBtnAtom>
       </div>
-      <div className={styles.headerMiddleDiv}>Project Name</div>
+      <div className={styles.headerMiddleDiv}>
+        {teamName ? teamName + "/" + projectName : "untitled"}
+      </div>
       <div className={styles.headerRightDiv}>
         <HeaderBtnAtom>
           <BsFillPlayFill color="white" size={24} />
