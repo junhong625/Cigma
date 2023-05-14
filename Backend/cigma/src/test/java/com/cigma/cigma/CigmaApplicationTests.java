@@ -165,9 +165,10 @@ class CigmaApplicationTests {
 	@Test
 	@DisplayName("connect k3s")
 	public void connectK3s() throws IOException, ApiException {
-//		Config config = Config.fromConfig(KubeConfig.loadKubeConfig(new FileReader("/Users/ahnjunhong/Downloads/k3s.yaml")));
-//		ApiClient client = Config.defaultClient(config);
-//		Configuration.setDefaultApiClient(client);
+		ApiClient client = Config.fromConfig(KubeConfig.loadKubeConfig(new FileReader("/Users/ahnjunhong/Downloads/k3s.yaml")));
+		client.setBasePath("https://k8a601.p.ssafy.io");
+		client.setVerifyingSsl(false);
+		Configuration.setDefaultApiClient(client);
 		CoreV1Api api = new CoreV1Api();
 		System.out.println("connect : k3s");
 		V1PodList v1PodList = api.listNamespacedPod("default", null, null, null, null, null, null, null, null, null, null);
