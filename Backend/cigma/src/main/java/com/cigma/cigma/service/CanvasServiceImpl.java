@@ -198,7 +198,6 @@ public class CanvasServiceImpl implements CanvasService{
     @Override
     public PodsGetResponse getPods() throws Exception {
         connect();
-        CoreV1Api api = new CoreV1Api();
         List<String> pods = new ArrayList<>();
         V1PodList list = api.listNamespacedPod("default", null, null, null, null, null, null, null, null, null, null);
         log.info("get Pods");
@@ -242,7 +241,7 @@ public class CanvasServiceImpl implements CanvasService{
 
     public void deleteService(String name) throws Exception{
         connect();
-        V1Service deletedServcie = api.deleteNamespacedService(name + "-service", "default", null, null, null, null, null, null);
+        V1Service deletedService = api.deleteNamespacedService(name + "-service", "default", null, null, null, null, null, null);
     }
 
     public String createFolder(String name) throws Exception {
