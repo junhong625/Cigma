@@ -14,8 +14,8 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && apt-get install
 && rm -rf /var/lib/apt/lists/*
 
 ### MAKE ROOT DIR
-RUN mkdir /cigma
-WORKDIR /cigma
+RUN mkdir -p /cigma/ide && mkdir -p /cigma/workspace
+WORKDIR /cigma/ide
 
 COPY . .
 
