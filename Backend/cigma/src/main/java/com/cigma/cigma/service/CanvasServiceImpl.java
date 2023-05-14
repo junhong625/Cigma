@@ -123,7 +123,7 @@ public class CanvasServiceImpl implements CanvasService{
             String podName = findingPod(name);
             log.info("Find Empty Pod! : " + podName);
             // 바인딩
-            binding(podName, folderName);
+            binding(podName, folderName, name);
             log.info("Binding OK!");
             // 해당 바인딩에 서비스 생성
             createService(new HashMap<String, String>() {{
@@ -159,6 +159,7 @@ public class CanvasServiceImpl implements CanvasService{
         String[] podList = new String[]{"cigma-canvas-1, cigma-canvas-2, cigma-canvas-3, cigma-canvas-4, cigma-canvas-5"};
         for (int i = 0; i < podList.length; i++) {
             // 사용 중이지 않은 pod를 발견할 경우
+            log.info("pod : " + podList[i]);
             if (redisTemplate.opsForValue().get(podList[i]) == null) {
                 //  해당 pod 사용 중으로 변경
                 redisTemplate.opsForValue().set(podList[i], name);
@@ -169,7 +170,7 @@ public class CanvasServiceImpl implements CanvasService{
         throw new AllCanvasUsingException();
     }
 
-    public void binding(String podName, String folderName) throws Exception{
+    public void binding(String podName, String folderName, String canvasName) throws Exception{
         // pod 조회
         V1Pod pod = api.readNamespacedPod(podName, "default", null);
         // pod 내부의 컨테이너에 바인딩 설정
@@ -180,7 +181,7 @@ public class CanvasServiceImpl implements CanvasService{
                 container.setVolumeMounts(Collections.singletonList(
                         new V1VolumeMount()
                                 .name(folderName)
-                                .mountPath("/workspace/project/")));
+                                .mountPath("/" + canvasName)));
             }
         }
         // 바인딩 반영
@@ -235,7 +236,7 @@ public class CanvasServiceImpl implements CanvasService{
     }
 
     public String createFolder(String name) throws Exception {
-        String folderPath = "/home/ubuntu/k3s/project/" + name;
+        String folderPath = "/canvas/" + name;
         Path path = Paths.get(folderPath);
         Files.createDirectories(path);
         return folderPath;
