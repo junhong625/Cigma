@@ -233,7 +233,7 @@ public class CanvasServiceImpl implements CanvasService{
     public String createFolder(String name) throws Exception {
         String host = "k8a601.p.ssafy.io";
         String username = "ubuntu";
-        String privateKeyPath = "~\\k3s\\config\\K8A601T.pem";
+        String privateKeyPath = "~/k3s/config/K8A601T.pem";
         int port = 22;
 
         try {
