@@ -10,6 +10,7 @@ import com.cigma.cigma.dto.response.TeamGetResponse;
 import com.cigma.cigma.entity.Project;
 import com.cigma.cigma.handler.customException.AllCanvasUsingException;
 import com.cigma.cigma.jwt.UserPrincipal;
+import com.google.protobuf.Api;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -20,7 +21,9 @@ import io.kubernetes.client.openapi.ApiException;
 import io.kubernetes.client.openapi.Configuration;
 import io.kubernetes.client.openapi.apis.CoreV1Api;
 import io.kubernetes.client.openapi.models.*;
+import io.kubernetes.client.util.ClientBuilder;
 import io.kubernetes.client.util.Config;
+import io.kubernetes.client.util.KubeConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
@@ -30,6 +33,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -214,7 +218,9 @@ public class CanvasServiceImpl implements CanvasService{
     }
 
     public void connect() throws Exception {
-        ApiClient client = Config.defaultClient().setBasePath("http://k8a601.p.ssafy.io:6443");
+//        ApiClient client = Config.defaultClient().setBasePath("http://k8a601.p.ssafy.io");
+        ApiClient client = Config.fromConfig(KubeConfig.loadKubeConfig(new FileReader("~/k3s/config/k3s.yaml")));
+        client.setBasePath("http://k8a601.p.ssafy.io");
         Configuration.setDefaultApiClient(client);
         api = new CoreV1Api();
         log.info("connect k3s");
