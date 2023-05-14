@@ -235,10 +235,10 @@ public class CanvasServiceImpl implements CanvasService{
     }
 
     public String createFolder(String name) throws Exception {
-        String folderPath = "/home/ubuntu/k3s/project/" + name;
-        Path path = Paths.get(folderPath);
-        Files.createDirectories(path);
-        return folderPath;
+//        String folderPath = "/home/ubuntu/k3s/project/" + name;
+//        Path path = Paths.get(folderPath);
+//        Files.createDirectories(path);
+//        return folderPath;
 //        File folder = new File(folderPath);
 //
 //        if (folder.mkdirs()) {
@@ -248,41 +248,42 @@ public class CanvasServiceImpl implements CanvasService{
 //            log.info("폴더가 이미 존재합니다!");
 //            return folderPath;
 //        }
-        // 외부에서 접속시!
-//        String host = "k8a601.p.ssafy.io";
-//        String username = "ubuntu";
-//        String privateKeyPath = "~/k3s/config/K8A601T.pem";
-//        int port = 22;
-//
-//        try {
-//            log.info("폴더 생성 시작");
-//            JSch jSch = new JSch();
-//
-//            // SSH private key 로드
-//            jSch.addIdentity(privateKeyPath);
-//            log.info("SSH private key 로드 : " + privateKeyPath);
-//
-//            // 세션 생성 및 접속
-//            Session session = jSch.getSession(username, host, port);
-//            session.setConfig("StrictHostKeyChecking", "no"); // 호스트 키 검증 비활성화
-//            session.connect();
-//            log.info("세션 생성 및 접속");
-//
-//            // 명령 실행
-//            ChannelExec channel = (ChannelExec) session.openChannel("exec");
-//            channel.setCommand("sudo mkdir -p /k3s/project/" + name);
-//            channel.connect();
-//            log.info("명령 실행");
-//
-//            // 명령어 실행 결과 출력
-//            // 예를 들어, command = "cd /; mkdir test_test"의 경우, 해당 디렉토리가 생성됩니다.
-//            System.out.println("Command executed successfully.");
-//
-//            // 연결 종료
-//            channel.disconnect();
-//            session.disconnect();
-//            return "/k3s/project/" + name;
-//        } catch (JSchException e) {
-//            throw new Exception();
+//         외부에서 접속시!
+        String host = "k8a601.p.ssafy.io";
+        String username = "ubuntu";
+        String privateKeyPath = "~/k3s/config/K8A601T.pem";
+        int port = 22;
+
+        try {
+            log.info("폴더 생성 시작");
+            JSch jSch = new JSch();
+
+            // SSH private key 로드
+            jSch.addIdentity(privateKeyPath);
+            log.info("SSH private key 로드 : " + privateKeyPath);
+
+            // 세션 생성 및 접속
+            Session session = jSch.getSession(username, host, port);
+            session.setConfig("StrictHostKeyChecking", "no"); // 호스트 키 검증 비활성화
+            session.connect();
+            log.info("세션 생성 및 접속");
+
+            // 명령 실행
+            ChannelExec channel = (ChannelExec) session.openChannel("exec");
+            channel.setCommand("sudo mkdir -p ~/k3s/project/" + name);
+            channel.connect();
+            log.info("명령 실행");
+
+            // 명령어 실행 결과 출력
+            // 예를 들어, command = "cd /; mkdir test_test"의 경우, 해당 디렉토리가 생성됩니다.
+            System.out.println("Command executed successfully.");
+
+            // 연결 종료
+            channel.disconnect();
+            session.disconnect();
+            return "/k3s/project/" + name;
+        } catch (JSchException e) {
+            throw new Exception();
+        }
     }
 }
