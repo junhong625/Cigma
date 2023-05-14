@@ -23,7 +23,6 @@ services:
     restart: always
 
   application:
-    network_mode: host
     build: .
     networks:
       - default
@@ -36,6 +35,8 @@ services:
     restart: always
     depends_on:
       - database
+    extra_hosts:
+      - host.docker.internal:host-gateway
       
 
   redis:

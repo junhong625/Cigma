@@ -210,7 +210,7 @@ public class CanvasServiceImpl implements CanvasService{
     }
 
     public void connect() throws Exception {
-        ApiClient client = Config.fromConfig("/k3s/config/k3s.yaml");
+        ApiClient client = Config.defaultClient().setBasePath("http://host.docker.internal");
         Configuration.setDefaultApiClient(client);
         api = new CoreV1Api();
         log.info("connect k3s");
