@@ -9,3 +9,11 @@ nav {
     padding: 1em 4em;
     background-color: transparent;
 }
+
+.navBar {
+    display: flex;
+    justify-content: space-between;
+    padding: 1em;
+    align-items: center;
+    flex-direction: row;
+}

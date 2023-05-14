@@ -14,9 +14,12 @@ function NavBar() {
         <nav>
             <NavLogo />
             <NavMenu />
+            <div className="navBar">
             <NavLink to="/login">
                 <NavItem itemText={'Login'}></NavItem>
             </NavLink>
+            </div>
+            
         </nav>
     );
 }
