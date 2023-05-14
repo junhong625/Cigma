@@ -156,7 +156,7 @@ public class CanvasServiceImpl implements CanvasService{
     }
 
     public String  findingPod(String name) throws Exception{
-        String[] podList = new String[]{"cigma-canvas-1, cigma-canvas-2, cigma-canvas-3, cigma-canvas-4, cigma-canvas-5"};
+        String[] podList = new String[]{"cigma-canvas-1", "cigma-canvas-2", "cigma-canvas-3", "cigma-canvas-4", "cigma-canvas-5"};
         for (int i = 0; i < podList.length; i++) {
             // 사용 중이지 않은 pod를 발견할 경우
             log.info("pod : " + podList[i]);
