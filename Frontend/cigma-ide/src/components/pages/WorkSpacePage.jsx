@@ -73,8 +73,11 @@ const WorkSpacePage = ({ widthLeft, heightBottom }) => {
 
   useEffect(() => {
     if (!boardRef.current || !isFirstRender) return;
+    const top = 1000;
+    const left = 1000;
+    const width = 800;
 
-    const { top, left, width } = codeEditors[codeEditors.length - 1];
+    // const { top, left, width } = codeEditors[codeEditors.length - 1];
 
     isFirstRender = false;
     boardRef.current.scrollTop = top - 100;

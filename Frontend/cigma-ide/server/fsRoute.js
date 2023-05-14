@@ -80,7 +80,21 @@ router.post("/file/data", (req, res) => {
     "utf-8"
   );
   res.send(data.toString());
-  // res.sendFile(path.join(__dirname, ROOT_FOLDER + "/test.txt"));
+});
+
+// 파일 수정 저장
+router.put("/file/data", (req, res) => {
+  const { path: filePath, data: fileData } = req.body;
+  const fullPath = path.join(ROOT_FOLDER, filePath);
+
+  fs.writeFile(fullPath, fileData, (err) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("Internal Server Error");
+    } else {
+      res.json({ message: "File saved successfully" });
+    }
+  });
 });
 
 // 파일 생성

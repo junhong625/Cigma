@@ -13,6 +13,7 @@ export const provider = new WebsocketProvider(
   roomName,
   ydoc
 );
+
 export const awareness = provider.awareness;
 
 console.log("clientID : ", awareness.clientID);
