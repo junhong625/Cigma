@@ -12,7 +12,7 @@ services:
       MYSQL_ROOT_PASSWORD: ssafy
       TZ: Asia/Seoul
     volumes:
-      - ./mysql/data:/var/lib/mysql
+      - ~/mysql/data:/var/lib/mysql
     networks:
       - default
     ports:
@@ -27,6 +27,8 @@ services:
     networks:
       - default
       - nginx_proxy_net
+    volumes:
+      - ~/canvas:/canvas
     ports:
       - 9090:9090
     restart: always
@@ -40,9 +42,9 @@ services:
     image: redis:latest
     command: redis-server /usr/local/etc/redis/redis.conf --requirepass ssafy8cigmapass
     volumes:
-      - ./redis/data:/data
-      - ./redis/conf/redis.conf:/usr/local/etc/redis/redis.conf
-      - ./redis/acl/users.acl:/etc/redis/users.acl
+      - ~/redis/data:/data
+      - ~/redis/conf/redis.conf:/usr/local/etc/redis/redis.conf
+      - ~/redis/acl/users.acl:/etc/redis/users.acl
     networks:
       - default
     ports:

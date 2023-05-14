@@ -117,7 +117,7 @@ public class CanvasServiceImpl implements CanvasService{
         if (!isUsingCanvas(name)) {
             log.info("Using Canvas!");
             // 폴더 생성
-            String folderName = createFolder(name);
+            String folderName = createFolder(name); // /canvas/teamName_projectName/workspace/project
             log.info("Create Folder! : " + folderName);
             // 접속 가능한 pod 찾기
             String podName = findingPod(name);
@@ -200,6 +200,7 @@ public class CanvasServiceImpl implements CanvasService{
         connect();
         List<String> pods = new ArrayList<>();
         V1PodList list = api.listNamespacedPod("default", null, null, null, null, null, null, null, null, null, null);
+        log.info("get Pods");
         for (V1Pod item : list.getItems()) {
             System.out.println(item.getMetadata().getName());
             System.out.println(item.getSpec().getContainers().get(0).getPorts());
@@ -212,6 +213,7 @@ public class CanvasServiceImpl implements CanvasService{
         ApiClient client = Config.defaultClient();
         Configuration.setDefaultApiClient(client);
         api = new CoreV1Api();
+        log.info("connect k3s");
     }
 
     public void createService(HashMap<String, String> label, String serviceName) throws Exception {
@@ -243,7 +245,7 @@ public class CanvasServiceImpl implements CanvasService{
     }
 
     public String createFolder(String name) throws Exception {
-        String folderPath = "/canvas/" + name;
+        String folderPath = "/canvas/" + name + "/workspace/project";
         Path path = Paths.get(folderPath);
         Files.createDirectories(path);
         return folderPath;
