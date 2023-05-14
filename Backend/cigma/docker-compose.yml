@@ -29,6 +29,7 @@ services:
       - nginx_proxy_net
     volumes:
       - ~/canvas:/canvas
+      - ~/k3s/config/k3s.yaml:/k3s/config/k3s.yaml
     ports:
       - 9090:9090
     restart: always
