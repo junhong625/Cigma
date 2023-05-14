@@ -199,18 +199,22 @@ public class CanvasServiceImpl implements CanvasService{
     public PodsGetResponse getPods() throws Exception {
         connect();
         List<String> pods = new ArrayList<>();
-        V1PodList list = api.listNamespacedPod("default", null, null, null, null, null, null, null, null, null, null);
-        log.info("get Pods");
-        for (V1Pod item : list.getItems()) {
-            System.out.println(item.getMetadata().getName());
-            System.out.println(item.getSpec().getContainers().get(0).getPorts());
-            pods.add(item.getMetadata().getName());
+        try {
+            V1PodList list = api.listNamespacedPod("default", null, null, null, null, null, null, null, null, null, null);
+            log.info("get Pods");
+            for (V1Pod item : list.getItems()) {
+                System.out.println(item.getMetadata().getName());
+                System.out.println(item.getSpec().getContainers().get(0).getPorts());
+                pods.add(item.getMetadata().getName());
+            }
+        } catch (Exception e) {
+            log.info(e.getMessage());
         }
         return new PodsGetResponse(pods);
     }
 
     public void connect() throws Exception {
-        ApiClient client = Config.defaultClient().setBasePath("http://host.docker.internal");
+        ApiClient client = Config.defaultClient();
         Configuration.setDefaultApiClient(client);
         api = new CoreV1Api();
         log.info("connect k3s");
