@@ -6,7 +6,8 @@ import { BsFillCheckCircleFill } from "react-icons/bs";
 import { BsFillReplyFill } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { getPortNumber } from "../../api/project";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { selectProjectIndex, selectProjectName, setProjectIndex, setProjectName } from "../../store/project";
 
 // 프로젝트 리스트에서 프로젝트 하나에 해당하는 Atom
 function ProjectThumbNailAtom({
@@ -18,6 +19,7 @@ function ProjectThumbNailAtom({
   setToDo,
   setPropFunction,
   projectIdx,
+  projectName,
 }) {
   const deleteProject = () => {
     setNowContent(0);
@@ -79,15 +81,22 @@ function ProjectThumbNailAtom({
   };
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   // 포트번호 받아온뒤 접속시키기
   const userToken = useSelector((store) => store.userToken);
   const [portNum, setPortNum] = useState(-1);
-  
+
   const callPortNumber = async () => { 
     const { status, portNum } = await getPortNumber(userToken, projectIdx);
     if (status === 200) {
       console.log(`port::${portNum}`);
-      setPortNum(portNum);
+      // redux값 설정
+      /**
+       * 꺼내올 때는 set-으로
+       * TODO: 나가거나 삭제할때 초기화 처리 해주어야할듯
+       */
+      dispatch(setProjectIndex(projectIdx));
+      dispatch(setProjectName(projectName));
       navigate("/test", { state: { portNum } });
     } else { 
       console.log("error");
