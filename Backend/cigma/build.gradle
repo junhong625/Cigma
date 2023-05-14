@@ -34,6 +34,7 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
     implementation 'io.kubernetes:client-java:18.0.0'
 	implementation 'com.jcraft:jsch:0.1.55'
+	implementation 'commons-io:commons-io:2.11.0'
 	compileOnly group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'

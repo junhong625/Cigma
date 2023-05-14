@@ -32,6 +32,9 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 @Service
@@ -233,16 +236,18 @@ public class CanvasServiceImpl implements CanvasService{
 
     public String createFolder(String name) throws Exception {
         String folderPath = "/home/ubuntu/k3s/project/" + name;
-
-        File folder = new File(folderPath);
-
-        if (folder.mkdirs()) {
-            log.info("폴더 생성!");
-            return folderPath;
-        } else {
-            log.info("폴더가 이미 존재합니다!");
-            return folderPath;
-        }
+        Path path = Paths.get(folderPath);
+        Files.createDirectories(path);
+        return folderPath;
+//        File folder = new File(folderPath);
+//
+//        if (folder.mkdirs()) {
+//            log.info("폴더 생성!");
+//            return folderPath;
+//        } else {
+//            log.info("폴더가 이미 존재합니다!");
+//            return folderPath;
+//        }
         // 외부에서 접속시!
 //        String host = "k8a601.p.ssafy.io";
 //        String username = "ubuntu";
