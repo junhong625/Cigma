@@ -239,7 +239,7 @@ public class CanvasServiceImpl implements CanvasService{
         if (folder.mkdirs()) {
             log.info("폴더 생성!");
             return folderPath;
-        } else
+        } else {
             log.info("폴더가 이미 존재합니다!");
             return folderPath;
         }
@@ -279,6 +279,5 @@ public class CanvasServiceImpl implements CanvasService{
 //            return "/k3s/project/" + name;
 //        } catch (JSchException e) {
 //            throw new Exception();
-        }
     }
 }
