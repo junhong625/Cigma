@@ -115,10 +115,10 @@ public class CanvasServiceImpl implements CanvasService{
             log.info("Using Canvas!");
             // 폴더 생성
             String folderName = createFolder(name);
-            log.info("Create Folder!");
+            log.info("Create Folder! : " + folderName);
             // 접속 가능한 pod 찾기
             String podName = findingPod(name);
-            log.info("Find Empty Pod!");
+            log.info("Find Empty Pod! : " + podName);
             // 바인딩
             binding(podName, folderName);
             log.info("Binding OK!");
