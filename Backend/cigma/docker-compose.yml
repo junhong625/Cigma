@@ -23,6 +23,7 @@ services:
     restart: always
 
   application:
+    network_mode: host
     build: .
     networks:
       - default
