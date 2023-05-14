@@ -171,6 +171,7 @@ public class CanvasServiceImpl implements CanvasService{
     }
 
     public void binding(String podName, String folderName, String canvasName) throws Exception{
+        connect();
         // pod 조회
         V1Pod pod = api.readNamespacedPod(podName, "default", null);
         log.info("pod 조회");
@@ -196,6 +197,7 @@ public class CanvasServiceImpl implements CanvasService{
     // Pods내에는 여러개의 컨테이너 존재도 가능
     @Override
     public PodsGetResponse getPods() throws Exception {
+        connect();
         List<String> pods = new ArrayList<>();
         V1PodList list = api.listNamespacedPod("default", null, null, null, null, null, null, null, null, null, null);
         for (V1Pod item : list.getItems()) {
@@ -213,6 +215,7 @@ public class CanvasServiceImpl implements CanvasService{
     }
 
     public void createService(HashMap<String, String> label, String serviceName) throws Exception {
+        connect();
         int port = 5000;
         V1Service service = new V1Service()
                 .metadata(new V1ObjectMeta().name(serviceName))
@@ -235,6 +238,7 @@ public class CanvasServiceImpl implements CanvasService{
     }
 
     public void deleteService(String name) throws Exception{
+        connect();
         V1Service deletedServcie = api.deleteNamespacedService(name + "-service", "default", null, null, null, null, null, null);
     }
 
