@@ -9,6 +9,7 @@ import {
 import styles from "../../styles/organisms/HeaderOrganism.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  selectCurrentTool,
   setCurrentTool,
   setFileBarVisible,
   setTermVisible,
@@ -17,6 +18,10 @@ import {
   selectProjectName,
   selectTeamName,
 } from "../../store/defaultSettingSlice";
+import { selectRunFile } from "../../store/runFileSlice";
+import { fitAddon, socket } from "../../store/initTerm";
+import { runLang } from "../../constants/typeLang";
+import { selectTermVisible } from "../../store/toolSlice";
 /*
 추가적인 기능을 plugin 방식으로 추가할 경우
 해당 부분을 setting 관련 파일에서 plugin을 
@@ -26,8 +31,11 @@ import {
 
 const HeaderOrganism = () => {
   const dispatch = useDispatch();
+  const currentTool = useSelector(selectCurrentTool);
+  const isTermVisible = useSelector(selectTermVisible);
   const teamName = useSelector(selectTeamName);
   const projectName = useSelector(selectProjectName);
+  const runFile = useSelector(selectRunFile);
 
   return (
     <>
@@ -40,10 +48,14 @@ const HeaderOrganism = () => {
         >
           <BsFillFileEarmarkTextFill color="white" size={24} />
         </HeaderBtnAtom>
-        <HeaderBtnAtom onClick={() => dispatch(setCurrentTool("text"))}>
+        <HeaderBtnAtom
+          isOnOff={currentTool == "text" ? true : false}
+          onClick={() => dispatch(setCurrentTool("text"))}
+        >
           <BsFileFontFill color="white" size={24} />
         </HeaderBtnAtom>
         <HeaderBtnAtom
+          isOnOff={isTermVisible}
           onClick={() => {
             dispatch(setTermVisible());
           }}
@@ -55,9 +67,22 @@ const HeaderOrganism = () => {
         {teamName ? teamName + "/" + projectName : "untitled"}
       </div>
       <div className={styles.headerRightDiv}>
-        <HeaderBtnAtom>
+        <div
+          className={styles.runIconBtn}
+          onClick={() => {
+            console.log(runFile);
+            if (runFile.filePath != null) {
+              const runCom = runLang(runFile.fileType);
+              const runString = `${runCom} .${runFile.filePath}\r`;
+              socket.send(runString);
+              if (!isTermVisible) {
+                dispatch(setTermVisible());
+              }
+            }
+          }}
+        >
           <BsFillPlayFill color="white" size={24} />
-        </HeaderBtnAtom>
+        </div>
       </div>
     </>
   );

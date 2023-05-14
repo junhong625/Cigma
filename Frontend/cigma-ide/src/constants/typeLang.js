@@ -34,3 +34,15 @@ export const typeLang = (type) => {
       return "text";
   }
 };
+
+export const runLang = (type) => {
+  switch (type) {
+    case "python":
+      return "python";
+    case "java":
+      return "javac";
+    case "javascript":
+    case "typescript":
+      return "node";
+  }
+};

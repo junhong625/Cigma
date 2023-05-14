@@ -9,12 +9,15 @@ const runFileSlice = createSlice({
   name: "runFile",
   initialState,
   reducers: {
-    setFile: (state, { payload: fileType, filePath }) => {
+    setFile: (state, { payload: { fileType, filePath } }) => {
       state.fileType = fileType;
       state.filePath = filePath;
     },
     detachFile: (state) => {
-      state = initialState;
+      state = {
+        fileType: null,
+        filePath: null,
+      };
     },
   },
 });

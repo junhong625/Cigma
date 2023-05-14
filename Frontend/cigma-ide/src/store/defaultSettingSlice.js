@@ -16,12 +16,14 @@ const defaultSettingSlice = createSlice({
     setDefaultSetting: (
       state,
       {
-        payload: userId,
-        userImage,
-        teamName,
-        projectName,
-        serverPath,
-        serverPort,
+        payload: {
+          userId,
+          userImage,
+          teamName,
+          projectName,
+          serverPath,
+          serverPort,
+        },
       }
     ) => {
       state.userId = userId;

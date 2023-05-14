@@ -28,6 +28,7 @@ import {
 } from "../../store/codeEditorSlice";
 import EditorOrganism from "./EditorOrganism";
 import { awareness } from "../../store/initYDoc";
+import { detachFile, setFile } from "../../store/runFileSlice";
 
 const directions = {
   N: "n",
@@ -90,6 +91,7 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
     dispatch(hideEditPointer);
     if (editorPerson !== myName) return;
     handleFinishIsShown();
+    dispatch(detachFile);
   };
   // editor 숨기기
   const handleHideClick = () => {
@@ -143,6 +145,7 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
       onClick={() => {
         handleStartIsShown();
         if (isShown) {
+          console.log(isShown);
           if (editorPerson === null || myName === editorPerson) {
             dispatch(setCodeEditorIndex(codeEditorIndex));
             setIsClicked(true);
@@ -150,6 +153,12 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
             dispatch(showEditPointer());
           }
         }
+        dispatch(
+          setFile({
+            fileType: codeEditors[codeEditorIndex].fileType,
+            filePath: codeEditors[codeEditorIndex].canvasName,
+          })
+        );
       }}
       onDoubleClick={handleDoubleClick}
       onBlur={() => {

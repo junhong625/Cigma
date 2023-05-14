@@ -19,7 +19,13 @@ export const setupPty = (conn, req) => {
   });
 
   conn.on("message", (data) => {
-    term.write(data);
+    if (data == "SIGINT") {
+      term.write("\x03");
+    } else if (data == "SIGTSTP") {
+      term.write("\x1a");
+    } else {
+      term.write(data);
+    }
   });
 
   conn.on("disconnect", () => {

@@ -87,11 +87,6 @@ const useTermWs = (socket) => {
       return;
     }
 
-    if (code === 32) {
-      socket.send(" ");
-      return;
-    }
-
     // enter
     if (code === 13) {
       if (terminalState.input === "exit") {

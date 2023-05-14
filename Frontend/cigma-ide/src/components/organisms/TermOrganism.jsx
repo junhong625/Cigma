@@ -5,14 +5,7 @@ import { Resizable } from "re-resizable";
 import { useSelector } from "react-redux";
 import { selectTermVisible } from "../../store/toolSlice";
 import useTermWs from "../../hooks/useTermWs";
-import { fitAddon } from "../../store/initTerm";
-
-const { VITE_WS_PORT } = import.meta.env;
-
-const termPort = VITE_WS_PORT || 5000;
-const socket = new WebSocket(
-  `ws://${window.location.hostname}:${termPort}/terminal`
-);
+import { fitAddon, socket } from "../../store/initTerm";
 
 const TermOrganism = ({ widthRight, setWidthRight, defaultWidthRight }) => {
   const xtermRef = useRef(null);
@@ -20,13 +13,10 @@ const TermOrganism = ({ widthRight, setWidthRight, defaultWidthRight }) => {
   const onData = useTermWs(socket);
 
   useEffect(() => {
-    // xtermRef.current.terminal.resize(30, 60);
     xtermRef.current.terminal.cursorBlink = true;
     socket.onmessage = (e) => {
       xtermRef.current.terminal.write(e.data);
     };
-    // xtermRef.current.terminal.write("Hello World");
-    // xtermRef.current.terminal.reset();
   }, []);
   return (
     <Resizable
