@@ -13,9 +13,10 @@ const generateCodeEditor = (top, left) => ({
   isShown: false,
   shownColor: null,
   editorPerson: null,
+  fileType: "",
 });
 
-const initialState = [generateCodeEditor(1000, 1000)];
+const initialState = [];
 // yLocs.set("codeEditors", initialState);
 
 const codeEditorSlice = createSlice({
@@ -31,11 +32,15 @@ const codeEditorSlice = createSlice({
       state.splice(codeEditorIndex, 1);
     },
     // 코드에디터 추가
-    addCodeEditor: (state, { payload: { top, left, canvasName } }) => {
+    addCodeEditor: (
+      state,
+      { payload: { top, left, canvasName, fileType } }
+    ) => {
       const newCodeEditor = {
         ...generateCodeEditor(top, left),
         // canvasName: `canvas_${state.length}`,
         canvasName: canvasName,
+        fileType: fileType,
       };
       state.push(newCodeEditor);
     },

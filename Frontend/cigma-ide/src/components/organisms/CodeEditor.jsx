@@ -229,6 +229,7 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
             editorPerson={editorPerson}
             className={styles["monaco-editor"]}
             file={codeEditors[codeEditorIndex].canvasName}
+            fileType={codeEditors[codeEditorIndex].fileType}
             readOnly={!isDoubleClicked}
             style={{ height: height - 30 }}
           />

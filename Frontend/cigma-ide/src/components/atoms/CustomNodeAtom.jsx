@@ -11,6 +11,7 @@ import {
   selectAllCodeEditor,
 } from "../../store/codeEditorSlice";
 import _ from "lodash";
+import { typeLang } from "../../constants/typeLang";
 
 export const CustomNodeAtom = (props) => {
   const { droppable, data } = props.node;
@@ -40,6 +41,8 @@ export const CustomNodeAtom = (props) => {
   const handleDoubleClick = () => {
     if (droppable) return;
     let filepath = getFilepathById(id, treeData);
+    const fileType = typeLang(data?.fileType);
+    console.log(fileType);
     filepath += `/${text}`;
     const codeEditor = _.find(codeEditors, { canvasName: filepath });
     if (codeEditor) return;
@@ -48,6 +51,7 @@ export const CustomNodeAtom = (props) => {
         top: 1000 + 10 * id,
         left: 1000 + 10 * id,
         canvasName: filepath,
+        fileType: fileType,
       })
     );
   };

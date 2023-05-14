@@ -5,7 +5,7 @@ import { Resizable } from "re-resizable";
 import { useSelector } from "react-redux";
 import { selectTermVisible } from "../../store/toolSlice";
 import useTermWs from "../../hooks/useTermWs";
-import { fitAddon } from "../../store/initTermAddons";
+import { fitAddon } from "../../store/initTerm";
 
 const { VITE_WS_PORT } = import.meta.env;
 

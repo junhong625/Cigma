@@ -8,6 +8,7 @@ import treeData from "./TreeData";
 import { bind, enhanceReducer } from "redux-yjs-bindings";
 import { ydoc } from "./initYDoc";
 import defaultSettingSlice from "./defaultSettingSlice";
+import runFileSlice from "./runFileSlice";
 // import undoable from "redux-undo";
 
 // const MAXIMUN_UNDO_COUNT = 100;
@@ -31,6 +32,7 @@ const store = configureStore({
     workbench: enhanceReducer(workbench),
     tool: toolSlice,
     defaultSetting: defaultSettingSlice,
+    runFile: runFileSlice,
   },
 });
 

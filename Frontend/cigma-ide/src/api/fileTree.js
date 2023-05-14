@@ -112,3 +112,18 @@ export const loadFileContent = async (path) => {
     console.error("loadFileContent error", error);
   }
 };
+
+// 파일 내용 수정 저장
+export const saveFileContent = async (path, data) => {
+  try {
+    const response = await axios.put("/api/file/data", {
+      path: path,
+      data: data,
+    });
+    return {
+      status: response.status,
+    };
+  } catch (error) {
+    console.error("saveFileContent error", error);
+  }
+};
