@@ -16,7 +16,11 @@ import { useDropzone } from "react-dropzone";
 import { useSelector, useDispatch } from "react-redux";
 import { modifyTreeData } from "../../store/TreeData";
 // import { saveAs } from "file-saver";
-import { selectFileBarVisible } from "../../store/toolSlice";
+import {
+  selectFileBarVisible,
+  setInputFieldBlurred,
+  setInputFieldFocused,
+} from "../../store/toolSlice";
 import {
   deleteFile,
   deleteFolder,
@@ -388,6 +392,10 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
                 onClick={() => {
                   handleOpen(selectedNode);
                   CreateFile();
+                  dispatch(setInputFieldFocused());
+                }}
+                onBlur={() => {
+                  dispatch(setInputFieldBlurred());
                 }}
               >
                 <BsFileEarmarkPlus />
@@ -396,6 +404,10 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
                 onClick={() => {
                   handleOpen(selectedNode);
                   CreateFolder();
+                  dispatch(setInputFieldFocused());
+                }}
+                onBlur={() => {
+                  dispatch(setInputFieldBlurred());
                 }}
               >
                 <BsFolderPlus />
