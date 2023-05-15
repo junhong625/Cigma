@@ -8,6 +8,7 @@ import {
   setCodeEditorIndex,
   selectIsInputFieldFocused,
   selectCurrentTool,
+  setInputFieldBlurred,
 } from "../store/toolSlice";
 import {
   deleteCodeEditor,
@@ -27,6 +28,15 @@ function useGlobalKeyboardShortCut() {
   // ctrl + t
   // text로 변경
   useEffect(() => {
+    const selectorResetShortCut = (event) => {
+      if (event.code === "Escape") {
+        event.preventDefault();
+        dispatch(setCurrentTool("selector"));
+        dispatch(setInputFieldBlurred());
+      }
+    };
+    window.addEventListener("keydown", selectorResetShortCut);
+
     if (isInputFieldFocused) return;
     /**
      * backspace 누르면 삭제
@@ -79,6 +89,7 @@ function useGlobalKeyboardShortCut() {
         dispatch(setCurrentTool("selector"));
       }
     };
+
     console.log("useGlobalKeyboardShortCut");
     window.addEventListener("keydown", deleteCanvasShortCut);
     window.addEventListener("keydown", codeEditorShortCut);
@@ -89,6 +100,7 @@ function useGlobalKeyboardShortCut() {
       window.removeEventListener("keydown", codeEditorShortCut);
       window.removeEventListener("keydown", textToolShortCut);
       window.removeEventListener("keydown", selectorToolShortCut);
+      window.removeEventListener("keydown", selectorResetShortCut);
     };
   }, [dispatch, editorCount, workingEditorIndex, isInputFieldFocused]);
 
