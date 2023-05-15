@@ -25,6 +25,7 @@
   @include artboardSize;
   background-color: $object-artboard-bg;
   transform-origin: 0 0;
+  position: relative;
 }
 
 .wide {

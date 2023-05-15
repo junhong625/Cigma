@@ -104,7 +104,7 @@ export const expressFile = async (name, path) => {
 // 모나코에 넣을 내용 불러오기
 export const loadFileContent = async (path) => {
   try {
-    const response = await axios.post("/api/file/data", { path: "/" + path });
+    const response = await axios.post("/api/file/data", { path });
     return {
       data: response.data,
     };

@@ -16,7 +16,11 @@ import { useDropzone } from "react-dropzone";
 import { useSelector, useDispatch } from "react-redux";
 import { modifyTreeData } from "../../store/TreeData";
 // import { saveAs } from "file-saver";
-import { selectFileBarVisible } from "../../store/toolSlice";
+import {
+  selectFileBarVisible,
+  setInputFieldBlurred,
+  setInputFieldFocused,
+} from "../../store/toolSlice";
 import {
   deleteFile,
   deleteFolder,
@@ -28,6 +32,11 @@ import {
   fileUpdate,
   projectDownload,
 } from "../../api/fileTree";
+import {
+  changeCodeEditorName,
+  selectAllCodeEditor,
+} from "../../store/codeEditorSlice";
+import _ from "lodash";
 
 // 마지막 파일의 Id 값을 가져옴
 const getLastId = (treeData) => {
@@ -82,6 +91,8 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
   const dispatch = useDispatch();
   const treeData = useSelector((state) => state.workbench.treeData);
   const handleFileBar = useSelector(selectFileBarVisible);
+  const codeEditors = useSelector(selectAllCodeEditor);
+  console.log(codeEditors);
 
   useEffect(() => {
     // 최초 렌더링 시 파일 트리 업데이트
@@ -269,9 +280,9 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
     { dragSourceId, dropTargetId, dragSource, dropTarget }
   ) => {
     // 현위치와 목표 위치를 정의
-    const sourcePath = getFilepathById(dragSourceId, treeData);
+    let sourcePath = getFilepathById(dragSourceId, treeData);
+
     let destinationPath = getFilepathById(dropTargetId, treeData);
-    console.log(dropTargetId);
     // 최상단은 droptarget이 undefined로 입력되므로 조건문을 통해 경로를 추가
     if (dropTarget) {
       destinationPath += `/${dropTarget.text}`;
@@ -284,6 +295,22 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
     );
     if (status) {
       dispatch(modifyTreeData(newTree));
+      if (sourcePath.trim() !== "") {
+        sourcePath = "/" + sourcePath;
+      }
+      const codeEditorIndex = _.findIndex(codeEditors, {
+        canvasName: sourcePath + "/" + dragSource.text,
+      });
+      if (codeEditorIndex === -1) return;
+      if (destinationPath === "/") {
+        destinationPath = "";
+      }
+      dispatch(
+        changeCodeEditorName({
+          codeEditorIndex: codeEditorIndex,
+          name: destinationPath + "/" + dragSource.text,
+        })
+      );
     }
   };
 
@@ -388,6 +415,10 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
                 onClick={() => {
                   handleOpen(selectedNode);
                   CreateFile();
+                  dispatch(setInputFieldFocused());
+                }}
+                onBlur={() => {
+                  dispatch(setInputFieldBlurred());
                 }}
               >
                 <BsFileEarmarkPlus />
@@ -396,6 +427,10 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
                 onClick={() => {
                   handleOpen(selectedNode);
                   CreateFolder();
+                  dispatch(setInputFieldFocused());
+                }}
+                onBlur={() => {
+                  dispatch(setInputFieldBlurred());
                 }}
               >
                 <BsFolderPlus />
