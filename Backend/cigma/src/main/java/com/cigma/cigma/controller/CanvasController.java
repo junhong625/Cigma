@@ -19,11 +19,13 @@ public class CanvasController {
 
     @GetMapping("/all")
     public CustomResponseEntity<? extends Object> getPods() throws Exception {
+        canvasService.connect();
         return ResponseHandler.generateResponse(true, "컨테이너 조회", HttpStatus.OK, canvasService.getPods());
     }
 
     @PostMapping()
     public CustomResponseEntity<? extends Object> joinCanvas(@RequestBody CanvasJoinRequest request) throws Exception {
+        canvasService.connect();
         return ResponseHandler.generateResponse(true, "캔버스 접속", HttpStatus.OK, canvasService.joinCanvas(request));
     }
 

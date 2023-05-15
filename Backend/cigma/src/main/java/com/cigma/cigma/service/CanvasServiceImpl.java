@@ -35,15 +35,7 @@ public class CanvasServiceImpl implements CanvasService{
     private final ProjectServiceImpl projectService;
     private final TeamServiceImpl teamService;
     private final String namespace = "cigma";
-    private final CoreV1Api api;
-
-    {
-        try {
-            api = connect();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+    private CoreV1Api api;
 
     @Override
     public PodsGetResponse createPod(String name) throws Exception {
@@ -207,11 +199,11 @@ public class CanvasServiceImpl implements CanvasService{
         return new PodsGetResponse(pods);
     }
 
-    public CoreV1Api connect() throws Exception {
+    public void connect() throws Exception {
         ApiClient client = Config.defaultClient();
         Configuration.setDefaultApiClient(client);
         log.info("connect k3s");
-        return new CoreV1Api();
+        api = new CoreV1Api();
     }
 
     public void createService(HashMap<String, String> label, String serviceName) throws Exception {
