@@ -15,9 +15,9 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     # server
-    url: jdbc:mysql://k8a601.p.ssafy.io:3306/cigma?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
+    url: jdbc:mysql://k8a601.p.ssafy.io:3306/cigma?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
     # local
-#    url: jdbc:mysql://localhost:3306/cigma?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
+#    url: jdbc:mysql://localhost:3306/cigma?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
     username: ssafy
     password: ssafy
     hikari:
@@ -47,8 +47,8 @@ spring:
   # - redis 종료 시에는 RDB를 통해 스냅샷 생성
 
   redis:
-#    host: localhost # localhost 전용
-    host: redis # Server 전용
+    host: localhost # localhost 전용
+#    host: redis # Server 전용
     port: 6379
     password: ssafy8cigmapass
 
@@ -101,3 +101,6 @@ image:
     user: https://cigma-ajh.s3.ap-northeast-2.amazonaws.com/Users/Image/default.png
     team: https://cigma-ajh.s3.ap-northeast-2.amazonaws.com/Teams/Image/default.png
     project: https://cigma-ajh.s3.ap-northeast-2.amazonaws.com/Projects/Image/default.png
+kubernetes:
+  api:
+    server: http://localhost/0:0:0:0:0:0:0:1:80
