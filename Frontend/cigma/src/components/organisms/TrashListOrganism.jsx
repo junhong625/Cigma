@@ -61,13 +61,14 @@ function TrashList() {
         {trashes.map((project, index) => (
           <div key={"project" + index} className={styles.project}>
             <ProjectThumbNailAtom
-              name={project.name}
-              img={project.thumbnail}
+              name={project.projectName}
+              img={project.projectImgUrl}
               trash={true}
               openModal={openModal}
               setNowContent={setNowContent}
               setToDo={setToDo}
               setPropFunction={setPropFunction}
+              projectIdx={project.projectIdx}
             />
           </div>
         ))}

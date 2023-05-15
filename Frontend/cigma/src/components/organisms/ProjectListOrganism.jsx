@@ -178,6 +178,7 @@ function ProjectListOrganism() {
                   setNowContent={setNowContent}
                   setToDo={setToDo}
                   setPropFunction={setPropFunction}
+                  projectIdx={project.projectIdx}
                 />
               </div>
             ))}
