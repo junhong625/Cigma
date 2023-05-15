@@ -31,16 +31,23 @@ import java.util.*;
 @Slf4j
 @RequiredArgsConstructor
 public class CanvasServiceImpl implements CanvasService{
-    private CoreV1Api api;
     private final RedisTemplate redisTemplate;
     private final ProjectServiceImpl projectService;
     private final TeamServiceImpl teamService;
     private final String namespace = "cigma";
+    private final CoreV1Api api;
+
+    {
+        try {
+            api = connect();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     public PodsGetResponse createPod(String name) throws Exception {
         try {
-            connect();
             // Pod의 이름이 중복되지 않는지 체크 필요
             //
             ////////////////////////////////////
@@ -84,7 +91,6 @@ public class CanvasServiceImpl implements CanvasService{
 
     @Override
     public void deletePod(String name) throws Exception {
-        connect();
         System.out.println(name);
         api.deleteNamespacedPod(name, namespace, null, null, null, null, null, new V1DeleteOptions());
         log.info("pod 삭제 완료");
@@ -95,7 +101,6 @@ public class CanvasServiceImpl implements CanvasService{
     @Override
     public CanvasGetResponse joinCanvas(CanvasJoinRequest request) throws Exception {
         log.info("=================join Canvas================");
-        connect();
         ProjectGetResponse project = projectService.getProject(request.getPjtIdx());
         TeamGetResponse team = teamService.getTeam(project.getTeamIdx());
         // 접속하려는 pjt가 해당 유저의 pjt가 맞는지 확인
@@ -162,7 +167,6 @@ public class CanvasServiceImpl implements CanvasService{
     }
 
     public void binding(String podName, String folderName, String canvasName) throws Exception{
-        connect();
         // pod 조회
         V1Pod pod = api.readNamespacedPod(podName, namespace, null);
         log.info("pod 조회");
@@ -188,7 +192,6 @@ public class CanvasServiceImpl implements CanvasService{
     // Pods내에는 여러개의 컨테이너 존재도 가능
     @Override
     public PodsGetResponse getPods() throws Exception {
-        connect();
         List<String> pods = new ArrayList<>();
         try {
             V1PodList list = api.listNamespacedPod(namespace, null, null, null, null, null, null, null, null, null, null);
@@ -204,15 +207,14 @@ public class CanvasServiceImpl implements CanvasService{
         return new PodsGetResponse(pods);
     }
 
-    public void connect() throws Exception {
+    public CoreV1Api connect() throws Exception {
         ApiClient client = Config.defaultClient();
         Configuration.setDefaultApiClient(client);
-        api = new CoreV1Api();
         log.info("connect k3s");
+        return new CoreV1Api();
     }
 
     public void createService(HashMap<String, String> label, String serviceName) throws Exception {
-        connect();
         int port = 5000;
         V1Service service = new V1Service()
                 .metadata(new V1ObjectMeta().name(serviceName))
@@ -235,7 +237,6 @@ public class CanvasServiceImpl implements CanvasService{
     }
 
     public void deleteService(String name) throws Exception{
-        connect();
         V1Service deletedService = api.deleteNamespacedService(name + "-service", namespace, null, null, null, null, null, null);
     }
 
