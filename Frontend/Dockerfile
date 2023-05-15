@@ -1,4 +1,6 @@
-FROM nginx:latest
+FROM centos/nginx-116-centos7
+
+RUN yum -y install https://extras.getpagespeed.com/release-latest.rpm && yum -y install nginx-module-let
 
 RUN mkdir /app
 WORKDIR /app
