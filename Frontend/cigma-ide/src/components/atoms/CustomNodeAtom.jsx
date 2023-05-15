@@ -41,6 +41,9 @@ export const CustomNodeAtom = (props) => {
   const handleDoubleClick = () => {
     if (droppable) return;
     let filepath = getFilepathById(id, treeData);
+    if (filepath) {
+      filepath = "/" + filepath;
+    }
     const fileType = typeLang(data?.fileType);
     console.log(fileType);
     filepath += `/${text}`;
