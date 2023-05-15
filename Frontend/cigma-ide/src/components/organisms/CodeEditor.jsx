@@ -40,6 +40,11 @@ const directions = {
   SE: "se",
   SW: "sw",
 };
+
+// icons
+import { FaComments } from "react-icons/fa";
+import { VscTriangleDown, VscTriangleUp } from "react-icons/vsc";
+import { TiDelete } from "react-icons/ti";
 const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   const dispatch = useDispatch();
   const canvasRef = useRef();
@@ -48,17 +53,8 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   // 클릭 -> 사이즈 조정
   const [isClicked, setIsClicked] = useState(false);
 
-  const {
-    top,
-    left,
-    width,
-    height,
-    isHidden,
-    comments,
-    isShown,
-    shownColor,
-    editorPerson,
-  } = codeEditor;
+  const { top, left, width, height, isHidden, comments, isShown, shownColor, editorPerson } =
+    codeEditor;
   // const [myWorking, setMyWorking] = useState(null);
   // 더블클릭 -> 에디터편집
   const [isDoubleClicked, setIsDoubleClicked] = useState(false);
@@ -113,20 +109,14 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
     if (isDragScrolling) return;
     if (isShown) return;
     dispatch(setStartIsShown({ codeEditorIndex: codeEditorIndex }));
-    dispatch(
-      changeShownColor({ color: myColor, codeEditorIndex: codeEditorIndex })
-    );
-    dispatch(
-      setEditorPerson({ name: myName, codeEditorIndex: codeEditorIndex })
-    );
+    dispatch(changeShownColor({ color: myColor, codeEditorIndex: codeEditorIndex }));
+    dispatch(setEditorPerson({ name: myName, codeEditorIndex: codeEditorIndex }));
     dispatch(setInputFieldFocused());
   };
   const handleFinishIsShown = () => {
     dispatch(setFinishIsShown({ codeEditorIndex: codeEditorIndex }));
     dispatch(setEditorPerson({ name: null, codeEditorIndex: codeEditorIndex }));
-    dispatch(
-      changeShownColor({ color: null, codeEditorIndex: codeEditorIndex })
-    );
+    dispatch(changeShownColor({ color: null, codeEditorIndex: codeEditorIndex }));
     dispatch(setInputFieldBlurred());
   };
 
@@ -179,26 +169,54 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
           width,
         }}
       >
-        <button
-          className={styles.commentButton}
-          onClick={() => {
-            if (hideComment) {
-              handleCommentClick();
-            } else {
-              handleHideCommentClick();
-            }
+        <div
+          style={{
+            display: "flex",
+            paddingLeft: "1em",
           }}
-        />
-        <button
-          className={styles.closeButton}
-          onClick={() => {
-            if (isHidden) {
-              handleShowClick();
-            } else {
-              handleHideClick();
-            }
+        >
+          <button
+            className={styles.closeButton}
+            onClick={() => {
+              //  삭제처리..
+            }}
+          >
+            <TiDelete />
+          </button>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-evenly",
+            paddingRight: "1em",
           }}
-        />
+        >
+          <button
+            className={styles.showButton}
+            onClick={() => {
+              if (isHidden) {
+                handleShowClick();
+              } else {
+                handleHideClick();
+              }
+            }}
+          >
+            {isHidden ? <VscTriangleDown /> : <VscTriangleUp />}
+          </button>
+          <button
+            className={styles.commentButton}
+            onClick={() => {
+              if (hideComment) {
+                handleCommentClick();
+              } else {
+                handleHideCommentClick();
+              }
+            }}
+          >
+            <FaComments />
+          </button>
+        </div>
       </div>
       {/* 댓글창 숨김처리 */}
       {!hideComment ? (
@@ -213,10 +231,10 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
       {!isHidden ? (
         <div
           style={{
-            top: 30,
+            top: 50,
             left: 0,
             width,
-            height: height - 30,
+            height: height - 50,
             position: "absolute",
             backgroundColor: "white",
           }}
@@ -240,7 +258,7 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
             file={codeEditors[codeEditorIndex].canvasName}
             fileType={codeEditors[codeEditorIndex].fileType}
             readOnly={!isDoubleClicked}
-            style={{ height: height - 30 }}
+            style={{ height: height - 50 }}
           />
           {/* comment 화면 처리 */}
         </div>
