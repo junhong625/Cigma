@@ -33,8 +33,8 @@ const IdePage = React.memo(({ teamName, projectName }) => {
         ref={iframeRef}
         className={styles.ideFlame}
         // 해당 프로젝트의 주소. Thumbnail 클릭시 받아온 portNum을 입력합니다.
-        // src=`cigmacode.com/project/${portNum}`
-        src="http://70.12.247.83:5173/"
+        src={`http://cigmacode.com/project:${portNum}`}
+        // src="http://70.12.247.83:5173/"
       ></iframe>
     </div>
   );
