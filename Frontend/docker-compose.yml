@@ -14,6 +14,13 @@ services:
     environment:
       - TZ=Asia/Seoul
     restart: always
+  certbot:
+    container_name: certbot
+    image: certbot/certbot:v0.36.0
+    restart: always
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
+      - /var/lib/letsencrypt:/var/lib/letsencrypt
 
 networks:
   nginx_proxy_net:
