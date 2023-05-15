@@ -9,7 +9,7 @@ import DocsPage from "./components/pages/DocsPage";
 import DocsContainer from "./components/organisms/DocsContainer";
 import LoadingAtom from "./components/atoms/LoadingAtom";
 import LoginPage from "./components/pages/LoginPage";
-import SignUpPage from "./components/pages/SignupPage";
+import SignUpPage from "./components/pages/SignUpPage";
 import IdePage from "./components/pages/IdePage";
 
 function App() {
