@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styles from "./CodeEditor.module.scss";
 import {
   hideEditPointer,
+  selectCurrentCodeEditorIndex,
   // selectEditPointerVisible,
   selectEditPointerVisible,
   selectIsDragScrolling,
@@ -19,8 +20,10 @@ import Comment from "./Comment";
 
 import {
   changeShownColor,
+  deleteCodeEditor,
   hideCodeEditor,
   selectAllCodeEditor,
+  selectCodeEditorLength,
   setEditorPerson,
   setFinishIsShown,
   setStartIsShown,
@@ -49,6 +52,8 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   const dispatch = useDispatch();
   const canvasRef = useRef();
   const codeEditors = useSelector(selectAllCodeEditor);
+  const editorCount = useSelector(selectCodeEditorLength);
+  const workingEditorIndex = useSelector(selectCurrentCodeEditorIndex);
   // const { top, left, width, height, isHidden, comments } = codeEditor;
   // 클릭 -> 사이즈 조정
   const [isClicked, setIsClicked] = useState(false);
@@ -120,6 +125,11 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
     dispatch(setInputFieldBlurred());
   };
 
+  // header X버튼 눌렀을 때 , 에디터 삭제하기
+  // TODO: 삭제처리맨
+  const handleDeleteClick = () => {
+    dispatch(deleteCodeEditor(workingEditorIndex));
+  };
   // comment창 크기 설정
   const commentWidth = width / 2;
   // editor 숨김처리되었을때 isHidden store 값에 따른 css 설정
@@ -179,6 +189,7 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
             className={styles.closeButton}
             onClick={() => {
               //  삭제처리..
+              handleDeleteClick();
             }}
           >
             <TiDelete />
