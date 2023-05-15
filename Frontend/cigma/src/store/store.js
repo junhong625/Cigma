@@ -1,17 +1,19 @@
-import { configureStore, combineReducers, getDefaultMiddleware } from "@reduxjs/toolkit";
-import sessionStorage from "redux-persist/es/storage/session";
-import { persistReducer } from "redux-persist";
-import userToken from "./userToken";
-import persistStore from "redux-persist/es/persistStore";
+import { configureStore, combineReducers, getDefaultMiddleware } from '@reduxjs/toolkit';
+import sessionStorage from 'redux-persist/es/storage/session';
+import { persistReducer } from 'redux-persist';
+import userToken from './userToken';
+import projectInfo from './project';
+import persistStore from 'redux-persist/es/persistStore';
 
 const persistConfig = {
-  key: "root",
+  key: 'root',
   storage: sessionStorage,
-  whitelist: ["userToken"],
+  whitelist: ['userToken', 'project'],
 };
 
 const rootReducer = combineReducers({
   userToken,
+  projectInfo,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
