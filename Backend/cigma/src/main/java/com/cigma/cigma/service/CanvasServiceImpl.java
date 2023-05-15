@@ -10,32 +10,18 @@ import com.cigma.cigma.dto.response.TeamGetResponse;
 import com.cigma.cigma.entity.Project;
 import com.cigma.cigma.handler.customException.AllCanvasUsingException;
 import com.cigma.cigma.jwt.UserPrincipal;
-import com.google.protobuf.Api;
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
 import io.kubernetes.client.custom.IntOrString;
 import io.kubernetes.client.openapi.ApiClient;
-import io.kubernetes.client.openapi.ApiException;
 import io.kubernetes.client.openapi.Configuration;
 import io.kubernetes.client.openapi.apis.CoreV1Api;
 import io.kubernetes.client.openapi.models.*;
-import io.kubernetes.client.util.ClientBuilder;
 import io.kubernetes.client.util.Config;
-import io.kubernetes.client.util.KubeConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.OkHttpClient;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cglib.core.VisibilityPredicate;
+
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -49,6 +35,7 @@ public class CanvasServiceImpl implements CanvasService{
     private final RedisTemplate redisTemplate;
     private final ProjectServiceImpl projectService;
     private final TeamServiceImpl teamService;
+    private final String namespace = "cigma";
 
     @Override
     public PodsGetResponse createPod(String name) throws Exception {
@@ -85,7 +72,7 @@ public class CanvasServiceImpl implements CanvasService{
                             ));
 
             log.info("pod 객체 생성");
-            V1Pod createdPod = api.createNamespacedPod("default", pod, null, null, null, null);
+            V1Pod createdPod = api.createNamespacedPod(namespace, pod, null, null, null, null);
 
             log.info("Pod created: " + createdPod.getMetadata().getName());
 //            createService(label, port);
@@ -99,7 +86,7 @@ public class CanvasServiceImpl implements CanvasService{
     public void deletePod(String name) throws Exception {
         connect();
         System.out.println(name);
-        api.deleteNamespacedPod(name, "default", null, null, null, null, null, new V1DeleteOptions());
+        api.deleteNamespacedPod(name, namespace, null, null, null, null, null, new V1DeleteOptions());
         log.info("pod 삭제 완료");
         deleteService(name);
         log.info("service 삭제 완료");
@@ -137,7 +124,7 @@ public class CanvasServiceImpl implements CanvasService{
             log.info("add connect List!");
         }
         // nodePort 조회할 service
-        V1Service service = api.readNamespacedService(name, "default", null);
+        V1Service service = api.readNamespacedService(name, namespace, null);
         log.info("get Service!");
         // 유저 정보
         UserPrincipal userPrincipal = SecurityUtils.getUserPrincipal();
@@ -177,7 +164,7 @@ public class CanvasServiceImpl implements CanvasService{
     public void binding(String podName, String folderName, String canvasName) throws Exception{
         connect();
         // pod 조회
-        V1Pod pod = api.readNamespacedPod(podName, "default", null);
+        V1Pod pod = api.readNamespacedPod(podName, namespace, null);
         log.info("pod 조회");
         // pod 내부의 컨테이너에 바인딩 설정
         V1PodSpec spec = pod.getSpec();
@@ -193,7 +180,7 @@ public class CanvasServiceImpl implements CanvasService{
             }
         }
         // 바인딩 반영
-        V1Pod updatedPod = api.replaceNamespacedPod(podName, "default", pod, null, null, null, null);
+        V1Pod updatedPod = api.replaceNamespacedPod(podName, namespace, pod, null, null, null, null);
         log.info("바인딩 반영");
     }
 
@@ -204,7 +191,7 @@ public class CanvasServiceImpl implements CanvasService{
         connect();
         List<String> pods = new ArrayList<>();
         try {
-            V1PodList list = api.listNamespacedPod("default", null, null, null, null, null, null, null, null, null, null);
+            V1PodList list = api.listNamespacedPod(namespace, null, null, null, null, null, null, null, null, null, null);
             log.info("get Pods");
             for (V1Pod item : list.getItems()) {
                 System.out.println(item.getMetadata().getName());
@@ -242,14 +229,14 @@ public class CanvasServiceImpl implements CanvasService{
                         .type("LoadBalancer"));
 
         // Service 생성 요청
-        V1Service createdService = api.createNamespacedService("default", service, null, null, null, null);
+        V1Service createdService = api.createNamespacedService(namespace, service, null, null, null, null);
 
         log.info("Service created: " + createdService.getMetadata().getName());
     }
 
     public void deleteService(String name) throws Exception{
         connect();
-        V1Service deletedService = api.deleteNamespacedService(name + "-service", "default", null, null, null, null, null, null);
+        V1Service deletedService = api.deleteNamespacedService(name + "-service", namespace, null, null, null, null, null, null);
     }
 
     public String createFolder(String name) throws Exception {
