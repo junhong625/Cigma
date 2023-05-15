@@ -15,20 +15,24 @@ const CommentCreateBox = ({ codeEditorIndex }) => {
       dispatch(addComment({ codeEditorIndex: codeEditorIndex, comment: inputValue }));
       setInputValue("");
     } else {
-      alert("댓글 내용 똑바로 입력하셈..");
+      alert("댓글 내용을 입력해주세요.");
     }
   };
   return (
     <div className={styles.commentBox}>
       <form className={styles.commentForm}>
         <input
-          style={ {border:"none",  backgroundColor: "inherit"}}
+          style={{ border: "none", backgroundColor: "inherit" }}
           type="text"
           onChange={(event) => setInputValue(event.target.value)}
           value={inputValue}
-          placeholder="comment 작성하기"
+          placeholder="댓글 작성하기"
         />
-        <button style={{backgroundColor: "transparent", border: "none"} } type="submit" onClick={add}>
+        <button
+          style={{ backgroundColor: "transparent", border: "none" }}
+          type="submit"
+          onClick={add}
+        >
           <FiEdit />
         </button>
       </form>
