@@ -2,6 +2,7 @@ version: "3.7"
 services:
   nginx:
     build: .
+    user: root
     container_name: nginx-proxy
     networks:
       - nginx_proxy_net
