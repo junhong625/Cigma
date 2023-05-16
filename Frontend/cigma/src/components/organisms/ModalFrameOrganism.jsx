@@ -3,6 +3,8 @@ import styles from "../../styles/organisms/ModalFrameOrganism.module.scss";
 import UserSearchOrganism from "./UserSearchOrganism";
 import CreateProjectOrganism from "./CreateProjectOrganism";
 import ConfirmOrganism from "./ConfirmOrganism";
+import DeleteTeamOrganism from "./DeleteTeamOrganism";
+import EditTeamOrganism from "./EditTeamOrganism";
 
 // 모달의 배경 부분
 function ModalFrameOrganism({
@@ -64,6 +66,12 @@ function ModalFrameOrganism({
             )}
             {modalContent === 2 && (
               <CreateProjectOrganism closeModal={closeModal} />
+            )}
+            {modalContent === 3 && (
+              <DeleteTeamOrganism closeModal={closeModal} />
+            )}
+            {modalContent === 4 && (
+              <EditTeamOrganism closeModal={closeModal} />
             )}
           </div>
         </div>

@@ -1,6 +1,6 @@
 import React from "react";
 import "../../styles/atoms/NavLogo.scss";
-import logo from "../../assets/cigmaLogo.png";
+import logo from "../../assets/CigmaLogo.png";
 import NavItem from "./NavItem";
 
 /**

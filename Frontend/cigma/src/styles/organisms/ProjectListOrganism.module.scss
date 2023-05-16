@@ -18,18 +18,75 @@
 }
 
 .title {
+  position: relative;
   display: flex;
+  justify-content: space-between;
   font-size: 30px;
   font-weight: bold;
   align-items: center;
   padding-bottom: 10px;
   gap: 20px;
+  text-align: left;
 }
 
 .iconWrapper {
   display: flex;
   cursor: pointer;
   gap: 10px;
+  border-radius: 5px;
+  padding: 3px;
+  transition: all 0.2s ease;
+  &:hover {
+    color: dimgray;
+  }
+}
+.outSide {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: -20px;
+  left: -40px;
+}
+
+.dropMenu {
+  position: absolute;
+  right: 0;
+  top: 50px;
+  padding: 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}
+
+.menuItem {
+  opacity: 0;
+  width: 100px;
+  font-size: 15px;
+  text-align: center;
+  animation: slideIn 0.2s ease-out;
+  animation-fill-mode: forwards;
+  cursor: pointer;
+  transition: all 0.15s ease-in;
+  padding: 5px;
+  background-color: #a5a5a5;
+
+  &:hover {
+    color: azure;
+    background-color: #5f5f5f;
+  }
+  &:nth-child(1) {
+    border-radius: 3px 3px 0 0;
+  }
+  &:nth-child(2) {
+    animation-delay: 0.1s;
+  }
+  &:nth-child(3) {
+    animation-delay: 0.2s;
+  }
+  &:nth-child(4) {
+    animation-delay: 0.3s;
+    border-radius: 0 0 3px 3px;
+  }
 }
 
 .projectContainer {
@@ -65,5 +122,16 @@
     margin-top: 30px;
     font-size: 30px;
     transition: all 0.35s ease-out;
+  }
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
   }
 }

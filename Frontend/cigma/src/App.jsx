@@ -9,8 +9,8 @@ import DocsPage from "./components/pages/DocsPage";
 import DocsContainer from "./components/organisms/DocsContainer";
 import LoadingAtom from "./components/atoms/LoadingAtom";
 import LoginPage from "./components/pages/LoginPage";
-import SignUpPage from "./components/pages/SignupPage";
-import IdeHeaderOrganism from "./components/organisms/IdeHeaderOrganism";
+import SignUpPage from "./components/pages/SignUpPage";
+import IdePage from "./components/pages/IdePage";
 
 function App() {
   return (
@@ -34,7 +34,7 @@ function App() {
             <Route path="/projects" element={<ProjectListOrganism />} />
             <Route path="/projects/trashcan" element={<TrashListOrganism />} />
           </Route>
-          <Route path="/test" element={<IdeHeaderOrganism />} />
+          <Route path="/test" element={<IdePage />} />
         </Routes>
       </BrowserRouter>
     </div>

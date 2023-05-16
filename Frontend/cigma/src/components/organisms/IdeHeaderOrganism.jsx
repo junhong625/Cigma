@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "../../styles/organisms/IdeHeaderOrganism.module.scss";
 import InviteModalOrganism from "./InviteModalOrganism";
 import { BsFillPersonPlusFill } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
 
 const IdeHeaderOrganism = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,10 +24,19 @@ const IdeHeaderOrganism = () => {
     setInfoVisible(false);
   };
 
+  const navigate = useNavigate();
+
   return (
     <header>
       <div className={styles.headerLeftDiv}>
-        <img className={styles.logo} src="/img/Logo.png" alt="thisislogo" />
+        <img
+          className={styles.logo}
+          src="/img/Logo.png"
+          alt="thisislogo"
+          onClick={() => {
+            navigate("/projects");
+          }}
+        />
       </div>
       <div className={styles.headerRightDiv}>
         <BsFillPersonPlusFill onClick={openModal} color="white" size={20} />
