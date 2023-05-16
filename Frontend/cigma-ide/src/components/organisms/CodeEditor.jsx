@@ -52,9 +52,7 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   const dispatch = useDispatch();
   const canvasRef = useRef();
   const codeEditors = useSelector(selectAllCodeEditor);
-  const editorCount = useSelector(selectCodeEditorLength);
   const workingEditorIndex = useSelector(selectCurrentCodeEditorIndex);
-  // const { top, left, width, height, isHidden, comments } = codeEditor;
   // 클릭 -> 사이즈 조정
   const [isClicked, setIsClicked] = useState(false);
 
@@ -69,11 +67,7 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
     shownColor,
     editorPerson,
   } = codeEditor;
-  // const [myWorking, setMyWorking] = useState(null);
-  // 더블클릭 -> 에디터편집
-  const [isDoubleClicked, setIsDoubleClicked] = useState(false);
-  // 에디터 상단 바
-  // const [isHidden, setIsHidden] = useState(false);
+
   const isDragScrolling = useSelector(selectIsDragScrolling);
 
   // comment 우측
@@ -85,20 +79,16 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   // 단축키 추가
   // useGlobalKeyboardShortCut(isClicked);
 
-  // 더블클릭 이벤트 처리
-  const handleDoubleClick = () => {
-    setIsDoubleClicked(true);
-  };
-
   // div 포커스 해제되었을때 처리되는 핸들러
   const myColor = awareness.getLocalState().color;
   const myName = awareness.getLocalState().name;
 
   const handleBlurred = (event) => {
-    console.log("blurred");
     setIsClicked(false);
-    setIsDoubleClicked(false);
     dispatch(hideEditPointer);
+    dispatch(
+      changeShownColor({ color: null, codeEditorIndex: codeEditorIndex })
+    );
     if (editorPerson !== myName) return;
     handleFinishIsShown();
     dispatch(detachFile);
@@ -131,12 +121,14 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
     );
     dispatch(setInputFieldFocused());
   };
+  const changeColor = () => {
+    dispatch(
+      changeShownColor({ color: myColor, codeEditorIndex: codeEditorIndex })
+    );
+  };
   const handleFinishIsShown = () => {
     dispatch(setFinishIsShown({ codeEditorIndex: codeEditorIndex }));
     dispatch(setEditorPerson({ name: null, codeEditorIndex: codeEditorIndex }));
-    dispatch(
-      changeShownColor({ color: null, codeEditorIndex: codeEditorIndex })
-    );
     dispatch(setInputFieldBlurred());
   };
 
@@ -151,20 +143,22 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   const isHiddenStyle = {
     ...codeEditor,
     height: isHidden ? "30px" : height,
-    border: isShown ? `2px solid ${shownColor}` : "none",
+    border: shownColor ? `2px solid ${shownColor}` : "none",
   };
 
   return (
     <div
       className={styles["code-editor"]}
-      onClick={() => {
+      onClick={(event) => {
+        changeColor();
+        event.preventDefault();
+      }}
+      onDoubleClick={() => {
         handleStartIsShown();
         if (isShown) {
-          console.log(isShown);
           if (editorPerson === null || myName === editorPerson) {
             dispatch(setCodeEditorIndex(codeEditorIndex));
             setIsClicked(true);
-            //setIsDoubleClicked(true);
             dispatch(showEditPointer());
           }
         }
@@ -175,7 +169,6 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
           })
         );
       }}
-      onDoubleClick={handleDoubleClick}
       onBlur={() => {
         // TODO: 하이라이트 해제되었을 떄 수정 필요 (한나/윤진)
         // handleFinishIsShown();
@@ -285,7 +278,6 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
             className={styles["monaco-editor"]}
             file={codeEditors[codeEditorIndex].canvasName}
             fileType={codeEditors[codeEditorIndex].fileType}
-            readOnly={!isDoubleClicked}
             style={{ height: height - 50 }}
           />
           {/* comment 화면 처리 */}
