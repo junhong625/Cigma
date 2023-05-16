@@ -1,15 +1,11 @@
 package com.cigma.cigma.service;
 
-import com.amazonaws.services.ec2.AmazonEC2Client;
-import com.cigma.cigma.common.SecurityUtils;
 import com.cigma.cigma.dto.request.CanvasJoinRequest;
 import com.cigma.cigma.dto.response.CanvasGetResponse;
 import com.cigma.cigma.dto.response.PodsGetResponse;
 import com.cigma.cigma.dto.response.ProjectGetResponse;
 import com.cigma.cigma.dto.response.TeamGetResponse;
-import com.cigma.cigma.entity.Project;
 import com.cigma.cigma.handler.customException.AllCanvasUsingException;
-import com.cigma.cigma.jwt.UserPrincipal;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodList;
 import io.fabric8.kubernetes.client.Config;
@@ -22,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
