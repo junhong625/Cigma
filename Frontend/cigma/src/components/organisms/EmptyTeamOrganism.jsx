@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "../../styles/organisms/EmptyTeamOrganism.module.scss";
-import emptyfiles from "../../assets/3dFileIcon.png";
+
 import { FaFolder } from "react-icons/fa";
 function EmptyTeamOrganism() {
   return (
