@@ -10,6 +10,7 @@ import com.cigma.cigma.dto.response.TeamGetResponse;
 import com.cigma.cigma.entity.Project;
 import com.cigma.cigma.handler.customException.AllCanvasUsingException;
 import com.cigma.cigma.jwt.UserPrincipal;
+import com.cigma.cigma.repository.TeamRepository;
 import io.kubernetes.client.custom.IntOrString;
 import io.kubernetes.client.openapi.ApiClient;
 import io.kubernetes.client.openapi.Configuration;
@@ -38,13 +39,14 @@ public class CanvasServiceImpl implements CanvasService{
     private CoreV1Api api;
 
     @Override
-    public PodsGetResponse createPod(String name) throws Exception {
+    public PodsGetResponse createPod(CanvasJoinRequest request) throws Exception {
         try {
+            String name = projectService.getProject(request.getPjtIdx()).getProjectName();
             // Pod의 이름이 중복되지 않는지 체크 필요
             //
             ////////////////////////////////////
             // 미 사용중인 port 번호 찾는 로직 필요
-            int port = 80;
+            int port = 5000;
             //
             ////////////////////////////////////
             V1ContainerPort v1ContainerPort = new V1ContainerPort().containerPort(port).protocol("TCP");
@@ -61,7 +63,7 @@ public class CanvasServiceImpl implements CanvasService{
                                         add(new V1Container()
                                                 .name(name + "-container")
                                                 // Cigma ide image 설정 필요
-                                                .image("nginx")
+                                                .image("junhong625/cigma_server")
                                                 .ports(
                                                         new ArrayList<V1ContainerPort>() {{
                                                             add(v1ContainerPort);

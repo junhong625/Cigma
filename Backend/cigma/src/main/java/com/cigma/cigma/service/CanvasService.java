@@ -9,7 +9,7 @@ public interface CanvasService {
 
     CanvasGetResponse joinCanvas(CanvasJoinRequest request) throws Exception;
 
-    PodsGetResponse createPod(String name) throws Exception;
+    PodsGetResponse createPod(CanvasJoinRequest request) throws Exception;
 
     void deletePod(String name) throws Exception;
 }

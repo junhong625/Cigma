@@ -23,11 +23,11 @@ public class CanvasController {
         return ResponseHandler.generateResponse(true, "컨테이너 조회", HttpStatus.OK, canvasService.getPods());
     }
 
-    @PostMapping()
-    public CustomResponseEntity<? extends Object> joinCanvas(@RequestBody CanvasJoinRequest request) throws Exception {
-        canvasService.connect();
-        return ResponseHandler.generateResponse(true, "캔버스 접속", HttpStatus.OK, canvasService.joinCanvas(request));
-    }
+//    @PostMapping()
+//    public CustomResponseEntity<? extends Object> joinCanvas(@RequestBody CanvasJoinRequest request) throws Exception {
+//        canvasService.connect();
+//        return ResponseHandler.generateResponse(true, "캔버스 접속", HttpStatus.OK, canvasService.joinCanvas(request));
+//    }
 
 //    @PostMapping()
 //    public CustomResponseEntity<? extends Object> setCanvas(@RequestBody CanvasCreateRequest request) throws Exception {
@@ -35,10 +35,10 @@ public class CanvasController {
 //    }
 
 
-//    @PostMapping()
-//    public CustomResponseEntity<? extends Object> createPod(@RequestBody CanvasCreateRequest request) throws Exception {
-//        return ResponseHandler.generateResponse(true, "Pod 생성", HttpStatus.OK, canvasService.createPod(request.getName()));
-//    }
+    @PostMapping()
+    public CustomResponseEntity<? extends Object> createPod(@RequestBody CanvasJoinRequest request) throws Exception {
+        return ResponseHandler.generateResponse(true, "Pod 생성", HttpStatus.OK, canvasService.createPod(request));
+    }
 //
 //    @DeleteMapping()
 //    public CustomResponseEntity<? extends Object> deletePod(@RequestBody CanvasCreateRequest request) throws Exception {
