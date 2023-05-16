@@ -43,7 +43,7 @@ const EditorOrganism = React.memo(({ file, fileType = "text", readOnly }) => {
         language={fileType}
         onMount={handleEditorDidMount}
         options={{
-          fontSize: 14,
+          fontSize: 18,
           minimap: { enabled: true },
           // 서버 연결된 이후에는, 더블클릭 &&  myName === editorPerson일때 편집가능해야해
           //readOnly: readOnly && myName === editorPerson ? false : true,

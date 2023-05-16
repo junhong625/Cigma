@@ -42,7 +42,7 @@ const CursorAtom = React.memo(({ cursor, color, name }) => {
         <p
           style={{
             whiteSpace: "nowrap",
-            fontSize: 13,
+            fontSize: 16,
             color: "white",
           }}
         >

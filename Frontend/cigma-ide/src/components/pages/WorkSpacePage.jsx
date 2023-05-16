@@ -23,14 +23,14 @@ import CursorAtom from "../atoms/CursorAtom";
 import { provider, awareness } from "../../store/initYDoc";
 import { USER_NAMES, USER_COLORS } from "../../constants";
 
-const random = (arr) => {
-  return arr[Math.floor(Math.random() * arr.length)];
-};
+// const random = (arr) => {
+//   return arr[Math.floor(Math.random() * arr.length)];
+// };
 
-const name = random(USER_NAMES);
-const color = random(USER_COLORS);
+// const name = random(USER_NAMES);
+// const color = random(USER_COLORS);
 
-awareness.setLocalState({ name, color });
+// awareness.setLocalState({ name, color, isActive: false });
 
 let isFirstRender = true;
 
@@ -153,6 +153,8 @@ const WorkSpacePage = ({ widthLeft, heightBottom }) => {
 
   return (
     <div
+      onPointerEnter={() => awareness.setLocalStateField("isActive", true)}
+      onPointerLeave={() => awareness.setLocalStateField("isActive", false)}
       ref={boardRef}
       className={styles["artboard-wrapper"]}
       onPointerMove={handlePointMove}

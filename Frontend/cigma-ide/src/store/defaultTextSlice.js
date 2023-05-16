@@ -7,7 +7,7 @@ const initialState = {
   // 텍스트 두께
   thickness: 1,
   // 택스트 사이즈
-  fontSize: 12,
+  fontSize: 22,
 };
 
 const defaultTextSlice = createSlice({

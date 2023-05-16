@@ -22,6 +22,9 @@ import { selectRunFile } from "../../store/runFileSlice";
 import { fitAddon, socket } from "../../store/initTerm";
 import { runLang } from "../../constants/typeLang";
 import { selectTermVisible } from "../../store/toolSlice";
+import { awareness } from "../../store/initYDoc";
+import { useUsers } from "y-presence";
+import UserToken from "../atoms/UserToken";
 /*
 추가적인 기능을 plugin 방식으로 추가할 경우
 해당 부분을 setting 관련 파일에서 plugin을 
@@ -30,6 +33,7 @@ import { selectTermVisible } from "../../store/toolSlice";
 */
 
 const HeaderOrganism = () => {
+  const users = useUsers(awareness);
   const dispatch = useDispatch();
   const currentTool = useSelector(selectCurrentTool);
   const isTermVisible = useSelector(selectTermVisible);
@@ -67,6 +71,20 @@ const HeaderOrganism = () => {
         {teamName ? teamName + "/" + projectName : "untitled"}
       </div>
       <div className={styles.headerRightDiv}>
+        {Array.from(users.entries()).map(([key, value], index) => {
+          if (!value.color || value.isActive === undefined) {
+            return null;
+          }
+          return (
+            <UserToken
+              key={key}
+              name={value.name}
+              isActive={value.isActive}
+              color={value.color}
+              image={value.avatar.image}
+            />
+          );
+        })}
         <div
           className={styles.runIconBtn}
           onClick={() => {

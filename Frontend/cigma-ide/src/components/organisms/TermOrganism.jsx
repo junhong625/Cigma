@@ -2,8 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { XTerm } from "../../library/xterm-for-react";
 import styles from "../../styles/organisms/TermOrganism.module.scss";
 import { Resizable } from "re-resizable";
-import { useSelector } from "react-redux";
-import { selectTermVisible } from "../../store/toolSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectTermVisible,
+  setInputFieldBlurred,
+  setInputFieldFocused,
+} from "../../store/toolSlice";
 import useTermWs from "../../hooks/useTermWs";
 import { fitAddon, socket } from "../../store/initTerm";
 
@@ -11,6 +15,7 @@ const TermOrganism = ({ widthRight, setWidthRight, defaultWidthRight }) => {
   const xtermRef = useRef(null);
   const handleTerm = useSelector(selectTermVisible);
   const onData = useTermWs(socket);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     xtermRef.current.terminal.cursorBlink = true;
@@ -20,6 +25,8 @@ const TermOrganism = ({ widthRight, setWidthRight, defaultWidthRight }) => {
   }, []);
   return (
     <Resizable
+      onClick={() => dispatch(setInputFieldFocused())}
+      onBlur={() => dispatch(setInputFieldBlurred())}
       size={{ width: widthRight, height: "100%" }}
       minWidth={handleTerm ? 240 : 0}
       maxWidth={"35%"}
