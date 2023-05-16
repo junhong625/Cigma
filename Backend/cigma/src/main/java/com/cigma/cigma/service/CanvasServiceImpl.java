@@ -205,7 +205,7 @@ public class CanvasServiceImpl implements CanvasService{
     }
 
     public void connect() throws Exception {
-        ApiClient client = Config.defaultClient();
+        ApiClient client = Config.defaultClient().setBasePath("http://127.0.0.1:6443");
         log.info("basePath : " + client.getBasePath());
         Configuration.setDefaultApiClient(client);
         log.info("connect k3s");
