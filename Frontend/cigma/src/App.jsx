@@ -11,6 +11,7 @@ import LoadingAtom from "./components/atoms/LoadingAtom";
 import LoginPage from "./components/pages/LoginPage";
 import SignUpPage from "./components/pages/SignUpPage";
 import IdePage from "./components/pages/IdePage";
+import IdeHeaderOrganism from "./components/organisms/IdeHeaderOrganism";
 
 function App() {
   return (
@@ -34,7 +35,7 @@ function App() {
             <Route path="/projects" element={<ProjectListOrganism />} />
             <Route path="/projects/trashcan" element={<TrashListOrganism />} />
           </Route>
-          <Route path="/test" element={<IdePage />} />
+          <Route path="/test" element={<IdeHeaderOrganism />} />
         </Routes>
       </BrowserRouter>
     </div>
