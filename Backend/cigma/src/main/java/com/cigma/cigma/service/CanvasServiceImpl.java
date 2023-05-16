@@ -34,7 +34,7 @@ public class CanvasServiceImpl implements CanvasService{
     private final RedisTemplate redisTemplate;
     private final ProjectServiceImpl projectService;
     private final TeamServiceImpl teamService;
-    private final String namespace = "cigma";
+    private final String namespace = "default";
     private CoreV1Api api;
 
     @Override
