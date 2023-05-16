@@ -212,6 +212,7 @@ public class CanvasServiceImpl implements CanvasService{
                 .withPassword("K103e214ca89e0b63176b529cf973c760a9313e8df2b8880660bb4e22919da3b28a::server:46f187721f35e22dc0a85381bf1adf09")
                 .build();
         client = new DefaultKubernetesClient(config);
+        log.info("k3s version : " + client.getKubernetesVersion());
 //        ApiClient client = ClientBuilder.kubeconfig(KubeConfig.loadKubeConfig(new FileReader(k3sConfigPath))).build();
 //        log.info("basePath : " + client.getBasePath());
 //        Configuration.setDefaultApiClient(client);
