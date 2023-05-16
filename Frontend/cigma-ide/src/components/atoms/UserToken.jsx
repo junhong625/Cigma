@@ -13,6 +13,7 @@ const UserToken = ({ name, isActive, color, image }) => {
         <div
           className={styles["circle-image"]}
           style={{
+            backgroundColor: `${isActive ? color : "grey"}`,
             border: `3px solid ${isActive ? color : "grey"}`,
             marginRight: 5,
           }}
@@ -20,7 +21,7 @@ const UserToken = ({ name, isActive, color, image }) => {
           onMouseLeave={handleHover}
         >
           <img
-            src={image}
+            src={image != null ? image : "./assets/img/default_avatar.png"}
             alt="이미지 설명"
             style={isActive ? null : { filter: "grayscale(60%)" }}
           />

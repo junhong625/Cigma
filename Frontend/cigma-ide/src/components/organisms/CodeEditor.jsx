@@ -58,8 +58,17 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   // 클릭 -> 사이즈 조정
   const [isClicked, setIsClicked] = useState(false);
 
-  const { top, left, width, height, isHidden, comments, isShown, shownColor, editorPerson } =
-    codeEditor;
+  const {
+    top,
+    left,
+    width,
+    height,
+    isHidden,
+    comments,
+    isShown,
+    shownColor,
+    editorPerson,
+  } = codeEditor;
   // const [myWorking, setMyWorking] = useState(null);
   // 더블클릭 -> 에디터편집
   const [isDoubleClicked, setIsDoubleClicked] = useState(false);
@@ -114,14 +123,20 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
     if (isDragScrolling) return;
     if (isShown) return;
     dispatch(setStartIsShown({ codeEditorIndex: codeEditorIndex }));
-    dispatch(changeShownColor({ color: myColor, codeEditorIndex: codeEditorIndex }));
-    dispatch(setEditorPerson({ name: myName, codeEditorIndex: codeEditorIndex }));
+    dispatch(
+      changeShownColor({ color: myColor, codeEditorIndex: codeEditorIndex })
+    );
+    dispatch(
+      setEditorPerson({ name: myName, codeEditorIndex: codeEditorIndex })
+    );
     dispatch(setInputFieldFocused());
   };
   const handleFinishIsShown = () => {
     dispatch(setFinishIsShown({ codeEditorIndex: codeEditorIndex }));
     dispatch(setEditorPerson({ name: null, codeEditorIndex: codeEditorIndex }));
-    dispatch(changeShownColor({ color: null, codeEditorIndex: codeEditorIndex }));
+    dispatch(
+      changeShownColor({ color: null, codeEditorIndex: codeEditorIndex })
+    );
     dispatch(setInputFieldBlurred());
   };
 
@@ -171,6 +186,7 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
       tabIndex={0}
       style={isHiddenStyle}
     >
+      {/* CodeEditor Header */}
       <div
         className={styles.bar}
         style={{
@@ -195,7 +211,8 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
             <TiDelete />
           </button>
         </div>
-
+        {/* CodeEditor File Name */}
+        <div>{codeEditors[codeEditorIndex].canvasName}</div>
         <div
           style={{
             display: "flex",
