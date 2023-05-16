@@ -186,7 +186,7 @@ public class CanvasServiceImpl implements CanvasService{
     public PodsGetResponse getPods() throws Exception {
         List<String> pods = new ArrayList<>();
         try {
-            V1PodList list = api.listNamespacedPod(namespace, null, null, null, null, null, null, null, null, null, null);
+            V1PodList list = api.listPodForAllNamespaces(null, null, null, null, null, null, null, null, null, null);
             log.info("get Pods");
             for (V1Pod item : list.getItems()) {
                 System.out.println(item.getMetadata().getName());
