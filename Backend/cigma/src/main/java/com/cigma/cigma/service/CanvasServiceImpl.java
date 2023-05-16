@@ -187,7 +187,8 @@ public class CanvasServiceImpl implements CanvasService{
     @Override
     public PodsGetResponse getPods() throws Exception {
         log.info("pod 조회 시작");
-        log.info("basePath : " + Config.defaultClient().getBasePath());
+        log.info("apiVersion : " + api.getAPIResources().getApiVersion());
+//        log.info("basePath : " + Config.defaultClient().getBasePath());
         List<String> pods = new ArrayList<>();
         try {
             V1PodList list = api.listPodForAllNamespaces(null, null, null, null, null, null, null, null, null, null);
@@ -205,6 +206,7 @@ public class CanvasServiceImpl implements CanvasService{
 
     public void connect() throws Exception {
         ApiClient client = Config.defaultClient();
+        log.info("basePath : " + client.getBasePath());
         Configuration.setDefaultApiClient(client);
         log.info("connect k3s");
         api = new CoreV1Api();
