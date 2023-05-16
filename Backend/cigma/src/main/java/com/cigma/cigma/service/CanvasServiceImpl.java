@@ -186,6 +186,8 @@ public class CanvasServiceImpl implements CanvasService{
     // Pods내에는 여러개의 컨테이너 존재도 가능
     @Override
     public PodsGetResponse getPods() throws Exception {
+        log.info("pod 조회 시작");
+        log.info("basePath : " + Config.defaultClient().getBasePath());
         List<String> pods = new ArrayList<>();
         try {
             V1PodList list = api.listPodForAllNamespaces(null, null, null, null, null, null, null, null, null, null);
@@ -195,7 +197,6 @@ public class CanvasServiceImpl implements CanvasService{
                 System.out.println(item.getSpec().getContainers().get(0).getPorts());
                 pods.add(item.getMetadata().getName());
             }
-            log.info("basePath : " + Config.defaultClient().getBasePath());
         } catch (Exception e) {
             log.info(e.getMessage());
         }
