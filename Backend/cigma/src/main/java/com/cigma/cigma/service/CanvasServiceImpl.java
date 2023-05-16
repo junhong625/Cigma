@@ -16,13 +16,16 @@ import io.kubernetes.client.openapi.ApiClient;
 import io.kubernetes.client.openapi.Configuration;
 import io.kubernetes.client.openapi.apis.CoreV1Api;
 import io.kubernetes.client.openapi.models.*;
+import io.kubernetes.client.util.ClientBuilder;
 import io.kubernetes.client.util.Config;
+import io.kubernetes.client.util.KubeConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -36,6 +39,7 @@ public class CanvasServiceImpl implements CanvasService{
     private final ProjectServiceImpl projectService;
     private final TeamServiceImpl teamService;
     private final String namespace = "default";
+    private final String k3sConfigPath = "/config/k3s.yaml";
     private CoreV1Api api;
 
     @Override
@@ -205,7 +209,8 @@ public class CanvasServiceImpl implements CanvasService{
     }
 
     public void connect() throws Exception {
-        ApiClient client = Config.defaultClient().setBasePath("http://127.0.0.1:6443");
+
+        ApiClient client = ClientBuilder.kubeconfig(KubeConfig.loadKubeConfig(new FileReader(k3sConfigPath))).build();
         log.info("basePath : " + client.getBasePath());
         Configuration.setDefaultApiClient(client);
         log.info("connect k3s");
