@@ -16,68 +16,61 @@
 }
 
 .bar {
-  height: 30px;
-  background-color: #d7b3ba;
+  height: 50px;
+  background-color: #3f474f;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   z-index: 2;
 }
 
-.hidden-bar {
-  position: absolute;
-  height: 30px;
-  background-color: #d7b3ba;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
+// .hidden-bar {
+//   position: absolute;
+//   height: 30px;
+//   background-color: #d7b3ba;
+//   display: flex;
+//   justify-content: flex-end;
+//   align-items: center;
+// }
 
-.resizeButton {
-  width: 10px;
-  height: 100%;
-  background-color: #aaa;
-  cursor: ew-resize;
-}
-
-.closeButton {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
-  background-color: #ddd;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-  &:hover {
-    background-color: #aaa;
-  }
-}
+// .resizeButton {
+//   width: 10px;
+//   height: 100%;
+//   background-color: #aaa;
+//   cursor: ew-resize;
+// }
 
 .showButton {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  padding: 5px;
-  background-color: #eee;
+  // width: 20px;
+  // height: 20px;
+  font-size: 1.5em;
+  background-color: transparent;
   border: none;
   cursor: pointer;
-  &:hover {
-    background-color: #ccc;
-  }
+  // margin: 1em;
+  color: white;
 }
 
 .commentButton {
-  width: 20px;
-  height: 20px;
-  position: absolute;
-  left: 10px;
-  padding: 5px;
-  background-color: #eee;
+  // width: 20px;
+  // height: 20px;
+  font-size: 1.5em;
+  background-color: transparent;
   border: none;
-  cursor: poiniter;
-  &:hover {
-    background-color: #ccc;
-  }
+  cursor: pointer;
+  // margin: 1em;
+  color: white;
+}
+
+.closeButton {
+  // width: 20px;
+  // height: 20px;
+  font-size: 1.5em;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  // margin: 1em;
+  color: white;
 }
 
 .comment {

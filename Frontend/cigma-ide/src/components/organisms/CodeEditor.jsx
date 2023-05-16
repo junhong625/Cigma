@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styles from "./CodeEditor.module.scss";
 import {
   hideEditPointer,
+  selectCurrentCodeEditorIndex,
   // selectEditPointerVisible,
   selectEditPointerVisible,
   selectIsDragScrolling,
@@ -19,8 +20,10 @@ import Comment from "./Comment";
 
 import {
   changeShownColor,
+  deleteCodeEditor,
   hideCodeEditor,
   selectAllCodeEditor,
+  selectCodeEditorLength,
   setEditorPerson,
   setFinishIsShown,
   setStartIsShown,
@@ -40,11 +43,16 @@ const directions = {
   SE: "se",
   SW: "sw",
 };
+
+// icons
+import { FaComments } from "react-icons/fa";
+import { VscTriangleDown, VscTriangleUp } from "react-icons/vsc";
+import { TiDelete } from "react-icons/ti";
 const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   const dispatch = useDispatch();
   const canvasRef = useRef();
   const codeEditors = useSelector(selectAllCodeEditor);
-  // const { top, left, width, height, isHidden, comments } = codeEditor;
+  const workingEditorIndex = useSelector(selectCurrentCodeEditorIndex);
   // 클릭 -> 사이즈 조정
   const [isClicked, setIsClicked] = useState(false);
 
@@ -60,8 +68,6 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
     editorPerson,
   } = codeEditor;
 
-  // 에디터 상단 바
-  // const [isHidden, setIsHidden] = useState(false);
   const isDragScrolling = useSelector(selectIsDragScrolling);
 
   // comment 우측
@@ -123,12 +129,14 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   const handleFinishIsShown = () => {
     dispatch(setFinishIsShown({ codeEditorIndex: codeEditorIndex }));
     dispatch(setEditorPerson({ name: null, codeEditorIndex: codeEditorIndex }));
-    // dispatch(
-    //   changeShownColor({ color: null, codeEditorIndex: codeEditorIndex })
-    // );
     dispatch(setInputFieldBlurred());
   };
 
+  // header X버튼 눌렀을 때 , 에디터 삭제하기
+  // TODO: 삭제처리맨
+  const handleDeleteClick = () => {
+    dispatch(deleteCodeEditor(workingEditorIndex));
+  };
   // comment창 크기 설정
   const commentWidth = width / 2;
   // editor 숨김처리되었을때 isHidden store 값에 따른 css 설정
@@ -179,26 +187,55 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
           width,
         }}
       >
-        <button
-          className={styles.commentButton}
-          onClick={() => {
-            if (hideComment) {
-              handleCommentClick();
-            } else {
-              handleHideCommentClick();
-            }
+        <div
+          style={{
+            display: "flex",
+            paddingLeft: "1em",
           }}
-        />
-        <button
-          className={styles.closeButton}
-          onClick={() => {
-            if (isHidden) {
-              handleShowClick();
-            } else {
-              handleHideClick();
-            }
+        >
+          <button
+            className={styles.closeButton}
+            onClick={() => {
+              //  삭제처리..
+              handleDeleteClick();
+            }}
+          >
+            <TiDelete />
+          </button>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-evenly",
+            paddingRight: "1em",
           }}
-        />
+        >
+          <button
+            className={styles.showButton}
+            onClick={() => {
+              if (isHidden) {
+                handleShowClick();
+              } else {
+                handleHideClick();
+              }
+            }}
+          >
+            {isHidden ? <VscTriangleDown /> : <VscTriangleUp />}
+          </button>
+          <button
+            className={styles.commentButton}
+            onClick={() => {
+              if (hideComment) {
+                handleCommentClick();
+              } else {
+                handleHideCommentClick();
+              }
+            }}
+          >
+            <FaComments />
+          </button>
+        </div>
       </div>
       {/* 댓글창 숨김처리 */}
       {!hideComment ? (
@@ -213,10 +250,10 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
       {!isHidden ? (
         <div
           style={{
-            top: 30,
+            top: 50,
             left: 0,
             width,
-            height: height - 30,
+            height: height - 50,
             position: "absolute",
             backgroundColor: "white",
           }}
@@ -239,7 +276,8 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
             className={styles["monaco-editor"]}
             file={codeEditors[codeEditorIndex].canvasName}
             fileType={codeEditors[codeEditorIndex].fileType}
-            style={{ height: height - 30 }}
+            readOnly={!isDoubleClicked}
+            style={{ height: height - 50 }}
           />
           {/* comment 화면 처리 */}
         </div>
