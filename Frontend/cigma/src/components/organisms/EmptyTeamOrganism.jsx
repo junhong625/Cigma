@@ -8,15 +8,6 @@ function EmptyTeamOrganism() {
       <div className={styles["empty-container"]}>
         <div className={styles.icons}>
           <FaFolder style={{ fontSize: "2em", color: "#505961" }} />
-          {/* <img
-            style={{
-              width: "2em",
-              height: "2em",
-              marginRight: "0.5em",
-            }}
-            src={emptyfiles}
-            alt="emptyfiles"
-          /> */}
           <div style={{ fontSize: "1.5em", fontWeight: "bold", color: "black" }}>
             생성된 Team이 없습니다.
           </div>
