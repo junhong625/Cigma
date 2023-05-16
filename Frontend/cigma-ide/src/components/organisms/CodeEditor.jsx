@@ -52,7 +52,7 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   const dispatch = useDispatch();
   const canvasRef = useRef();
   const codeEditors = useSelector(selectAllCodeEditor);
-  const workingEditorIndex = useSelector(selectCurrentCodeEditorIndex);
+
   // 클릭 -> 사이즈 조정
   const [isClicked, setIsClicked] = useState(false);
 
@@ -86,10 +86,15 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   const handleBlurred = (event) => {
     setIsClicked(false);
     dispatch(hideEditPointer);
+    if (editorPerson === null) {
+      dispatch(
+        changeShownColor({ color: null, codeEditorIndex: codeEditorIndex })
+      );
+    }
+    if (editorPerson !== myName) return;
     dispatch(
       changeShownColor({ color: null, codeEditorIndex: codeEditorIndex })
     );
-    if (editorPerson !== myName) return;
     handleFinishIsShown();
     dispatch(detachFile);
   };
@@ -122,6 +127,7 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
     dispatch(setInputFieldFocused());
   };
   const changeColor = () => {
+    if (editorPerson) return;
     dispatch(
       changeShownColor({ color: myColor, codeEditorIndex: codeEditorIndex })
     );
@@ -135,14 +141,14 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   // header X버튼 눌렀을 때 , 에디터 삭제하기
   // TODO: 삭제처리맨
   const handleDeleteClick = () => {
-    dispatch(deleteCodeEditor(workingEditorIndex));
+    dispatch(deleteCodeEditor(codeEditorIndex));
   };
   // comment창 크기 설정
   const commentWidth = width / 2;
   // editor 숨김처리되었을때 isHidden store 값에 따른 css 설정
   const isHiddenStyle = {
     ...codeEditor,
-    height: isHidden ? "30px" : height,
+    height: isHidden ? "50px" : height,
     border: shownColor ? `2px solid ${shownColor}` : "none",
   };
 
