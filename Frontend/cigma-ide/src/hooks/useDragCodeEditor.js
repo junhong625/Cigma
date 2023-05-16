@@ -158,6 +158,14 @@ function useDragCodeEditor(codeEditorIndex, artBoardRef, canvasRef) {
           horizontalLine.style.visibility = VER_SNAP_LINE_STYLES.VISIBLE;
           horizontalLine.style.top = nearestPossibleSnapAtY + "px";
         }
+
+        dispatch(
+          modifyCodeEditor({
+            top: originalElPositionTop + movedTop,
+            left: originalElPositionLeft + movedLeft,
+            codeEditorIndex,
+          })
+        );
       };
 
       const handleMouseUp = () => {
