@@ -147,6 +147,13 @@ const useDragText = (textRef, artBoardRef, textIndex) => {
           horizontalLine.style.top = nearestPossibleSnapAtY + "px";
         }
       };
+      dispatch(
+        modifyText({
+          top: originalElPositionTop + movedTop,
+          left: originalElPositionLeft + movedLeft,
+          textIndex,
+        })
+      );
 
       const handleMouseUp = () => {
         const newShapeTop = originalElPositionTop + movedTop;
