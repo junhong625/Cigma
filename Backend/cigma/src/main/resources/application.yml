@@ -48,7 +48,7 @@ spring:
 
   redis:
 #    host: localhost # localhost 전용
-    host: redis # Server 전용
+    host: cigma-redis # Server 전용
     port: 6379
     password: ssafy8cigmapass
 
