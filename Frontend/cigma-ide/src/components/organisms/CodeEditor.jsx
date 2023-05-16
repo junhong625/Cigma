@@ -276,7 +276,6 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
             className={styles["monaco-editor"]}
             file={codeEditors[codeEditorIndex].canvasName}
             fileType={codeEditors[codeEditorIndex].fileType}
-            readOnly={!isDoubleClicked}
             style={{ height: height - 50 }}
           />
           {/* comment 화면 처리 */}
