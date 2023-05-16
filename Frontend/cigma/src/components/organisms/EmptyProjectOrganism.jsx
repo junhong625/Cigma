@@ -12,7 +12,23 @@ function EmptyProjectOrganism() {
             생성된 프로젝트가 없습니다.
           </div>
         </div>
-        {/* 프로젝트 생성 버튼 누르기 */}
+        {/* 프로젝트 생성 버튼*/}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignContent: "center",
+          }}
+        >
+          <div
+            className={styles.button}
+            onClick={() => {
+              // 프로젝트 생성하는 액션넣어주기
+            }}
+          >
+            생성하기
+          </div>
+        </div>
       </div>
     </div>
   );
