@@ -7,9 +7,9 @@ import NavItem from "./NavItem";
  *
  * @returns 네비게이션 바의 로고 + NavItem(네비게이션 바 텍스트)
  */
-function NavLogo() {
+function NavLogo({ onClick }) {
   return (
-    <div className="logo">
+    <div className="logo" onClick={onClick}>
       <img src={logo} />
     </div>
   );
