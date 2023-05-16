@@ -11,13 +11,15 @@ import ProjectThumbNail from "../atoms/ProjectThumbNailAtom";
 import styles from "../../styles/organisms/ProjectListOrganism.module.scss";
 import { useSelector } from "react-redux";
 import { callProjects } from "../../api/project";
+import EmptyProjectOrganism from "./EmptyProjectOrganism";
+import EmptyTeamOrganism from "./EmptyTeamOrganism";
 
 function ProjectListOrganism() {
   const [openModal, team, setNowContent, setToDo, setPropFunction] = useOutletContext();
-  // team=== 해당 프로젝트를 가져온 팀 명.
+  // team === 해당 팀 정보
   // API상 필요한 정보를 context에 담아 가져올 것.
   // API 호출을 통해 해당 팀의 프로젝트를 리스트로 가져왔다고 가정
-
+  // console.log(`팀이름::::${team.teamName}`);
   /**test */
   console.log(`project list organism team info?${JSON.stringify(team)}`);
   //유저토큰
@@ -102,88 +104,95 @@ function ProjectListOrganism() {
 
   return (
     <div className={styles.container} ref={scrollRef}>
-      {projects.length === 0 ? (
-        // 모든 프로젝트가 삭제되었거나, 처음 들어온 경우인 페이지
-        // CreateTeam 기능이 있는 버튼 추가 필요
-        <div>
-          <div>프로젝트를 진행할 팀이 없습니다</div>
-          <div>만들기</div>
-        </div>
+      {team === undefined ? (
+        <>
+          <EmptyTeamOrganism></EmptyTeamOrganism>
+        </>
       ) : (
-        <div>
-          <div className={styles.title}>
-            {team.teamName}
-            <div
-              className={styles.iconWrapper}
-              style={{ backgroundColor: dropMenu ? "gray" : "" }}
-              onClick={() => {
-                setDropMenu(true);
-              }}
-            >
-              <BsList />
-            </div>
-            {dropMenu ? (
-              <>
+        <>
+          {projects.length === 0 ? (
+            // 모든 프로젝트가 삭제되었거나, 처음 들어온 경우인 페이지
+            // CreateTeam 기능이 있는 버튼 추가 필요
+            <>
+              <EmptyProjectOrganism></EmptyProjectOrganism>
+            </>
+          ) : (
+            <div>
+              <div className={styles.title}>
+                {team.teamName}
                 <div
-                  className={styles.outSide}
+                  className={styles.iconWrapper}
+                  style={{ backgroundColor: dropMenu ? "gray" : "" }}
                   onClick={() => {
-                    setDropMenu(false);
+                    setDropMenu(true);
                   }}
-                ></div>
-                <div className={styles.dropMenu}>
-                  <div
-                    onClick={() => {
-                      UserSearch();
-                    }}
-                    className={styles.menuItem}
-                  >
-                    팀원 추가
-                  </div>
-                  <div
-                    className={styles.menuItem}
-                    onClick={() => {
-                      CreateProject();
-                    }}
-                  >
-                    프로젝트 추가
-                  </div>
-                  <div
-                    onClick={() => {
-                      EditTeam();
-                    }}
-                    className={styles.menuItem}
-                  >
-                    팀명 변경
-                  </div>
-                  <div
-                    onClick={() => {
-                      DeleteTeam();
-                    }}
-                    className={styles.menuItem}
-                  >
-                    팀 삭제
-                  </div>
+                >
+                  <BsList />
                 </div>
-              </>
-            ) : null}
-          </div>
-          <hr />
-          <div className={styles.projectContainer}>
-            {projects.map((project, index) => (
-              <div key={"project" + index} className={styles.project}>
-                <ProjectThumbNail
-                  name={project.projectName}
-                  img={project.projectImageUrl}
-                  openModal={openModal}
-                  setNowContent={setNowContent}
-                  setToDo={setToDo}
-                  setPropFunction={setPropFunction}
-                  projectIdx={project.projectIdx}
-                />
+                {dropMenu ? (
+                  <>
+                    <div
+                      className={styles.outSide}
+                      onClick={() => {
+                        setDropMenu(false);
+                      }}
+                    ></div>
+                    <div className={styles.dropMenu}>
+                      <div
+                        onClick={() => {
+                          UserSearch();
+                        }}
+                        className={styles.menuItem}
+                      >
+                        팀원 추가
+                      </div>
+                      <div
+                        className={styles.menuItem}
+                        onClick={() => {
+                          CreateProject();
+                        }}
+                      >
+                        프로젝트 추가
+                      </div>
+                      <div
+                        onClick={() => {
+                          EditTeam();
+                        }}
+                        className={styles.menuItem}
+                      >
+                        팀명 변경
+                      </div>
+                      <div
+                        onClick={() => {
+                          DeleteTeam();
+                        }}
+                        className={styles.menuItem}
+                      >
+                        팀 삭제
+                      </div>
+                    </div>
+                  </>
+                ) : null}
               </div>
-            ))}
-          </div>
-        </div>
+              <hr />
+              <div className={styles.projectContainer}>
+                {projects.map((project, index) => (
+                  <div key={"project" + index} className={styles.project}>
+                    <ProjectThumbNail
+                      name={project.projectName}
+                      img={project.projectImageUrl}
+                      openModal={openModal}
+                      setNowContent={setNowContent}
+                      setToDo={setToDo}
+                      setPropFunction={setPropFunction}
+                      projectIdx={project.projectIdx}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
