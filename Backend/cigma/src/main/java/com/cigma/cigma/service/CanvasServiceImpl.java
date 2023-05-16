@@ -195,6 +195,7 @@ public class CanvasServiceImpl implements CanvasService{
                 System.out.println(item.getSpec().getContainers().get(0).getPorts());
                 pods.add(item.getMetadata().getName());
             }
+            log.info("basePath : " + Config.defaultClient().getBasePath());
         } catch (Exception e) {
             log.info(e.getMessage());
         }
