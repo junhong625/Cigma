@@ -8,16 +8,25 @@ import com.cigma.cigma.dto.response.TeamGetResponse;
 import com.cigma.cigma.handler.customException.AllCanvasUsingException;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodList;
-import io.fabric8.kubernetes.client.Config;
 import io.fabric8.kubernetes.client.ConfigBuilder;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
+import io.kubernetes.client.openapi.ApiClient;
+import io.kubernetes.client.openapi.Configuration;
+import io.kubernetes.client.openapi.apis.CoreV1Api;
+import io.kubernetes.client.openapi.models.V1Pod;
+import io.kubernetes.client.openapi.models.V1PodList;
+import io.kubernetes.client.openapi.models.V1Service;
+import io.kubernetes.client.openapi.models.V1ServiceList;
+import io.kubernetes.client.util.Config;
+import io.kubernetes.client.util.KubeConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -32,7 +41,7 @@ public class CanvasServiceImpl implements CanvasService{
     private final TeamServiceImpl teamService;
     private final String namespace = "default";
     private final String k3sConfigPath = "/config/k3s.yaml";
-    private KubernetesClient client;
+    private final KubernetesClient kubernetesClient;
 
     @Override
     public PodsGetResponse createPod(CanvasJoinRequest request) throws Exception {
@@ -182,13 +191,26 @@ public class CanvasServiceImpl implements CanvasService{
     // Pods내에는 여러개의 컨테이너 존재도 가능
     @Override
     public PodsGetResponse getPods() throws Exception {
-        log.info("pod 조회 시작");
-        List<String> pods = new ArrayList<>();
-        PodList podList = client.pods().list();
-        for (Pod pod : podList.getItems()) {
-            pods.add(pod.toString());
-            System.out.println("Pod: " + pod);
+        ApiClient client = Config.fromConfig(k3sConfigPath);
+        log.info(client.getBasePath());
+        Configuration.setDefaultApiClient(client);
+
+        CoreV1Api api = new CoreV1Api();
+        V1PodList list = api.listPodForAllNamespaces(null, null, null, null, null, null, null, null, null, null);
+        for (V1Pod item : list.getItems()) {
+            System.out.println(item.getMetadata().getName());
         }
+//        V1PodList list = api.listPodForAllNamespaces(null, null, null, null, null, null, null, null, null, null);
+//        for (V1Pod pod : list.getItems()) {
+//            System.out.println(pod.getMetadata().getName());
+//            pods.add(pod.getMetadata().getName());
+//        }
+//        log.info("version : " + kubernetesClient.getKubernetesVersion());
+//        List<String> pods = new ArrayList<>();
+//        PodList podList = kubernetesClient.pods().inNamespace("default").list();
+//        for (Pod pod : podList.getItems()) {
+//            pods.add(pod.toString());
+//            System.out.println("Pod: " + pod);
 //        log.info("apiVersion : " + api.getAPIResources().getApiVersion());
 ////        log.info("basePath : " + Config.defaultClient().getBasePath());
 //        try {
@@ -202,17 +224,18 @@ public class CanvasServiceImpl implements CanvasService{
 //        } catch (Exception e) {
 //            log.info(e.getMessage());
 //        }
-        return new PodsGetResponse(pods);
+        return new PodsGetResponse(null);
     }
 
     public void connect() throws Exception {
-        Config config = new ConfigBuilder()
-                .withMasterUrl("https://127.0.0.1:6443")
-                .withUsername("default")
-                .withPassword("K103e214ca89e0b63176b529cf973c760a9313e8df2b8880660bb4e22919da3b28a::server:46f187721f35e22dc0a85381bf1adf09")
-                .build();
-        client = new DefaultKubernetesClient(config);
-        log.info("k3s version : " + client.getKubernetesVersion());
+//        Config config = new ConfigBuilder()
+//                .withMasterUrl("http://172.26.13.160:6443")
+//                .withUsername("default")
+//                .withPassword("8b7d424305e9e3416ebdfe5819027d38")
+//                .build();
+//        client = new DefaultKubernetesClient(config);
+//        log.info("k3s server : " + client.getMasterUrl());
+//        log.info("k3s version : " + client.getKubernetesVersion());
 //        ApiClient client = ClientBuilder.kubeconfig(KubeConfig.loadKubeConfig(new FileReader(k3sConfigPath))).build();
 //        log.info("basePath : " + client.getBasePath());
 //        Configuration.setDefaultApiClient(client);
