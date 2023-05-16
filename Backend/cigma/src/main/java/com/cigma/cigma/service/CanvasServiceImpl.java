@@ -10,15 +10,12 @@ import com.cigma.cigma.dto.response.TeamGetResponse;
 import com.cigma.cigma.entity.Project;
 import com.cigma.cigma.handler.customException.AllCanvasUsingException;
 import com.cigma.cigma.jwt.UserPrincipal;
-import com.cigma.cigma.repository.TeamRepository;
-import io.kubernetes.client.custom.IntOrString;
-import io.kubernetes.client.openapi.ApiClient;
-import io.kubernetes.client.openapi.Configuration;
-import io.kubernetes.client.openapi.apis.CoreV1Api;
-import io.kubernetes.client.openapi.models.*;
-import io.kubernetes.client.util.ClientBuilder;
-import io.kubernetes.client.util.Config;
-import io.kubernetes.client.util.KubeConfig;
+import io.fabric8.kubernetes.api.model.Pod;
+import io.fabric8.kubernetes.api.model.PodList;
+import io.fabric8.kubernetes.client.Config;
+import io.fabric8.kubernetes.client.ConfigBuilder;
+import io.fabric8.kubernetes.client.DefaultKubernetesClient;
+import io.fabric8.kubernetes.client.KubernetesClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,59 +37,59 @@ public class CanvasServiceImpl implements CanvasService{
     private final TeamServiceImpl teamService;
     private final String namespace = "default";
     private final String k3sConfigPath = "/config/k3s.yaml";
-    private CoreV1Api api;
+    private KubernetesClient client;
 
     @Override
     public PodsGetResponse createPod(CanvasJoinRequest request) throws Exception {
-        try {
-            String name = projectService.getProject(request.getPjtIdx()).getProjectName();
-            // Pod의 이름이 중복되지 않는지 체크 필요
-            //
-            ////////////////////////////////////
-            // 미 사용중인 port 번호 찾는 로직 필요
-            int port = 5000;
-            //
-            ////////////////////////////////////
-            V1ContainerPort v1ContainerPort = new V1ContainerPort().containerPort(port).protocol("TCP");
-            // service 생성 시 필요한 label 생성
-            HashMap<String, String> label = new HashMap<>() {{
-                put("app", name);}};
-            // Pod 객체 생성
-            V1Pod pod = new V1Pod()
-                    .metadata(new V1ObjectMeta().name(name)
-                            .labels(label))
-                    .spec(new V1PodSpec()
-                            .containers(
-                                    new ArrayList<V1Container>() {{
-                                        add(new V1Container()
-                                                .name(name + "-container")
-                                                // Cigma ide image 설정 필요
-                                                .image("junhong625/cigma_server")
-                                                .ports(
-                                                        new ArrayList<V1ContainerPort>() {{
-                                                            add(v1ContainerPort);
-                                                        }}
-                                                ));
-                                    }}
-                            ));
-
-            log.info("pod 객체 생성");
-            V1Pod createdPod = api.createNamespacedPod(namespace, pod, null, null, null, null);
-
-            log.info("Pod created: " + createdPod.getMetadata().getName());
-//            createService(label, port);
-        } catch (Exception e) {
-            System.err.println("Exception when creating Pod: " + e.getMessage());
-        }
+//        try {
+//            String name = projectService.getProject(request.getPjtIdx()).getProjectName();
+//            // Pod의 이름이 중복되지 않는지 체크 필요
+//            //
+//            ////////////////////////////////////
+//            // 미 사용중인 port 번호 찾는 로직 필요
+//            int port = 5000;
+//            //
+//            ////////////////////////////////////
+//            V1ContainerPort v1ContainerPort = new V1ContainerPort().containerPort(port).protocol("TCP");
+//            // service 생성 시 필요한 label 생성
+//            HashMap<String, String> label = new HashMap<>() {{
+//                put("app", name);}};
+//            // Pod 객체 생성
+//            V1Pod pod = new V1Pod()
+//                    .metadata(new V1ObjectMeta().name(name)
+//                            .labels(label))
+//                    .spec(new V1PodSpec()
+//                            .containers(
+//                                    new ArrayList<V1Container>() {{
+//                                        add(new V1Container()
+//                                                .name(name + "-container")
+//                                                // Cigma ide image 설정 필요
+//                                                .image("junhong625/cigma_server")
+//                                                .ports(
+//                                                        new ArrayList<V1ContainerPort>() {{
+//                                                            add(v1ContainerPort);
+//                                                        }}
+//                                                ));
+//                                    }}
+//                            ));
+//
+//            log.info("pod 객체 생성");
+//            V1Pod createdPod = api.createNamespacedPod(namespace, pod, null, null, null, null);
+//
+//            log.info("Pod created: " + createdPod.getMetadata().getName());
+////            createService(label, port);
+//        } catch (Exception e) {
+//            System.err.println("Exception when creating Pod: " + e.getMessage());
+//        }
         return null;
     }
 
     @Override
     public void deletePod(String name) throws Exception {
         System.out.println(name);
-        api.deleteNamespacedPod(name, namespace, null, null, null, null, null, new V1DeleteOptions());
+//        api.deleteNamespacedPod(name, namespace, null, null, null, null, null, new V1DeleteOptions());
         log.info("pod 삭제 완료");
-        deleteService(name);
+//        deleteService(name);
         log.info("service 삭제 완료");
     }
 
@@ -120,25 +117,25 @@ public class CanvasServiceImpl implements CanvasService{
             binding(podName, folderName, name);
             log.info("Binding OK!");
             // 해당 바인딩에 서비스 생성
-            createService(new HashMap<String, String>() {{
-                put("app", podName);}}, name);
+//            createService(new HashMap<String, String>() {{
+//                put("app", podName);}}, name);
             // redis에 해당 key : 서비스 이름, value : 접속한 유저들의 idx 리스트
             redisTemplate.opsForValue().set(name, new ArrayList<>());
             log.info("add connect List!");
         }
         // nodePort 조회할 service
-        V1Service service = api.readNamespacedService(name, namespace, null);
-        log.info("get Service!");
-        // 유저 정보
-        UserPrincipal userPrincipal = SecurityUtils.getUserPrincipal();
-        // redis에 유저의 서비스 접속 여부 표시
-        ArrayList<Integer> connectMembers = (ArrayList<Integer>) redisTemplate.opsForValue().get(name);
-        connectMembers.add(userPrincipal.getUserIdx().intValue());
-        redisTemplate.opsForValue().set(name,connectMembers);
-        log.info("add connect List Redis!");
+//        V1Service service = api.readNamespacedService(name, namespace, null);
+//        log.info("get Service!");
+//        // 유저 정보
+//        UserPrincipal userPrincipal = SecurityUtils.getUserPrincipal();
+//        // redis에 유저의 서비스 접속 여부 표시
+//        ArrayList<Integer> connectMembers = (ArrayList<Integer>) redisTemplate.opsForValue().get(name);
+//        connectMembers.add(userPrincipal.getUserIdx().intValue());
+//        redisTemplate.opsForValue().set(name,connectMembers);
+//        log.info("add connect List Redis!");
         return CanvasGetResponse.builder()
                 .name(name)
-                .port(service.getSpec().getPorts().get(0).getNodePort())
+//                .port(service.getSpec().getPorts().get(0).getNodePort())
                 .build();
     }
 
@@ -166,24 +163,24 @@ public class CanvasServiceImpl implements CanvasService{
 
     public void binding(String podName, String folderName, String canvasName) throws Exception{
         // pod 조회
-        V1Pod pod = api.readNamespacedPod(podName, namespace, null);
-        log.info("pod 조회");
-        // pod 내부의 컨테이너에 바인딩 설정
-        V1PodSpec spec = pod.getSpec();
-        if (spec != null & spec.getContainers() != null) {
-            for (V1Container container : spec.getContainers()) {
-                log.info("pod 내부 container : " + container.getName());
-                // 컨테이너에 바인딩 설정
-                container.setVolumeMounts(Collections.singletonList(
-                        new V1VolumeMount()
-                                .name(folderName)
-                                .mountPath("/" + canvasName)));
-                log.info("바인딩 설정");
-            }
-        }
-        // 바인딩 반영
-        V1Pod updatedPod = api.replaceNamespacedPod(podName, namespace, pod, null, null, null, null);
-        log.info("바인딩 반영");
+//        V1Pod pod = api.readNamespacedPod(podName, namespace, null);
+//        log.info("pod 조회");
+//        // pod 내부의 컨테이너에 바인딩 설정
+//        V1PodSpec spec = pod.getSpec();
+//        if (spec != null & spec.getContainers() != null) {
+//            for (V1Container container : spec.getContainers()) {
+//                log.info("pod 내부 container : " + container.getName());
+//                // 컨테이너에 바인딩 설정
+//                container.setVolumeMounts(Collections.singletonList(
+//                        new V1VolumeMount()
+//                                .name(folderName)
+//                                .mountPath("/" + canvasName)));
+//                log.info("바인딩 설정");
+//            }
+//        }
+//        // 바인딩 반영
+//        V1Pod updatedPod = api.replaceNamespacedPod(podName, namespace, pod, null, null, null, null);
+//        log.info("바인딩 반영");
     }
 
     // Kubernetes에서 관리 중인 Pods(컨테이너 가져오기)
@@ -191,57 +188,67 @@ public class CanvasServiceImpl implements CanvasService{
     @Override
     public PodsGetResponse getPods() throws Exception {
         log.info("pod 조회 시작");
-        log.info("apiVersion : " + api.getAPIResources().getApiVersion());
-//        log.info("basePath : " + Config.defaultClient().getBasePath());
         List<String> pods = new ArrayList<>();
-        try {
-            V1PodList list = api.listPodForAllNamespaces(null, null, null, null, null, null, null, null, null, null);
-            log.info("get Pods");
-            for (V1Pod item : list.getItems()) {
-                System.out.println(item.getMetadata().getName());
-                System.out.println(item.getSpec().getContainers().get(0).getPorts());
-                pods.add(item.getMetadata().getName());
-            }
-        } catch (Exception e) {
-            log.info(e.getMessage());
+        PodList podList = client.pods().list();
+        for (Pod pod : podList.getItems()) {
+            pods.add(pod.toString());
+            System.out.println("Pod: " + pod);
         }
+//        log.info("apiVersion : " + api.getAPIResources().getApiVersion());
+////        log.info("basePath : " + Config.defaultClient().getBasePath());
+//        try {
+//            V1PodList list = api.listPodForAllNamespaces(null, null, null, null, null, null, null, null, null, null);
+//            log.info("get Pods");
+//            for (V1Pod item : list.getItems()) {
+//                System.out.println(item.getMetadata().getName());
+//                System.out.println(item.getSpec().getContainers().get(0).getPorts());
+//                pods.add(item.getMetadata().getName());
+//            }
+//        } catch (Exception e) {
+//            log.info(e.getMessage());
+//        }
         return new PodsGetResponse(pods);
     }
 
     public void connect() throws Exception {
-
-        ApiClient client = ClientBuilder.kubeconfig(KubeConfig.loadKubeConfig(new FileReader(k3sConfigPath))).build();
-        log.info("basePath : " + client.getBasePath());
-        Configuration.setDefaultApiClient(client);
-        log.info("connect k3s");
-        api = new CoreV1Api();
+        Config config = new ConfigBuilder()
+                .withMasterUrl("https://127.0.0.1:6443")
+                .withUsername("default")
+                .withPassword("K103e214ca89e0b63176b529cf973c760a9313e8df2b8880660bb4e22919da3b28a::server:46f187721f35e22dc0a85381bf1adf09")
+                .build();
+        client = new DefaultKubernetesClient(config);
+//        ApiClient client = ClientBuilder.kubeconfig(KubeConfig.loadKubeConfig(new FileReader(k3sConfigPath))).build();
+//        log.info("basePath : " + client.getBasePath());
+//        Configuration.setDefaultApiClient(client);
+//        log.info("connect k3s");
+//        api = new CoreV1Api();
     }
 
-    public void createService(HashMap<String, String> label, String serviceName) throws Exception {
-        int port = 5000;
-        V1Service service = new V1Service()
-                .metadata(new V1ObjectMeta().name(serviceName))
-                .spec(new V1ServiceSpec()
-                        .selector(label)
-                        .ports(
-                                new ArrayList<V1ServicePort>() {{
-                                    add(new V1ServicePort()
-                                            .protocol("TCP")
-                                            .port(port)
-                                            .targetPort(new IntOrString(port)));
-                                }}
-                        )
-                        .type("LoadBalancer"));
-
-        // Service 생성 요청
-        V1Service createdService = api.createNamespacedService(namespace, service, null, null, null, null);
-
-        log.info("Service created: " + createdService.getMetadata().getName());
-    }
-
-    public void deleteService(String name) throws Exception{
-        V1Service deletedService = api.deleteNamespacedService(name + "-service", namespace, null, null, null, null, null, null);
-    }
+//    public void createService(HashMap<String, String> label, String serviceName) throws Exception {
+//        int port = 5000;
+//        V1Service service = new V1Service()
+//                .metadata(new V1ObjectMeta().name(serviceName))
+//                .spec(new V1ServiceSpec()
+//                        .selector(label)
+//                        .ports(
+//                                new ArrayList<V1ServicePort>() {{
+//                                    add(new V1ServicePort()
+//                                            .protocol("TCP")
+//                                            .port(port)
+//                                            .targetPort(new IntOrString(port)));
+//                                }}
+//                        )
+//                        .type("LoadBalancer"));
+//
+//        // Service 생성 요청
+//        V1Service createdService = api.createNamespacedService(namespace, service, null, null, null, null);
+//
+//        log.info("Service created: " + createdService.getMetadata().getName());
+//    }
+//
+//    public void deleteService(String name) throws Exception{
+//        V1Service deletedService = api.deleteNamespacedService(name + "-service", namespace, null, null, null, null, null, null);
+//    }
 
     public String createFolder(String name) throws Exception {
         String folderPath = "/canvas/" + name + "/workspace/project";
