@@ -5,7 +5,7 @@ import com.cigma.cigma.dto.response.CanvasGetResponse;
 import com.cigma.cigma.dto.response.PodsGetResponse;
 
 public interface CanvasService {
-    PodsGetResponse getPods() throws Exception;
+    PodsGetResponse getPods(String url) throws Exception;
 
     CanvasGetResponse joinCanvas(CanvasJoinRequest request) throws Exception;
 
