@@ -7,6 +7,7 @@ import com.cigma.cigma.dto.response.ProjectGetResponse;
 import com.cigma.cigma.dto.response.TeamGetResponse;
 import com.cigma.cigma.handler.customException.AllCanvasUsingException;
 
+import com.mysql.cj.xdevapi.Client;
 import io.kubernetes.client.openapi.ApiClient;
 import io.kubernetes.client.openapi.Configuration;
 import io.kubernetes.client.openapi.apis.CoreV1Api;
@@ -22,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -194,11 +196,13 @@ public class CanvasServiceImpl implements CanvasService{
 // API 클라이언트 생성
 //        client.setBasePath(url);
         log.info("url: " + url);
-        ApiClient client = Config.defaultClient();
-        client.setAccessToken("eyJhbGciOiJSUzI1NiIsImtpZCI6ImtxQ2ZTZ0VIUXNQeHVWcnhYN3JiRU9idUplMkpfQWFwbWVwMFlYSUZhTWcifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiLCJrM3MiXSwiZXhwIjoxNzE1ODM4NzA1LCJpYXQiOjE2ODQzMDI3MDUsImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwia3ViZXJuZXRlcy5pbyI6eyJuYW1lc3BhY2UiOiJkZWZhdWx0IiwicG9kIjp7Im5hbWUiOiJjaWdtYS1zZXJ2ZXItNWY4NWRiNDU5Ni01emhwbCIsInVpZCI6ImJlNjEzODg4LTJmYWUtNDAzYy04ZmY5LWY1ZTQ2ZmMxY2E0ZSJ9LCJzZXJ2aWNlYWNjb3VudCI6eyJuYW1lIjoiZGVmYXVsdCIsInVpZCI6IjI3M2VlY2M2LTEwOTYtNDNkMC04NzMzLWRkYTk5NDYwZTJjZiJ9LCJ3YXJuYWZ0ZXIiOjE2ODQzMDYzMTJ9LCJuYmYiOjE2ODQzMDI3MDUsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpkZWZhdWx0OmRlZmF1bHQifQ.nFA1XyFyLi_poadHO9SnCrjxYxAHmVFh6LqiFHZnq63IPTIxwneIRic-nSzvJZ9ljhP7HuF7RTiV1NwhrsgQ5cW4IkciO-RKA3cvAKQW0b0WPc9FaQcNLECD35za0asWzeELJWBWVWjp-v7bntqfukRqynTBGuGd7Ha97cPjKe0xQxg49pze_JIJVlHYVbBq88BhrTMswOt_5XLpPdXjI7SD4rKxtI8Dm0Zs7A4M_gtTURQz93s7Q8OJ0oNlRTaZrVph0UPbURyCIv8Q_FROrbDZy5k3yFrVnrwoFc");
-//        client.setBasePath(url);
-//        client.
-//        Configuration.setDefaultApiClient(client);
+        String serviceAccountTokenPath = "/var/run/secrets/kubernetes.io/serviceaccount/token"; // Service Account Token 파일 경로
+
+        KubeConfig kubeConfig = KubeConfig.loadKubeConfig(new FileReader(k3sConfigPath));
+        ApiClient client = ClientBuilder.kubeconfig(kubeConfig).build();
+        client.setAccessToken(new String(Files.readAllBytes(Paths.get(serviceAccountTokenPath))));
+
+        Configuration.setDefaultApiClient(client);
         log.info("basePath : " + client.getBasePath());
 
         CoreV1Api api = new CoreV1Api();
