@@ -45,7 +45,7 @@ public class UserController {
     public CustomResponseEntity<Object> signUp(@RequestBody UserCreateRequest userUpdateRequest) {
         try {
             userService.signUp(userUpdateRequest);
-            return ResponseHandler.generateResponse(true, "로그인 성공", HttpStatus.CREATED, null);
+            return ResponseHandler.generateResponse(true, "회원가입 성공", HttpStatus.CREATED, null);
         } catch (Exception e) {
             return ResponseHandler.generateResponse(false, "이미 등록된 이메일입니다.", HttpStatus.BAD_REQUEST, null);
         }

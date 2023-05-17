@@ -61,11 +61,14 @@ public class CanvasServiceImpl implements CanvasService{
         String containerId;
         ProjectGetResponse project = projectService.getProject(request.getPjtIdx());
         TeamGetResponse team = teamService.getTeam(project.getTeamIdx());
+        log.info("teamIdx : " + team.getTeamIdx());
+        log.info("pjtIdx : " + project.getProjectIdx());
         // 접속하려는 pjt가 해당 유저의 pjt가 맞는지 확인
         projectService.checkAuthorization(project.getProjectIdx());
         log.info("Authorization OK");
         // folder 이름
         String name = team.getTeamName() + "_" + project.getProjectName();
+        log.info("name : " + name);
         // 현재 누가 이미 캔버스에 접속했는지 확인
         Object isUsing = isUsingCanvas(name);
         // 누가 접속하지 않았다면
