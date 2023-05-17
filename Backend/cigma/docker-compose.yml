@@ -4,7 +4,7 @@ version: "3.7"
 #    external: true
 #    name: cigma
 services:
-  database:
+  mysql:
     image: mysql:8.0.30
     environment:
       MYSQL_DATABASE: cigma
@@ -22,7 +22,7 @@ services:
       - "--collation-server=utf8mb4_unicode_ci"
     restart: always
 
-  application:
+  server:
     build: .
     networks:
       - default
