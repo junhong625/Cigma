@@ -5,11 +5,7 @@ import com.cigma.cigma.dto.response.CanvasGetResponse;
 import com.cigma.cigma.dto.response.PodsGetResponse;
 
 public interface CanvasService {
-    PodsGetResponse getPods(String url) throws Exception;
+    CanvasGetResponse openCanvas(CanvasJoinRequest request) throws Exception;
 
-    CanvasGetResponse joinCanvas(CanvasJoinRequest request) throws Exception;
-
-    PodsGetResponse createPod(CanvasJoinRequest request) throws Exception;
-
-    void deletePod(String name) throws Exception;
+    PodsGetResponse closeCanvas(CanvasJoinRequest request) throws Exception;
 }

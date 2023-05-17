@@ -5,18 +5,12 @@ import com.cigma.cigma.dto.request.UserLoginRequest;
 import com.cigma.cigma.dto.response.UserLoginResponse;
 import com.cigma.cigma.service.CanvasServiceImpl;
 import com.cigma.cigma.service.UserServiceImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-import io.kubernetes.client.openapi.ApiClient;
-import io.kubernetes.client.openapi.ApiException;
-import io.kubernetes.client.openapi.Configuration;
-import io.kubernetes.client.openapi.apis.CoreV1Api;
-import io.kubernetes.client.openapi.models.V1Pod;
-import io.kubernetes.client.openapi.models.V1PodList;
-import io.kubernetes.client.util.Config;
-import io.kubernetes.client.util.KubeConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -24,7 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.http.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.io.FileReader;
@@ -32,6 +30,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -163,17 +162,41 @@ class CigmaApplicationTests {
 	}
 
 	@Test
-	@DisplayName("connect k3s")
-	public void connectK3s() throws IOException, ApiException {
-		ApiClient client = Config.fromConfig(KubeConfig.loadKubeConfig(new FileReader("/Users/ahnjunhong/Downloads/k3s.yaml")));
-		client.setBasePath("https://k8a601.p.ssafy.io");
-		client.setVerifyingSsl(false);
-		Configuration.setDefaultApiClient(client);
-		CoreV1Api api = new CoreV1Api();
-		System.out.println("connect : k3s");
-		V1PodList v1PodList = api.listNamespacedPod("default", null, null, null, null, null, null, null, null, null, null);
-		for (V1Pod pod : v1PodList.getItems()) {
-			System.out.println(pod.getMetadata().getName());
-		}
+	@DisplayName("check Response fastAPI")
+	public void check() throws JsonProcessingException {
+		RestTemplate restTemplate = new RestTemplate();
+		// 요청 헤더 설정
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		// 요청 바디 설정
+		MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
+//		requestBody.add("port", String.valueOf(port));
+//		requestBody.add("teamName", teamName);
+//		requestBody.add("projectName", projectName);
+
+		// 요청 엔티티 생성
+		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(requestBody, headers);
+
+		// CURL 요청 보내기
+		ResponseEntity<String> responseEntity = restTemplate.exchange("http://127.0.0.1:8000/", HttpMethod.GET, requestEntity, String.class);
+		ObjectMapper objectMapper = new ObjectMapper();
+		Map<String, Object> map = objectMapper.readValue(responseEntity.getBody(), Map.class);
+		System.out.println(map.get("status"));
+		System.out.println(map.get("port"));
 	}
+//	@Test
+//	@DisplayName("connect k3s")
+//	public void connectK3s() throws IOException, ApiException {
+//		ApiClient client = Config.fromConfig(KubeConfig.loadKubeConfig(new FileReader("/Users/ahnjunhong/Downloads/k3s.yaml")));
+//		client.setBasePath("https://k8a601.p.ssafy.io");
+//		client.setVerifyingSsl(false);
+//		Configuration.setDefaultApiClient(client);
+//		CoreV1Api api = new CoreV1Api();
+//		System.out.println("connect : k3s");
+//		V1PodList v1PodList = api.listNamespacedPod("default", null, null, null, null, null, null, null, null, null, null);
+//		for (V1Pod pod : v1PodList.getItems()) {
+//			System.out.println(pod.getMetadata().getName());
+//		}
+//	}
 }
