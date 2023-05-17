@@ -92,12 +92,12 @@ function useGlobalKeyboardShortCut() {
 
     console.log("useGlobalKeyboardShortCut");
     // window.addEventListener("keydown", deleteCanvasShortCut);
-    window.addEventListener("keydown", codeEditorShortCut);
+    // window.addEventListener("keydown", codeEditorShortCut);
     window.addEventListener("keydown", textToolShortCut);
     window.addEventListener("keydown", selectorToolShortCut);
     return () => {
       // window.removeEventListener("keydown", deleteCanvasShortCut);
-      window.removeEventListener("keydown", codeEditorShortCut);
+      // window.removeEventListener("keydown", codeEditorShortCut);
       window.removeEventListener("keydown", textToolShortCut);
       window.removeEventListener("keydown", selectorToolShortCut);
       window.removeEventListener("keydown", selectorResetShortCut);
