@@ -78,8 +78,8 @@ public class CanvasServiceImpl implements CanvasService{
             Long cnt = Long.parseLong(countCanvas());
             log.info("현재 " + cnt.toString() + "개로 canvas 생성 가능");
             // 폴더 생성
-            String folderName = createFolder(name); // /canvas/teamName_projectName/workspace/project
-            log.info("Create Folder! : " + folderName);
+//            String folderName = createFolder(name); // /canvas/teamName_projectName/workspace/project
+//            log.info("Create Folder! : " + folderName);
             // 접속 가능한 port 찾기(범위 8000~9000)
             port = randomPort();
             log.info("Find Empty Port! : " + port);
@@ -188,7 +188,7 @@ public class CanvasServiceImpl implements CanvasService{
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(requestBody, headers);
 
         // CURL 요청 보내기
-        ResponseEntity<String> responseEntity = restTemplate.exchange("http://host.docker.internal:3000/", HttpMethod.POST, requestEntity, String.class);
+        ResponseEntity<String> responseEntity = restTemplate.exchange("http://host.docker.internal:3000/ide/create", HttpMethod.POST, requestEntity, String.class);
 
         // 응답 결과 출력
         ObjectMapper objectMapper = new ObjectMapper();
