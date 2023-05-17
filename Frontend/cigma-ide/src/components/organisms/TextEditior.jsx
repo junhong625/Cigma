@@ -10,7 +10,7 @@ import {
   setInputFieldFocused,
   setTextEditorIndex,
 } from "../../store/toolSlice";
-import { modifyText } from "../../store/textSlice";
+import { modifyText, deleteText } from "../../store/textSlice";
 import { activateSelector } from "../../store/toolSlice";
 import style from "../../styles/organisms/TextEditor.module.scss";
 // import { SHAPE_TEXT_STYLES } from "../../constants/styles";
@@ -32,22 +32,42 @@ const TextEditior = ({ textIndex, artBoardRef, ...textEditor }) => {
 
   const [isDoubleClicked, setIsDoubleClicked] = useState(false);
   const handleBlur = (event) => {
-    const newText = {
-      // 택스트 내용
-      text: event.target.textContent,
-      // 색상
-      color: defaultColor,
-      // 폰트사이즈
-      fontSize: defaultFontSize,
-      // 높이
-      height: event.target.clientHeight,
-      // 가로
-      width: event.target.clientWidth,
-      // Text index
-      textIndex: textIndex,
-    };
+    // const newText = {
+    //   // 택스트 내용
+    //   text: event.target.textContent,
+    //   // 색상
+    //   color: defaultColor,
+    //   // 폰트사이즈
+    //   fontSize: defaultFontSize,
+    //   // 높이
+    //   height: event.target.clientHeight,
+    //   // 가로
+    //   width: event.target.clientWidth,
+    //   // Text index
+    //   textIndex: textIndex,
+    // };
+    console.log(`event target ${event.target.textContent}`);
+    if (event.target.textContent) {
+      const newText = {
+            // 택스트 내용
+            text: event.target.textContent,
+            // 색상
+            color: defaultColor,
+            // 폰트사이즈
+            fontSize: defaultFontSize,
+            // 높이
+            height: event.target.clientHeight,
+            // 가로
+            width: event.target.clientWidth,
+            // Text index
+            textIndex: textIndex,
+          };
+      dispatch(modifyText(newText));
+      } else {
+      dispatch(deleteText({textIndex}));
+      }
     setIsDoubleClicked(false);
-    dispatch(modifyText(newText));
+    // dispatch(modifyText(newText));
     dispatch(activateSelector());
     dispatch(setInputFieldBlurred());
   };
