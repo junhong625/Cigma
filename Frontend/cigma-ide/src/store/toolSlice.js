@@ -13,8 +13,8 @@ const initialState = {
   workingCodeEditorIndex: 0,
   workingTextEditorIndex: 0,
   isEditPointerVisible: false,
-  isFileBarVisible: false,
-  isTermVisible: false,
+  isFileBarVisible: true,
+  isTermVisible: true,
 };
 
 const toolSlice = createSlice({
