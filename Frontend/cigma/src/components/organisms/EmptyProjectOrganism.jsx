@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "../../styles/organisms/EmptyProjectOrganism.module.scss";
 import { createProject } from "../../api/project";
 import { FaFolder } from "react-icons/fa";
 import { useSelector } from "react-redux";
 function EmptyProjectOrganism({ teamIdx }) {
-  const [projectName, setProjectName] = userState("");
+  const [projectName, setProjectName] = useState("");
   //유저토큰
   const userToken = useSelector((store) => store.userToken);
   // 프로젝트 생성 api 호출
