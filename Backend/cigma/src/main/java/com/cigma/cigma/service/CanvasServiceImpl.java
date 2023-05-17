@@ -32,6 +32,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.nio.charset.StandardCharsets;
@@ -197,18 +198,18 @@ public class CanvasServiceImpl implements CanvasService{
 
     // 처음 프로젝트를 사용하는 것이라면
     public String createFolder(String name) throws Exception {
+        log.info("folder name : " + name);
         String folderPath = "/canvas/" + name + "/workspace/project";
-        Path path = Paths.get(folderPath);
-        Files.createDirectories(path);
+//        Path path = Paths.get(folderPath);
+//        Files.createDirectories(path);
+//        return folderPath;
+        File folder = new File(folderPath);
+
+        if (folder.mkdirs()) {
+            log.info("폴더 생성!");
+        } else {
+            log.info("폴더가 이미 존재합니다!");
+        }
         return folderPath;
-//        File folder = new File(folderPath);
-//
-//        if (folder.mkdirs()) {
-//            log.info("폴더 생성!");
-//            return folderPath;
-//        } else {
-//            log.info("폴더가 이미 존재합니다!");
-//            return folderPath;
-//        }
     }
 }
