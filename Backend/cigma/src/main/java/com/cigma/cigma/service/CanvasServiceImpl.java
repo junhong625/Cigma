@@ -25,6 +25,7 @@ import com.github.dockerjava.core.DockerClientConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -152,7 +153,7 @@ public class CanvasServiceImpl implements CanvasService{
         int port;
         while (true) {
             Random random = new Random();
-            port = (random.nextInt(100) + 700) * 10;
+            port = (random.nextInt(100) + 800) * 10;
             if (getRedis(port) == null) {
                 break;
             }
@@ -179,13 +180,13 @@ public class CanvasServiceImpl implements CanvasService{
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         // 요청 바디 설정
-        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
-        requestBody.add("port", String.valueOf(port));
-        requestBody.add("teamName", teamName);
-        requestBody.add("projectName", projectName);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("port", String.valueOf(port));
+        jsonObject.put("teamName", teamName);
+        jsonObject.put("projectName", projectName);
 
         // 요청 엔티티 생성
-        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(requestBody, headers);
+        HttpEntity<JSONObject> requestEntity = new HttpEntity<>(jsonObject, headers);
 
         // CURL 요청 보내기
         ResponseEntity<String> responseEntity = restTemplate.exchange("http://k8a601.p.ssafy.io:3000/ide/create", HttpMethod.POST, requestEntity, String.class);
