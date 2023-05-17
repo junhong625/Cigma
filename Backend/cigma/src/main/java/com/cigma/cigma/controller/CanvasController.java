@@ -18,8 +18,8 @@ public class CanvasController {
     private final CanvasServiceImpl canvasService;
 
     @GetMapping("/all")
-    public CustomResponseEntity<? extends Object> getPods() throws Exception {
-        return ResponseHandler.generateResponse(true, "컨테이너 조회", HttpStatus.OK, canvasService.getPods());
+    public CustomResponseEntity<? extends Object> getPods(@RequestParam String url) throws Exception {
+        return ResponseHandler.generateResponse(true, "컨테이너 조회", HttpStatus.OK, canvasService.getPods(url));
     }
 
 //    @PostMapping()
