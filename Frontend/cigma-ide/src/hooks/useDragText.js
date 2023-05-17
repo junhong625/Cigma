@@ -1,17 +1,17 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
 import {
   selectCurrentScale,
   selectCurrentTextEditorIndex,
   selectCurrentTool,
   selectIsDragScrolling,
-} from "../store/toolSlice";
-import { useEffect } from "react";
-import { modifyText, selectAllTextEditor } from "../store/textSlice";
+} from '../store/toolSlice';
+import { useEffect } from 'react';
+import { modifyText, selectAllTextEditor } from '../store/textSlice';
 import {
   HOR_SNAP_LINE_STYLES,
   VER_SNAP_LINE_STYLES,
-} from "../constants/styles";
-import computeSnapPosition from "../tools/computeSnapPosition";
+} from '../constants/styles';
+import computeSnapPosition from '../tools/computeSnapPosition';
 
 const GRAVITY = 5;
 
@@ -31,8 +31,8 @@ const useDragText = (textRef, artBoardRef, textIndex) => {
     const artBoard = artBoardRef.current;
 
     const handleMouseDown = (event) => {
-      const verticalLine = document.createElement("div");
-      const horizontalLine = document.createElement("div");
+      const verticalLine = document.createElement('div');
+      const horizontalLine = document.createElement('div');
 
       // 현재 텍스트 index
       const currentTextIndex =
@@ -104,56 +104,55 @@ const useDragText = (textRef, artBoardRef, textIndex) => {
         );
 
         if (Math.abs(currentLeft - nearestPossibleSnapAtX) < GRAVITY) {
-          text.style.left = nearestPossibleSnapAtX + "px";
+          text.style.left = nearestPossibleSnapAtX + 'px';
           isLeftAttached = true;
           isRightAttached = false;
         } else if (
           Math.abs(currentLeft + originalElWidth - nearestPossibleSnapAtX) <
           GRAVITY
         ) {
-          text.style.left = nearestPossibleSnapAtX - originalElWidth + "px";
+          text.style.left = nearestPossibleSnapAtX - originalElWidth + 'px';
           isRightAttached = true;
           isLeftAttached = false;
         } else {
-          text.style.left = currentLeft + "px";
+          text.style.left = currentLeft + 'px';
           isLeftAttached = false;
           isRightAttached = false;
         }
 
         if (Math.abs(currentTop - nearestPossibleSnapAtY) < GRAVITY) {
-          text.style.top = nearestPossibleSnapAtY + "px";
+          text.style.top = nearestPossibleSnapAtY + 'px';
           isTopAttached = true;
           isBottomAttached = false;
         } else if (
           Math.abs(currentTop + originalElHeight - nearestPossibleSnapAtY) <
           GRAVITY
         ) {
-          text.style.top = nearestPossibleSnapAtY - originalElHeight + "px";
+          text.style.top = nearestPossibleSnapAtY - originalElHeight + 'px';
           isBottomAttached = true;
           isTopAttached = false;
         } else {
-          text.style.top = currentTop + "px";
+          text.style.top = currentTop + 'px';
           isTopAttached = false;
           isBottomAttached = false;
         }
 
         if (isLeftAttached || isRightAttached) {
           verticalLine.style.visibility = VER_SNAP_LINE_STYLES.VISIBLE;
-          verticalLine.style.left = nearestPossibleSnapAtX + "px";
+          verticalLine.style.left = nearestPossibleSnapAtX + 'px';
         }
 
         if (isTopAttached || isBottomAttached) {
           horizontalLine.style.visibility = VER_SNAP_LINE_STYLES.VISIBLE;
-          horizontalLine.style.top = nearestPossibleSnapAtY + "px";
+          horizontalLine.style.top = nearestPossibleSnapAtY + 'px';
         }
       };
-      dispatch(
-        modifyText({
-          top: originalElPositionTop + movedTop,
-          left: originalElPositionLeft + movedLeft,
-          textIndex,
-        })
-      );
+      // dispatch();
+      // modifyText({
+      //   top: originalElPositionTop + movedTop,
+      //   left: originalElPositionLeft + movedLeft,
+      //   textIndex,
+      // })
 
       const handleMouseUp = () => {
         const newShapeTop = originalElPositionTop + movedTop;
@@ -241,17 +240,17 @@ const useDragText = (textRef, artBoardRef, textIndex) => {
         movedTop = 0;
         movedLeft = 0;
 
-        window.removeEventListener("mousemove", handleMouseMove);
+        window.removeEventListener('mousemove', handleMouseMove);
       };
 
-      window.addEventListener("mousemove", handleMouseMove);
-      window.addEventListener("mouseup", handleMouseUp, { once: true });
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp, { once: true });
     };
 
-    text.addEventListener("mousedown", handleMouseDown);
+    text.addEventListener('mousedown', handleMouseDown);
 
     return () => {
-      text.removeEventListener("mousedown", handleMouseDown);
+      text.removeEventListener('mousedown', handleMouseDown);
     };
   }, [
     artBoardRef,
