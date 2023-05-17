@@ -196,15 +196,15 @@ public class CanvasServiceImpl implements CanvasService{
 // API 클라이언트 생성
 //        client.setBasePath(url);
         log.info("url: " + url);
-        ApiClient client = ClientBuilder.defaultClient();
+        ApiClient client = ClientBuilder.cluster().build();
 //        client.setUsername("admin");
 //        client.setPassword("ssafy8cigmapass");
-        client.setBasePath(url);
+//        client.setBasePath(url);
         Configuration.setDefaultApiClient(client);
         log.info("basePath : " + client.getBasePath());
 
         CoreV1Api api = new CoreV1Api();
-        log.info(api.getAPIResources().getApiVersion());
+//        log.info(api.getAPIResources().getApiVersion());
         V1PodList podList =  api.listPodForAllNamespaces(null, null, null, null, null, null, null, null, null, null);
         for (V1Pod pod : podList.getItems()) {
             System.out.println(pod.getMetadata().getName());
