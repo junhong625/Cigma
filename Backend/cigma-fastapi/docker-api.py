@@ -26,7 +26,7 @@ def info():
     return "this is cigma docker api"
 
 
-@app.post("/docker/create")
+@app.post("/ide/create")
 async def create_container(createModel: CreateModel, response: Response):
     create_dict = createModel.dict()
     if create_dict == None or create_dict["teamName"] == "" or create_dict["project_name"] == "":
@@ -49,7 +49,7 @@ async def create_container(createModel: CreateModel, response: Response):
     return {"containerId": container.id, "status": 200}
 
 
-@app.post("/docker/delete")
+@app.post("/ide/delete")
 async def delete_container(deleteModel: DeleteModel, response: Response):
     delete_dict = deleteModel.dict()
     if delete_dict == None or delete_dict["containerId"] == "":
