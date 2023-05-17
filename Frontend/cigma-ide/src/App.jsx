@@ -8,16 +8,32 @@ import {
   selectWsServerUrl,
   setDefaultSetting,
 } from "./store/defaultSettingSlice";
-import { provider, ydoc } from "./store/initYDoc";
+// import { provider, ydoc } from "./store/initYDoc";
+import {
+  changeYDoc,
+  createYDoc,
+  selectAwareness,
+  selectProvider,
+  selectyDoc,
+} from "./store/yDocSlice";
+import { bind } from "redux-yjs-bindings";
+import store from "./store/configureStore";
+const { VITE_WS_ROOMNAME, VITE_WS_PORT } = import.meta.env;
+
+const roomName = VITE_WS_ROOMNAME || "workspace";
+const port = VITE_WS_PORT || 5000;
 
 function App() {
   const dispatch = useDispatch();
-  const serverUrl = useSelector(selectWsServerUrl);
+  const ydoc = useSelector(selectyDoc);
+  const provider = useSelector(selectProvider);
+  const awareness = useSelector(selectAwareness);
 
   // SET DEFAULT SETTING
   useEffect(() => {
+    dispatch(createYDoc({ roomName, port }));
     window.addEventListener("message", (e) => {
-      if (e.data.state != "setting") {
+      if (e.data.state === "setting") {
         dispatch(
           setDefaultSetting({
             userId: e.data.userId,
@@ -26,6 +42,13 @@ function App() {
             projectName: e.data.projectName,
             serverPath: e.data.serverPath,
             serverPort: e.data.serverPort,
+          })
+        );
+        dispatch(
+          changeYDoc({
+            roomName,
+            path: e.data.serverPath,
+            port: e.data.serverPort,
           })
         );
       }
@@ -37,24 +60,27 @@ function App() {
     };
   }, []);
 
-  // CHANGE WS URL TO SERVER
   useEffect(() => {
-    if (serverUrl != null) {
-      provider.disconnect();
-      ydoc.destroy();
-      provider.url = serverUrl;
-      provider.connect();
+    if (ydoc !== null) {
+      bind(ydoc, store, "workbench");
     }
-  }, [serverUrl]);
+  }, [ydoc]);
 
+  if (awareness) {
+    return (
+      <div className={styles.app}>
+        <header>
+          <HeaderOrganism />
+        </header>
+        <div className={styles.workspaceDiv}>
+          <WorkBenchPage />
+        </div>
+      </div>
+    );
+  }
   return (
     <div className={styles.app}>
-      <header>
-        <HeaderOrganism />
-      </header>
-      <div className={styles.workspaceDiv}>
-        <WorkBenchPage />
-      </div>
+      <p>Loading</p>
     </div>
   );
 }

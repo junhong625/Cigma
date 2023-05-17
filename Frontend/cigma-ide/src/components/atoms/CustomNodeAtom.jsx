@@ -12,6 +12,10 @@ import {
 } from "../../store/codeEditorSlice";
 import _ from "lodash";
 import { typeLang } from "../../constants/typeLang";
+import {
+  setInputFieldBlurred,
+  setInputFieldFocused,
+} from "../../store/toolSlice";
 
 export const CustomNodeAtom = (props) => {
   const { droppable, data } = props.node;
@@ -45,7 +49,6 @@ export const CustomNodeAtom = (props) => {
       filepath = "/" + filepath;
     }
     const fileType = typeLang(data?.fileType);
-    console.log(fileType);
     filepath += `/${text}`;
     const codeEditor = _.find(codeEditors, { canvasName: filepath });
     if (codeEditor) return;
@@ -253,7 +256,16 @@ export const CustomNodeAtom = (props) => {
                 e.stopPropagation();
               }}
             >
-              <div className={styles.editButton} onClick={handleShowInput}>
+              <div
+                className={styles.editButton}
+                onClick={() => {
+                  handleShowInput();
+                  dispatch(setInputFieldFocused());
+                }}
+                onBlur={() => {
+                  dispatch(setInputFieldBlurred());
+                }}
+              >
                 <BsFillPenFill className={styles.editIcon} />
               </div>
               <div
