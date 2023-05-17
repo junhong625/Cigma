@@ -135,7 +135,8 @@ public class CanvasServiceImpl implements CanvasService{
 
     public String countCanvas() throws FullCanvasException {
         Object cnt = getRedis("canvasCnt");
-        if (Integer.parseInt(cnt.toString()) == 10) {
+        log.info("canvas 개수 : " + cnt.toString());
+        if (Integer.parseInt(cnt.toString()) >= 10) {
             throw new FullCanvasException();
         }
         return (String) cnt;
