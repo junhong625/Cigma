@@ -1,4 +1,6 @@
 import React from "react";
+import useModalClickOutside from '../../hooks/useModalClickOutside'
+import styles from '../../styles/organisms/ModalOrganism.module.scss';
 
 function ModalOrganism({ type, action, setModalOpen, apiFunc }) {
   // project 생성
@@ -16,6 +18,11 @@ function ModalOrganism({ type, action, setModalOpen, apiFunc }) {
     <Modal type={'댓글신고'} setModalOpen={setModalOpen} apiFunc={api 요청 보낼 함수} />
     )}
     */
+  
+  const ref = useRef();
+  useModalClickOutside(ref, () => {
+    setModalOpen(false);
+  });
   return <div>ModalOrganism</div>;
 }
 
