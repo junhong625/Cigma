@@ -202,6 +202,8 @@ public class CanvasServiceImpl implements CanvasService{
 //        client.setBasePath(url);
         Configuration.setDefaultApiClient(client);
         log.info("basePath : " + client.getBasePath());
+        log.info("cluster Ping Interval : " + ClientBuilder.cluster().getPingInterval().getSeconds());
+        log.info("cluster authentication : " + ClientBuilder.cluster().getAuthentication());
 
         CoreV1Api api = new CoreV1Api();
 //        log.info(api.getAPIResources().getApiVersion());
