@@ -7,7 +7,7 @@ client = docker.from_env()
 
 
 class CreateModel(BaseModel):
-    port: int
+    port: str
     teamName: str
     projectName: str
 
@@ -29,19 +29,23 @@ def info():
 @app.post("/ide/create")
 async def create_container(createModel: CreateModel, response: Response):
     create_dict = createModel.dict()
-    if create_dict == None or create_dict["teamName"] == "" or create_dict["project_name"] == "":
+    print(create_dict)
+    if create_dict == None or create_dict["teamName"] == "" or create_dict["projectName"] == "":
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {"status": 400}
-    default_name = f'{create_dict["teamName"]}_{create_dict["project_name"]}'
+    default_name = f'{create_dict["teamName"]}_{create_dict["projectName"]}'
     default_path = f'/home/ubuntu/canvas/{default_name}/workspace'
-    main_port = f'{create_dict["port"]}/tcp'
-    web_port = f'{create_dict["port"]+1}/tcp'
-    server_port = f'{create_dict["port"]+2}/tcp'
+    main_port = f'5000/tcp'
+    web_port = f'8080/tcp'
+    server_port = f'3000/tcp'
     if not os.path.isdir(default_path):
         os.makedirs(default_path)
     try:
         container = await client.containers.create(default_image, volumes=[
-            f'{default_path}:/cigma/workspace'], ports={main_port: '5000', web_port: '8080', server_port: '3000'})
+            f'{default_path}:/cigma/workspace'], ports={main_port: create_dict["port"], web_port: f'{int(create_dict["port"])+1}', server_port: f'{int(create_dict["port"])+2}'})
+        print("container_create")
+        container.start()
+        print("container_start")
     except:
         response.status_code = status.HTTP_409_CONFLICT
         return {"status": 409}
