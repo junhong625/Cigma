@@ -188,7 +188,7 @@ public class CanvasServiceImpl implements CanvasService{
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(requestBody, headers);
 
         // CURL 요청 보내기
-        ResponseEntity<String> responseEntity = restTemplate.exchange("http://host.docker.internal:3000/ide/create", HttpMethod.POST, requestEntity, String.class);
+        ResponseEntity<String> responseEntity = restTemplate.exchange("http://k8a601.p.ssafy.io:3000/ide/create", HttpMethod.POST, requestEntity, String.class);
 
         // 응답 결과 출력
         ObjectMapper objectMapper = new ObjectMapper();
