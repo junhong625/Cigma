@@ -55,3 +55,60 @@ export const deleteTeam = async (token, teamIdx) => {
     };
   }
 };
+
+// 팀 이름 변경
+export const changeTeamName = async (token, teamName, teamIdx) => {
+  const api = createApi({ token });
+  try {
+    const response = await api.patch(`/team/${teamIdx}`, {
+      teamName: teamName,
+    });
+    return {
+      status: response.status,
+      team: response.data,
+    };
+  } catch (error) {
+    console.log("teamname change error", error);
+    return {
+      status: error.response.status,
+    };
+  }
+};
+
+// 팀원 추가
+export const addMember = async (token, teamIdx, userEmail) => {
+  const api = createApi({ token });
+  try {
+    const response = await api.patch(`/team/${teamIdx}/add`, {
+      userEmail: userEmail,
+    });
+    return {
+      status: response.status,
+      team: response.data,
+    };
+  } catch (error) {
+    console.log("add member error", error);
+    return {
+      status: error.response.status,
+    };
+  }
+};
+
+// 팀원 제거
+export const deleteMember = async (token, teamIdx, userEmail) => {
+  const api = createApi({ token });
+  try {
+    const response = await api.patch(`/team/${teamIdx}/pop`, {
+      userEmail: userEmail,
+    });
+    return {
+      status: response.status,
+      team: response.data,
+    };
+  } catch (error) {
+    console.log("member delete  error", error);
+    return {
+      status: error.response.status,
+    };
+  }
+};

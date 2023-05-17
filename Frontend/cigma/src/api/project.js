@@ -1,4 +1,4 @@
-import createApi from './api';
+import createApi from "./api";
 
 // 프로젝트 리스트
 export const callProjects = async (token, id) => {
@@ -10,7 +10,7 @@ export const callProjects = async (token, id) => {
       projectList: response.data,
     };
   } catch (error) {
-    console.error('browse error', error);
+    console.error("browse error", error);
     return {
       status: error.response.status,
     };
@@ -45,7 +45,7 @@ export const createProject = async (token, projectName, teamIdx) => {
       projectInfo: response.data,
     };
   } catch (error) {
-    console.error('project create error', error);
+    console.error("project create error", error);
     return {
       status: error.response.status,
     };
@@ -64,13 +64,30 @@ export const deleteProject = async (token, projectIdx) => {
       status: response.status,
     };
   } catch (error) {
-    console.error('project delete error', error);
+    console.error("project delete error", error);
     return {
       status: error.response.status,
     };
   }
 };
-// 프로젝트 수정
+// 프로젝트 이름 수정
+export const changeProjectName = async (token, projectIdx, projectName) => {
+  const api = createApi({ token });
+  try {
+    const response = await api.patch(`/project/${projectIdx}`, {
+      projectName: projectName,
+    });
+    return {
+      status: response.status,
+      project: response.data,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      status: error,
+    };
+  }
+};
 
 // 포트번호 받아오기
 // api/canvas/{id}
