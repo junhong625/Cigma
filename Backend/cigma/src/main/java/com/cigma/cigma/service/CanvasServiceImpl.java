@@ -76,7 +76,7 @@ public class CanvasServiceImpl implements CanvasService{
             log.info("Not Using Canvas!");
             // canvas 개수 확인
             Long cnt = Long.parseLong(countCanvas());
-            log.info("현재 " + cnt + "개로 canvas 생성 가능");
+            log.info("현재 " + cnt.toString() + "개로 canvas 생성 가능");
             // 폴더 생성
             String folderName = createFolder(name); // /canvas/teamName_projectName/workspace/project
             log.info("Create Folder! : " + folderName);
@@ -141,10 +141,10 @@ public class CanvasServiceImpl implements CanvasService{
         log.info("canvas 개수 세기 시작!");
         Object cnt = getRedis("canvasCnt");
         cnt = cnt != null ? cnt : 0;
-        log.info("canvas 개수 : " + cnt.toString());
         if (Integer.parseInt(cnt.toString()) >= 10) {
             throw new FullCanvasException();
         }
+        log.info("canvas 개수 : " + cnt.toString());
         return (String) cnt;
     }
 
