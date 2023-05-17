@@ -13,6 +13,7 @@ import io.kubernetes.client.openapi.apis.CoreV1Api;
 import io.kubernetes.client.openapi.models.V1Pod;
 import io.kubernetes.client.openapi.models.V1PodList;
 import io.kubernetes.client.proto.V1;
+import io.kubernetes.client.util.ClientBuilder;
 import io.kubernetes.client.util.Config;
 import io.kubernetes.client.util.KubeConfig;
 import lombok.RequiredArgsConstructor;
@@ -186,16 +187,14 @@ public class CanvasServiceImpl implements CanvasService{
     // Pods내에는 여러개의 컨테이너 존재도 가능
     @Override
     public PodsGetResponse getPods(String url) throws Exception {
-        String caCertData = "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJlRENDQVIyZ0F3SUJBZ0lCQURBS0JnZ3Foa2pPUFFRREFqQWpNU0V3SHdZRFZRUUREQmhyTTNNdGMyVnkKZG1WeUxXTmhRREUyT0RReU1qYzFOekF3SGhjTk1qTXdOVEUyTURnMU9UTXdXaGNOTXpNd05URXpNRGcxT1RNdwpXakFqTVNFd0h3WURWUVFEREJock0zTXRjMlZ5ZG1WeUxXTmhRREUyT0RReU1qYzFOekF3V1RBVEJnY3Foa2pPClBRSUJCZ2dxaGtqT1BRTUJCd05DQUFUYUNCODBNQ3laeFQxb1pwMFBseDdVSUJxdVNNejVCQU5iNlJpUGVSdmkKbjFtenptNWwvZCtsMkF0SmZscUtWVXh2S0czL3V6cWs1dzY2eHk4OThsRW9vMEl3UURBT0JnTlZIUThCQWY4RQpCQU1DQXFRd0R3WURWUjBUQVFIL0JBVXdBd0VCL3pBZEJnTlZIUTRFRmdRVVRuSHpSRkFueTVMN3A3SnNBK1plCmwrMXVWc1F3Q2dZSUtvWkl6ajBFQXdJRFNRQXdSZ0loQUpTNFhVallUS1lNdGdKV3l5NTZDdVlseHVPNWZ6cjEKK2F5L1BobTlHVkJvQWlFQXhFMDJsS1dnd1ZrT3o4T1paQ1c1akg5VUlPYkpVR1hYVmZzRkx1MHQ5TUk9Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K"; // CA 인증서 데이터 (Base64 인코딩된)
-        byte[] decodedCertData = Base64.getDecoder().decode(caCertData);
-        String caCert = new String(decodedCertData, StandardCharsets.UTF_8);
-        String apiServerUrl = "http://10.43.0.1:443"; // K3s API 서버의 URL
         KubeConfig kubeConfig = KubeConfig.loadKubeConfig(new FileReader(k3sConfigPath));
-        ApiClient client = Config.fromConfig(kubeConfig);
+        ApiClient client = ClientBuilder.kubeconfig(kubeConfig).setBasePath(url).build();
+        Configuration.setDefaultApiClient(client);
+
 // 필요에 따라 다른 구성 설정 (인증서, 토큰 등) 추가 가능
 
 // API 클라이언트 생성
-        client.setBasePath(url);
+//        client.setBasePath(url);
         log.info("url: " + url);
 //        ApiClient client = Config.defaultClient();
 //        client.setBasePath(url);
