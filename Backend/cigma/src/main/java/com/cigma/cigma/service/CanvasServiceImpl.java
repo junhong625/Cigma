@@ -145,7 +145,7 @@ public class CanvasServiceImpl implements CanvasService{
             throw new FullCanvasException();
         }
         log.info("canvas 개수 : " + cnt.toString());
-        return (String) cnt;
+        return cnt.toString();
     }
 
     public int randomPort() {
