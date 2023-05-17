@@ -180,13 +180,17 @@ public class CanvasServiceImpl implements CanvasService{
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         // 요청 바디 설정
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("port", String.valueOf(port));
-        jsonObject.put("teamName", teamName);
-        jsonObject.put("projectName", projectName);
+//        JSONObject jsonObject = new JSONObject();
+//        jsonObject.put("port", String.valueOf(port));
+//        jsonObject.put("teamName", teamName);
+//        jsonObject.put("projectName", projectName);
+        HashMap<String, String> requestBody = new HashMap<>();
+        requestBody.put("port", String.valueOf(port));
+        requestBody.put("teamName", teamName);
+        requestBody.put("projectName", projectName);
 
         // 요청 엔티티 생성
-        HttpEntity<JSONObject> requestEntity = new HttpEntity<>(jsonObject, headers);
+        HttpEntity<HashMap<String, String>> requestEntity = new HttpEntity<>(requestBody, headers);
 
         // CURL 요청 보내기
         ResponseEntity<String> responseEntity = restTemplate.exchange("http://k8a601.p.ssafy.io:3000/ide/create", HttpMethod.POST, requestEntity, String.class);
