@@ -15,15 +15,15 @@ function CreateProjectForm({ setIsClicked, text, setText, apiFunc }) {
   const ref = useRef();
   useModalClickOutside(ref, () => {
     setIsClicked(false);
-   })
+  })
   // onblur로 바깥영역 접근할때 클릭해제로 부모 조건에 의해 숨김처리되게끔?
   const dispatch = useDispatch();
-  const add = (event) => { 
+  const add = (event) => {
     event.preventDefault();
     if (text.length > 0) {
       apiFunc();
       setText("");
-    } else { 
+    } else {
       alert("프로젝트 이름을 설정해주세요.");
     }
 
@@ -31,19 +31,24 @@ function CreateProjectForm({ setIsClicked, text, setText, apiFunc }) {
   return (
     <div style={{
       display: "flex",
-      position: "row"
+      position: "row",
+      // backgroundColor: "red",
+      justifyContent: "center",
     }}
-    onBlur={() => { 
-      console.log('blurred');
-      setIsClicked(false);
-  }}>
+      onBlur={() => {
+        console.log('blurred');
+        setIsClicked(false);
+      }}
+      
+    >
       <div className={styles.commentBox}
         
       >
-        <form className={styles.commentForm}>
+        <form className={styles.commentForm} >
           <input
             style={{
               border: "none",
+              color: "black",
               backgroundColor: "inherit"
             }}
             type="text"
@@ -52,7 +57,7 @@ function CreateProjectForm({ setIsClicked, text, setText, apiFunc }) {
             placeholder="프로젝트 이름 작성"
           />
           <button
-            style={{ backgroundColor: "transparent", border: "none" }}
+            style={{ color: "black", padding: "0", backgroundColor: "transparent", border: "none" }}
             type="submit"
             onClick={() => { 
               add();

@@ -23,7 +23,7 @@ function EmptyProjectOrganism({ teamIdx }) {
     }
   };
   const [isClicked, setIsClicked] = useState(false);
-
+  console.log(isClicked);
   return (
     <div className={styles.container}>
       <div className={styles["empty-container"]}>
