@@ -21,7 +21,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.FileInputStream;
 import java.io.FileReader;
@@ -189,28 +193,48 @@ public class CanvasServiceImpl implements CanvasService{
     // Pods내에는 여러개의 컨테이너 존재도 가능
     @Override
     public PodsGetResponse getPods(String url) throws Exception {
+        RestTemplate restTemplate = new RestTemplate();
+
+        // 요청 헤더 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // 요청 바디 설정
+        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
+//        requestBody.add("key1", "value1");
+//        requestBody.add("key2", "value2");
+
+        // 요청 엔티티 생성
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(requestBody, headers);
+
+        // CURL 요청 보내기
+        ResponseEntity<String> responseEntity = restTemplate.exchange("http://localhost:8001/api/v1/namespaces/default/pods", HttpMethod.GET, requestEntity, String.class);
+
+        // 응답 결과 출력
+        String responseBody = responseEntity.getBody();
+        System.out.println(responseBody);
         // k3s.yaml 파일 가져오기
 
 // 필요에 따라 다른 구성 설정 (인증서, 토큰 등) 추가 가능
 
 // API 클라이언트 생성
 //        client.setBasePath(url);
-        log.info("url: " + url);
-        ApiClient client = Config.defaultClient();
-//        client.setUsername("admin");
-//        client.setPassword("ssafy8cigmapass");
-//        client.setBasePath(url);
-        Configuration.setDefaultApiClient(client);
-        log.info("basePath : " + client.getBasePath());
-        log.info("cluster Ping Interval : " + ClientBuilder.cluster().getPingInterval().getSeconds());
-        log.info("cluster authentication : " + ClientBuilder.cluster().getAuthentication());
-
-        CoreV1Api api = new CoreV1Api();
-//        log.info(api.getAPIResources().getApiVersion());
-        V1PodList podList =  api.listNamespacedPod("default", null, null, null, null, null, null, null, null, null, null);
-        for (V1Pod pod : podList.getItems()) {
-            System.out.println(pod.getMetadata().getName());
-        }
+//        log.info("url: " + url);
+//        ApiClient client = Config.defaultClient();
+////        client.setUsername("admin");
+////        client.setPassword("ssafy8cigmapass");
+////        client.setBasePath(url);
+//        Configuration.setDefaultApiClient(client);
+//        log.info("basePath : " + client.getBasePath());
+//        log.info("cluster Ping Interval : " + ClientBuilder.cluster().getPingInterval().getSeconds());
+//        log.info("cluster authentication : " + ClientBuilder.cluster().getAuthentication());
+//
+//        CoreV1Api api = new CoreV1Api();
+////        log.info(api.getAPIResources().getApiVersion());
+//        V1PodList podList =  api.listNamespacedPod("default", null, null, null, null, null, null, null, null, null, null);
+//        for (V1Pod pod : podList.getItems()) {
+//            System.out.println(pod.getMetadata().getName());
+//        }
         return new PodsGetResponse(null);
     }
 
