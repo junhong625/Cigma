@@ -6,20 +6,14 @@ import com.cigma.cigma.dto.response.PodsGetResponse;
 import com.cigma.cigma.dto.response.ProjectGetResponse;
 import com.cigma.cigma.dto.response.TeamGetResponse;
 import com.cigma.cigma.handler.customException.AllCanvasUsingException;
-import io.fabric8.kubernetes.api.model.Pod;
-import io.fabric8.kubernetes.api.model.PodList;
-import io.fabric8.kubernetes.client.ConfigBuilder;
-import io.fabric8.kubernetes.client.DefaultKubernetesClient;
-import io.fabric8.kubernetes.client.KubernetesClient;
+
 import io.kubernetes.client.openapi.ApiClient;
 import io.kubernetes.client.openapi.Configuration;
 import io.kubernetes.client.openapi.apis.CoreV1Api;
 import io.kubernetes.client.openapi.models.V1Pod;
 import io.kubernetes.client.openapi.models.V1PodList;
-import io.kubernetes.client.openapi.models.V1Service;
-import io.kubernetes.client.openapi.models.V1ServiceList;
+import io.kubernetes.client.proto.V1;
 import io.kubernetes.client.util.Config;
-import io.kubernetes.client.util.KubeConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,7 +35,6 @@ public class CanvasServiceImpl implements CanvasService{
     private final TeamServiceImpl teamService;
     private final String namespace = "default";
     private final String k3sConfigPath = "/config/k3s.yaml";
-    private final KubernetesClient kubernetesClient;
 
     @Override
     public PodsGetResponse createPod(CanvasJoinRequest request) throws Exception {
@@ -193,39 +186,15 @@ public class CanvasServiceImpl implements CanvasService{
     public PodsGetResponse getPods(String url) throws Exception {
         log.info("url: " + url);
         ApiClient client = Config.defaultClient();
+        Configuration.setDefaultApiClient(client);
         client.setBasePath(url);
         log.info("basePath : " + client.getBasePath());
-        Configuration.setDefaultApiClient(client);
 
         CoreV1Api api = new CoreV1Api();
-        V1PodList list = api.listPodForAllNamespaces(null, null, null, null, null, null, null, null, null, null);
-        for (V1Pod item : list.getItems()) {
-            System.out.println(item.getMetadata().getName());
+        V1PodList podList =  api.listPodForAllNamespaces(null, null, null, null, null, null, null, null, null, null);
+        for (V1Pod pod : podList.getItems()) {
+            System.out.println(pod.getMetadata().getName());
         }
-//        V1PodList list = api.listPodForAllNamespaces(null, null, null, null, null, null, null, null, null, null);
-//        for (V1Pod pod : list.getItems()) {
-//            System.out.println(pod.getMetadata().getName());
-//            pods.add(pod.getMetadata().getName());
-//        }
-//        log.info("version : " + kubernetesClient.getKubernetesVersion());
-//        List<String> pods = new ArrayList<>();
-//        PodList podList = kubernetesClient.pods().inNamespace("default").list();
-//        for (Pod pod : podList.getItems()) {
-//            pods.add(pod.toString());
-//            System.out.println("Pod: " + pod);
-//        log.info("apiVersion : " + api.getAPIResources().getApiVersion());
-////        log.info("basePath : " + Config.defaultClient().getBasePath());
-//        try {
-//            V1PodList list = api.listPodForAllNamespaces(null, null, null, null, null, null, null, null, null, null);
-//            log.info("get Pods");
-//            for (V1Pod item : list.getItems()) {
-//                System.out.println(item.getMetadata().getName());
-//                System.out.println(item.getSpec().getContainers().get(0).getPorts());
-//                pods.add(item.getMetadata().getName());
-//            }
-//        } catch (Exception e) {
-//            log.info(e.getMessage());
-//        }
         return new PodsGetResponse(null);
     }
 
