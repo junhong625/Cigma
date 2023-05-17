@@ -30,7 +30,6 @@ import {
   showCodeEditor,
 } from "../../store/codeEditorSlice";
 import EditorOrganism from "./EditorOrganism";
-import { awareness } from "../../store/initYDoc";
 import { detachFile, setFile } from "../../store/runFileSlice";
 
 const directions = {
@@ -48,10 +47,12 @@ const directions = {
 import { FaComments } from "react-icons/fa";
 import { VscTriangleDown, VscTriangleUp } from "react-icons/vsc";
 import { TiDelete } from "react-icons/ti";
+import { selectAwareness } from "../../store/yDocSlice";
 const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
   const dispatch = useDispatch();
   const canvasRef = useRef();
   const codeEditors = useSelector(selectAllCodeEditor);
+  const awareness = useSelector(selectAwareness);
 
   // 클릭 -> 사이즈 조정
   const [isClicked, setIsClicked] = useState(false);
@@ -158,6 +159,12 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
       onClick={(event) => {
         changeColor();
         event.preventDefault();
+        dispatch(
+          setFile({
+            fileType: codeEditors[codeEditorIndex].fileType,
+            filePath: codeEditors[codeEditorIndex].canvasName,
+          })
+        );
       }}
       onDoubleClick={() => {
         handleStartIsShown();
@@ -168,12 +175,6 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
             dispatch(showEditPointer());
           }
         }
-        dispatch(
-          setFile({
-            fileType: codeEditors[codeEditorIndex].fileType,
-            filePath: codeEditors[codeEditorIndex].canvasName,
-          })
-        );
       }}
       onBlur={() => {
         // TODO: 하이라이트 해제되었을 떄 수정 필요 (한나/윤진)

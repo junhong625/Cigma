@@ -306,6 +306,9 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
 
     let destinationPath = getFilepathById(dropTargetId, treeData);
     // 최상단은 droptarget이 undefined로 입력되므로 조건문을 통해 경로를 추가
+    if (destinationPath.trim()) {
+      destinationPath = "/" + destinationPath;
+    }
     if (dropTarget) {
       destinationPath += `/${dropTarget.text}`;
     }
@@ -324,9 +327,10 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
         canvasName: sourcePath + "/" + dragSource.text,
       });
       if (codeEditorIndex === -1) return;
-      if (destinationPath === "/") {
+      if (destinationPath === "//") {
         destinationPath = "";
       }
+      console.log("destination", destinationPath + "/" + dragSource.text);
       dispatch(
         changeCodeEditorName({
           codeEditorIndex: codeEditorIndex,

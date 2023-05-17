@@ -1,14 +1,18 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import {
+  combineReducers,
+  configureStore,
+  getDefaultMiddleware,
+} from "@reduxjs/toolkit";
 import defaultTextSlice from "./defaultTextSlice";
 import codeEditorSlice from "./codeEditorSlice";
 import toolSlice from "./toolSlice";
 import textSlice from "./textSlice";
 import treeData from "./TreeData";
 
-import { bind, enhanceReducer } from "redux-yjs-bindings";
-import { ydoc } from "./initYDoc";
+import { enhanceReducer } from "redux-yjs-bindings";
 import defaultSettingSlice from "./defaultSettingSlice";
 import runFileSlice from "./runFileSlice";
+import yDocSlice from "./yDocSlice";
 // import undoable from "redux-undo";
 
 // const MAXIMUN_UNDO_COUNT = 100;
@@ -31,13 +35,13 @@ const store = configureStore({
   reducer: {
     workbench: enhanceReducer(workbench),
     tool: toolSlice,
+    yDoc: yDocSlice,
     defaultSetting: defaultSettingSlice,
     runFile: runFileSlice,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({ serializableCheck: false }),
 });
-
-bind(ydoc, store, "workbench");
-// bind(ydoc, store, "tool");
 
 export default store;
 
