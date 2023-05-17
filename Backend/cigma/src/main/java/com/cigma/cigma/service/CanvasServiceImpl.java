@@ -153,7 +153,7 @@ public class CanvasServiceImpl implements CanvasService{
         while (true) {
             Random random = new Random();
             port = (random.nextInt(100) + 700) * 10;
-            if (getRedis(port) != null) {
+            if (getRedis(port) == null) {
                 break;
             }
         }
