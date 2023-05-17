@@ -7,12 +7,14 @@ import DeleteTeamOrganism from "./DeleteTeamOrganism";
 import EditTeamOrganism from "./EditTeamOrganism";
 
 // 모달의 배경 부분
+
 function ModalFrameOrganism({
   show,
   closeModal,
   nowContent,
   propFunction,
   toDo,
+  teamIdx
 }) {
   //Transition이 반환하는 show 값에 따른 애니메이션용 class 탈부착
   const fadeAnimation = [
@@ -62,7 +64,7 @@ function ModalFrameOrganism({
               />
             )}
             {modalContent === 1 && (
-              <UserSearchOrganism closeModal={closeModal} />
+              <UserSearchOrganism closeModal={closeModal} teamIdx={teamIdx}/>
             )}
             {modalContent === 2 && (
               <CreateProjectOrganism closeModal={closeModal} />

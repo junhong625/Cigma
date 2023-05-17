@@ -26,22 +26,22 @@ function ProjectListOrganism() {
   const userToken = useSelector((store) => store.userToken);
   // 프로젝트 리스트 호출
   const [projects, setProjects] = useState([
-    // {
-    //   projectIdx: 1,
-    //   teamIdx: 1,
-    //   projectUrl: "urlpath",
-    //   projectName: "취뽀",
-    //   projectImageUrl:
-    //     "https://camo.githubusercontent.com/10e9104d2cd511e6eee744a7487fbb3603eee30b3d07f89a74fd2076797ad295/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f537072696e672d3644423333462e7376673f267374796c653d666f722d7468652d6261646765266c6f676f3d537072696e67266c6f676f436f6c6f723d7768697465",
-    // },
-    // {
-    //   projectIdx: 1,
-    //   teamIdx: 1,
-    //   projectUrl: "urlpath",
-    //   projectName: "취뽀",
-    //   projectImageUrl:
-    //     "https://camo.githubusercontent.com/35ba18158dd0251a4d17cef42209a272da8af0a80ab76c61a1a873d049715c68/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f507974686f6e2d3337373641422e7376673f267374796c653d666f722d7468652d6261646765266c6f676f3d507974686f6e266c6f676f436f6c6f723d7768697465",
-    // },
+    {
+      projectIdx: 1,
+      teamIdx: 1,
+      projectUrl: "urlpath",
+      projectName: "취뽀",
+      projectImageUrl:
+        "https://camo.githubusercontent.com/10e9104d2cd511e6eee744a7487fbb3603eee30b3d07f89a74fd2076797ad295/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f537072696e672d3644423333462e7376673f267374796c653d666f722d7468652d6261646765266c6f676f3d537072696e67266c6f676f436f6c6f723d7768697465",
+    },
+    {
+      projectIdx: 1,
+      teamIdx: 1,
+      projectUrl: "urlpath",
+      projectName: "취뽀",
+      projectImageUrl:
+        "https://camo.githubusercontent.com/35ba18158dd0251a4d17cef42209a272da8af0a80ab76c61a1a873d049715c68/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f507974686f6e2d3337373641422e7376673f267374796c653d666f722d7468652d6261646765266c6f676f3d507974686f6e266c6f676f436f6c6f723d7768697465",
+    },
     /**
      * 
      * 

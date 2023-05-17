@@ -5,17 +5,17 @@ import { useDispatch } from "react-redux";
 import useModalClickOutside from "../../hooks/useModalClickOutside";
 /**
  * 
- * @param setIsClicked:  나타나는 버튼 선택 여부
  * @param text : form 입력데이터 설정
  * @param setText : form 입력데이터 설정 useState
  * @param apiFunc : 전송버튼 클릭 시 api 호출
+ * @param placeholder: form placeholder 지정
  *
  */
-function CreateProjectForm({ setIsClicked, text, setText, apiFunc }) {
-  const ref = useRef();
-  useModalClickOutside(ref, () => {
-    setIsClicked(false);
-  })
+function CreateProjectForm({  text, setText, apiFunc, placeholder }) {
+  // const ref = useRef();
+  // useModalClickOutside(ref, () => {
+  //   setIsClicked(false);
+  // })
   // onblur로 바깥영역 접근할때 클릭해제로 부모 조건에 의해 숨김처리되게끔?
   const dispatch = useDispatch();
   const add = (event) => {
@@ -36,8 +36,8 @@ function CreateProjectForm({ setIsClicked, text, setText, apiFunc }) {
       justifyContent: "center",
     }}
       onBlur={() => {
-        console.log('blurred');
-        setIsClicked(false);
+        // console.log('blurred');
+        // setIsClicked(false);
       }}
       
     >
@@ -54,14 +54,12 @@ function CreateProjectForm({ setIsClicked, text, setText, apiFunc }) {
             type="text"
             onChange={(event) => setText(event.target.value)}
             value={text}
-            placeholder="프로젝트 이름 작성"
+            placeholder={ placeholder}
           />
           <button
-            style={{ color: "black", padding: "0", backgroundColor: "transparent", border: "none" }}
+            style={{ fontSize: "16px", color: "black",  backgroundColor: "transparent", border: "none" }}
             type="submit"
-            onClick={() => { 
-              add();
-            }}
+            onClick={add}
           >
             <FiEdit/>
           </button>
