@@ -21,6 +21,11 @@ default_image = "caffeincoding/cigma-ide:latest"
 app = FastAPI()
 
 
+@app.get("/")
+def info():
+    return "this is cigma docker api"
+
+
 @app.post("/docker/create")
 async def create_container(createModel: CreateModel, response: Response):
     create_dict = createModel.dict()
