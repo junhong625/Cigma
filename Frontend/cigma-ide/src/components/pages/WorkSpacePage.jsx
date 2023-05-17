@@ -20,21 +20,12 @@ import TextEditior from "../organisms/TextEditior";
 import React from "react";
 import { useUsers } from "y-presence";
 import CursorAtom from "../atoms/CursorAtom";
-import { provider, awareness } from "../../store/initYDoc";
-import { USER_NAMES, USER_COLORS } from "../../constants";
-
-// const random = (arr) => {
-//   return arr[Math.floor(Math.random() * arr.length)];
-// };
-
-// const name = random(USER_NAMES);
-// const color = random(USER_COLORS);
-
-// awareness.setLocalState({ name, color, isActive: false });
+import { selectAwareness } from "../../store/yDocSlice";
 
 let isFirstRender = true;
 
 const WorkSpacePage = ({ widthLeft, heightBottom }) => {
+  const awareness = useSelector(selectAwareness);
   const dispatch = useDispatch();
   const codeEditors = useSelector(selectAllCodeEditor);
   const textEditors = useSelector(selectAllTextEditor);
@@ -50,12 +41,12 @@ const WorkSpacePage = ({ widthLeft, heightBottom }) => {
   const handlePointMove = React.useCallback(
     (e) => {
       const artboardNode = innerBoardRef.current.getBoundingClientRect();
-      awareness.setLocalStateField("cursor", {
+      awareness?.setLocalStateField("cursor", {
         x: (e.clientX - artboardNode.left) / currentScale,
         y: (e.clientY - artboardNode.top) / currentScale,
       });
     },
-    [currentScale, innerBoardRef.current]
+    [currentScale, innerBoardRef.current, awareness]
   );
 
   // 스크롤
@@ -85,20 +76,6 @@ const WorkSpacePage = ({ widthLeft, heightBottom }) => {
     boardRef.current.scrollLeft =
       left - boardRef.current.clientWidth / 2 + width / 2;
   }, [codeEditors, textEditors]);
-
-  useEffect(() => {
-    /**
-     * How to Loading with y-websocket provider
-     */
-    // const onSync = (isSynced) => {
-    //   if (isSynced) {
-    //     setLoading(false);
-    //   }
-    // };
-    // console.log(provider);
-    // provider.on("sync", onSync);
-    // return () => provider.off("sync", onSync);
-  }, []);
 
   /**
    * @todo innerBoardRef관련 useEffect?
@@ -151,10 +128,16 @@ const WorkSpacePage = ({ widthLeft, heightBottom }) => {
     boardRef.current.scrollLeft += difference.current;
   }, [difference.current]);
 
+  // useEffect(() => {
+  //   if (awareness !== null) {
+  //     setUsers(useUsers(awareness));
+  //   }
+  // }, [awareness]);
+
   return (
     <div
-      onPointerEnter={() => awareness.setLocalStateField("isActive", true)}
-      onPointerLeave={() => awareness.setLocalStateField("isActive", false)}
+      onPointerEnter={() => awareness?.setLocalStateField("isActive", true)}
+      onPointerLeave={() => awareness?.setLocalStateField("isActive", false)}
       ref={boardRef}
       className={styles["artboard-wrapper"]}
       onPointerMove={handlePointMove}
@@ -176,20 +159,22 @@ const WorkSpacePage = ({ widthLeft, heightBottom }) => {
             artBoardRef={innerBoardRef}
           />
         ))}
-        {Array.from(users.entries()).map(([key, value]) => {
-          if (key === awareness.clientID) return null;
+        {users
+          ? Array.from(users.entries()).map(([key, value]) => {
+              if (key === awareness.clientID) return null;
 
-          if (!value.cursor || !value.color || !value.name) return null;
+              if (!value.cursor || !value.color || !value.name) return null;
 
-          return (
-            <CursorAtom
-              key={key}
-              cursor={value.cursor}
-              color={value.color}
-              name={value.name}
-            />
-          );
-        })}
+              return (
+                <CursorAtom
+                  key={key}
+                  cursor={value.cursor}
+                  color={value.color}
+                  name={value.name}
+                />
+              );
+            })
+          : null}
       </div>
     </div>
   );
