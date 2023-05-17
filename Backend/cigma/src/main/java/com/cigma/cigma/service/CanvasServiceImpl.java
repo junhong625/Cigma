@@ -207,7 +207,7 @@ public class CanvasServiceImpl implements CanvasService{
 
         CoreV1Api api = new CoreV1Api();
 //        log.info(api.getAPIResources().getApiVersion());
-        V1PodList podList =  api.listPodForAllNamespaces(null, null, null, null, null, null, null, null, null, null);
+        V1PodList podList =  api.listNamespacedPod("default", null, null, null, null, null, null, null, null, null, null);
         for (V1Pod pod : podList.getItems()) {
             System.out.println(pod.getMetadata().getName());
         }
