@@ -19,14 +19,8 @@ function App() {
         <Routes>
           <Route path="" element={<StartPage />}></Route>
           <Route path="/docs" element={<DocsPage />}>
-            <Route
-              path="/docs/intro"
-              element={<DocsContainer containerText={"hehe"} />}
-            />
-            <Route
-              path="/docs/setting"
-              element={<DocsContainer containerText={"aaa"} />}
-            />
+            <Route path="/docs/intro" element={<DocsContainer />} />
+            <Route path="/docs/setting" element={<DocsContainer />} />
           </Route>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
