@@ -196,7 +196,7 @@ public class CanvasServiceImpl implements CanvasService{
 // API 클라이언트 생성
 //        client.setBasePath(url);
         log.info("url: " + url);
-        ApiClient client = ClientBuilder.defaultClient();
+        ApiClient client = ClientBuilder.cluster().build();
 //        client.setUsername("admin");
 //        client.setPassword("ssafy8cigmapass");
 //        client.setBasePath(url);
