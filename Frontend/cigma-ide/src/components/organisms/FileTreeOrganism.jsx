@@ -34,6 +34,7 @@ import {
 } from "../../api/fileTree";
 import {
   changeCodeEditorName,
+  deleteCodeEditor,
   selectAllCodeEditor,
 } from "../../store/codeEditorSlice";
 import _ from "lodash";
@@ -92,7 +93,6 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
   const treeData = useSelector((state) => state.workbench.treeData);
   const handleFileBar = useSelector(selectFileBarVisible);
   const codeEditors = useSelector(selectAllCodeEditor);
-  console.log(codeEditors);
 
   useEffect(() => {
     // 최초 렌더링 시 파일 트리 업데이트
@@ -108,7 +108,7 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
   //=========================== 파일 이름 바꾸기=============================== //
   const handleTextChange = async (id, value, type) => {
     // 파일 경로 확보
-    const filepath = getFilepathById(id, treeData);
+    let filepath = getFilepathById(id, treeData);
     const node = findNodeById(id, treeData);
     const data = { oldName: node.text, newName: value, path: filepath };
     // 파일 이름 변경에 성공한 경우
@@ -133,13 +133,27 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
       return node;
     });
     dispatch(modifyTreeData(newTree));
-    await fileTextUpdate();
+    await fileTextUpdate(data);
+    // codeEditor 이름 변경
+    if (filepath.trim() !== "") {
+      filepath = "/" + filepath;
+    }
+    const codeEditorIndex = _.findIndex(codeEditors, {
+      canvasName: filepath + "/" + node.text,
+    });
+    if (codeEditorIndex === -1) return;
+    dispatch(
+      changeCodeEditorName({
+        codeEditorIndex: codeEditorIndex,
+        name: filepath + "/" + value,
+      })
+    );
   };
 
   // ===============================파일 삭제================================= //
   const handleDelete = async (id, name, dir, created = false) => {
     // 파일 경로
-    const filepath = getFilepathById(id, treeData);
+    let filepath = getFilepathById(id, treeData);
     const deleteIds = [
       id,
       ...getDescendants(treeData, id).map((node) => node.id),
@@ -157,6 +171,14 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
         const { status } = await deleteFile(name, filepath, newTree, dispatch);
         if (status) {
           dispatch(modifyTreeData(newTree));
+          if (filepath.trim() !== "") {
+            filepath = "/" + filepath;
+          }
+          const codeEditorIndex = _.findIndex(codeEditors, {
+            canvasName: filepath + "/" + name,
+          });
+          if (codeEditorIndex === -1) return;
+          dispatch(deleteCodeEditor(codeEditorIndex));
         }
       }
     } else {

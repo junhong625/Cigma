@@ -32,7 +32,10 @@ const codeEditorSlice = createSlice({
       state.splice(codeEditorIndex, 1);
     },
     // 코드에디터 추가
-    addCodeEditor: (state, { payload: { top, left, canvasName, fileType } }) => {
+    addCodeEditor: (
+      state,
+      { payload: { top, left, canvasName, fileType } }
+    ) => {
       const newCodeEditor = {
         ...generateCodeEditor(top, left),
         // canvasName: `canvas_${state.length}`,
@@ -48,7 +51,6 @@ const codeEditorSlice = createSlice({
     // 코드에디터 위치 수정
     modifyCodeEditor: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;
-      console.log(state[codeEditorIndex].canvasName);
       delete payload.codeEditorIndex;
       state[codeEditorIndex] = {
         ...state[codeEditorIndex],
@@ -58,45 +60,63 @@ const codeEditorSlice = createSlice({
     // 코드에디터 크기 수정
     resizeNorth: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;
-      state[codeEditorIndex].top = current(state[codeEditorIndex]).top + payload.change;
-      state[codeEditorIndex].height = current(state[codeEditorIndex]).height - payload.change;
+      state[codeEditorIndex].top =
+        current(state[codeEditorIndex]).top + payload.change;
+      state[codeEditorIndex].height =
+        current(state[codeEditorIndex]).height - payload.change;
     },
     resizeEast: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;
-      state[codeEditorIndex].width = current(state[codeEditorIndex]).width + payload.change;
+      state[codeEditorIndex].width =
+        current(state[codeEditorIndex]).width + payload.change;
     },
     resizeSouth: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;
-      state[codeEditorIndex].height = current(state[codeEditorIndex]).height + payload.change;
+      state[codeEditorIndex].height =
+        current(state[codeEditorIndex]).height + payload.change;
     },
     resizeWest: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;
-      state[codeEditorIndex].left = current(state[codeEditorIndex]).left + payload.change;
-      state[codeEditorIndex].width = current(state[codeEditorIndex]).width - payload.change;
+      state[codeEditorIndex].left =
+        current(state[codeEditorIndex]).left + payload.change;
+      state[codeEditorIndex].width =
+        current(state[codeEditorIndex]).width - payload.change;
     },
     resizeNorthEast: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;
-      state[codeEditorIndex].top = current(state[codeEditorIndex]).top - payload.verChange;
-      state[codeEditorIndex].height = current(state[codeEditorIndex]).height - payload.verChange;
-      state[codeEditorIndex].width = current(state[codeEditorIndex]).width - payload.verChange;
+      state[codeEditorIndex].top =
+        current(state[codeEditorIndex]).top - payload.verChange;
+      state[codeEditorIndex].height =
+        current(state[codeEditorIndex]).height - payload.verChange;
+      state[codeEditorIndex].width =
+        current(state[codeEditorIndex]).width - payload.verChange;
     },
     resizeSouthEast: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;
-      state[codeEditorIndex].height = current(state[codeEditorIndex]).height + payload.verChange;
-      state[codeEditorIndex].width = current(state[codeEditorIndex]).width + payload.horChange;
+      state[codeEditorIndex].height =
+        current(state[codeEditorIndex]).height + payload.verChange;
+      state[codeEditorIndex].width =
+        current(state[codeEditorIndex]).width + payload.horChange;
     },
     resizeNorthWest: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;
-      state[codeEditorIndex].top = current(state[codeEditorIndex]).top + payload.verChange;
-      state[codeEditorIndex].height = current(state[codeEditorIndex]).height - payload.verChange;
-      state[codeEditorIndex].left = current(state[codeEditorIndex]).left + payload.horChange;
-      state[codeEditorIndex].width = current(state[codeEditorIndex]).width - payload.horChange;
+      state[codeEditorIndex].top =
+        current(state[codeEditorIndex]).top + payload.verChange;
+      state[codeEditorIndex].height =
+        current(state[codeEditorIndex]).height - payload.verChange;
+      state[codeEditorIndex].left =
+        current(state[codeEditorIndex]).left + payload.horChange;
+      state[codeEditorIndex].width =
+        current(state[codeEditorIndex]).width - payload.horChange;
     },
     resizeSouthWest: (state, { payload }) => {
       const codeEditorIndex = payload.codeEditorIndex;
-      state[codeEditorIndex].height = current(state[codeEditorIndex]).height + payload.verChange;
-      state[codeEditorIndex].left = current(state[codeEditorIndex]).left + payload.horChange;
-      state[codeEditorIndex].width = current(state[codeEditorIndex]).width - payload.horChange;
+      state[codeEditorIndex].height =
+        current(state[codeEditorIndex]).height + payload.verChange;
+      state[codeEditorIndex].left =
+        current(state[codeEditorIndex]).left + payload.horChange;
+      state[codeEditorIndex].width =
+        current(state[codeEditorIndex]).width - payload.horChange;
     },
     // 코드에디터 숨기기
     hideCodeEditor: (state, { payload }) => {
@@ -117,7 +137,10 @@ const codeEditorSlice = createSlice({
       const codeEditorIndex = payload.codeEditorIndex;
       const comment = payload.comment;
       // comment timestamp의 key로 index 찾기
-      const commendIndex = _.findIndex(state[codeEditorIndex].comments, comment.timestamp);
+      const commendIndex = _.findIndex(
+        state[codeEditorIndex].comments,
+        comment.timestamp
+      );
       state[commendIndex].comments.splice(codeEditorIndex, 1);
     },
     setStartIsShown: (state, { payload }) => {
@@ -143,7 +166,8 @@ const codeEditorSlice = createSlice({
 
 export const selectAllCodeEditor = (state) => state.workbench.codeEditor;
 // 코드 에디터들 사이즈 구하기
-export const selectCodeEditorLength = (state) => state.workbench.codeEditor.length;
+export const selectCodeEditorLength = (state) =>
+  state.workbench.codeEditor.length;
 export const {
   loadCodeEditor,
   hideCodeEditor,

@@ -45,7 +45,6 @@ export const CustomNodeAtom = (props) => {
       filepath = "/" + filepath;
     }
     const fileType = typeLang(data?.fileType);
-    console.log(fileType);
     filepath += `/${text}`;
     const codeEditor = _.find(codeEditors, { canvasName: filepath });
     if (codeEditor) return;
