@@ -212,7 +212,9 @@ const CodeEditor = ({ codeEditorIndex, artBoardRef, ...codeEditor }) => {
           </button>
         </div>
         {/* CodeEditor File Name */}
-        <div>{codeEditors[codeEditorIndex].canvasName}</div>
+        <div className={styles.editorHeaderName}>
+          {codeEditors[codeEditorIndex].canvasName}
+        </div>
         <div
           style={{
             display: "flex",
