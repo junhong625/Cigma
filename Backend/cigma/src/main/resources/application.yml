@@ -17,7 +17,7 @@ spring:
     # server
 #    url: jdbc:mysql://k8a601.p.ssafy.io:3306/cigma?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
     # local
-    url: jdbc:mysql://localhost:3306/cigma?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    url: jdbc:mysql://172.26.13.160:3306/cigma?allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
     username: ssafy
     password: ssafy
     hikari:
