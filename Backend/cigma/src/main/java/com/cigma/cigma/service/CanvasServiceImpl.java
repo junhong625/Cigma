@@ -196,12 +196,9 @@ public class CanvasServiceImpl implements CanvasService{
 // API 클라이언트 생성
 //        client.setBasePath(url);
         log.info("url: " + url);
-        String serviceAccountTokenPath = "/var/run/secrets/kubernetes.io/serviceaccount/token"; // Service Account Token 파일 경로
-
-        KubeConfig kubeConfig = KubeConfig.loadKubeConfig(new FileReader(k3sConfigPath));
-        ApiClient client = ClientBuilder.kubeconfig(kubeConfig).build();
-        client.setAccessToken(new String(Files.readAllBytes(Paths.get(serviceAccountTokenPath))));
-
+        ApiClient client = ClientBuilder.defaultClient();
+        client.setUsername("admin");
+        client.setPassword("ssafy8cigmapass");
         Configuration.setDefaultApiClient(client);
         log.info("basePath : " + client.getBasePath());
 
