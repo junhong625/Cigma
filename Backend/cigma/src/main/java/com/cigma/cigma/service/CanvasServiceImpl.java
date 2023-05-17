@@ -191,7 +191,7 @@ public class CanvasServiceImpl implements CanvasService{
     // Pods내에는 여러개의 컨테이너 존재도 가능
     @Override
     public PodsGetResponse getPods() throws Exception {
-        ApiClient client = Config.fromConfig(k3sConfigPath);
+        ApiClient client = Config.defaultClient().setBasePath("http://172.26.13.160:6443");
         log.info(client.getBasePath());
         Configuration.setDefaultApiClient(client);
 
