@@ -20,13 +20,21 @@ function DocsMenu() {
         style={{ color: "gray", textDecoration: "none" }}
         to="/docs/intro"
       >
+        <DocsItem itemText={"서비스 소개"} />
+      </NavLink>
+      <NavLink
+        className={styles.link}
+        activeStyle={{ color: "black" }}
+        style={{ color: "gray", textDecoration: "none" }}
+        to="/docs/developer"
+      >
         <DocsItem itemText={"개발자 튜토리얼"} />
       </NavLink>
       <NavLink
         className={styles.link}
         activeStyle={{ color: "black" }}
         style={{ color: "gray", textDecoration: "none" }}
-        to="/docs/setting"
+        to="/docs/tutorial"
       >
         <DocsItem itemText={"사용자 튜토리얼"} />
       </NavLink>

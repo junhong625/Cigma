@@ -19,8 +19,9 @@ function App() {
         <Routes>
           <Route path="" element={<StartPage />}></Route>
           <Route path="/docs" element={<DocsPage />}>
-            <Route path="/docs/intro" element={<DocsContainer />} />
-            <Route path="/docs/setting" element={<DocsContainer />} />
+            <Route path="/docs/intro" element={<DocsContainer menuText={"intro"} />} />
+            <Route path="/docs/tutorial" element={<DocsContainer menuText={"user"} />} />
+            <Route path="/docs/developer" element={<DocsContainer menuText={"develop"} />} />
           </Route>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />

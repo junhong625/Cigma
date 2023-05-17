@@ -1,7 +1,8 @@
 import React from "react";
 import { DevDocs } from "./DevDocs";
+import { IntroductionDocs } from "./IntroductionDocs";
 // import DevDocs from "../organisms/DevDocs.md";
-function DocsContainer() {
+function DocsContainer({ menuText }) {
   return (
     <div
       style={{
@@ -11,7 +12,9 @@ function DocsContainer() {
         width: "100%",
       }}
     >
-      <DevDocs />
+      {menuText === "intro" && <IntroductionDocs />}
+      {menuText === "develop" && <DevDocs />}
+      {menuText === "user" && <DevDocs />}
     </div>
   );
 }
