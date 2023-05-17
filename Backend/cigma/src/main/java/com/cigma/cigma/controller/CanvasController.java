@@ -19,6 +19,7 @@ public class CanvasController {
 
     @GetMapping("/all")
     public CustomResponseEntity<? extends Object> getPods(@RequestParam String url) throws Exception {
+        log.info("pod 조회 시작!!!!!!!")
         return ResponseHandler.generateResponse(true, "컨테이너 조회", HttpStatus.OK, canvasService.getPods(url));
     }
 
