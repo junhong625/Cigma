@@ -193,7 +193,7 @@ public class CanvasServiceImpl implements CanvasService{
     public PodsGetResponse getPods(String url) throws Exception {
         log.info("url: " + url);
         ApiClient client = Config.defaultClient();
-        client.setBasePath(url);
+//        client.setBasePath(url);
         log.info("basePath : " + client.getBasePath());
         Configuration.setDefaultApiClient(client);
 
