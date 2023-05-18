@@ -57,9 +57,9 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
         setOnCreate(false);
         return;
       }
-      const { status } = await createTeams(userToken, newTeamName.current.value);
+      const { status, data } = await createTeams(userToken, newTeamName.current.value);
       if (status === 201) {
-        setTeamList([...teamList, newTeamName.current.value]);
+        setTeamList();
       }
       // 그 후 입력값 초기화
       newTeamName.current.value = "";
@@ -156,7 +156,7 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
             )}
           </div>
 
-          <div
+          {/* <div
             onClick={() => {
               toTrash();
             }}
@@ -165,7 +165,7 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
             }`}
           >
             <IconTextAtom icon={<BsTrashFill />} text={"Recycle Bin"} openTeams={openTeams} />
-          </div>
+          </div> */}
           <div className={styles.menu}>
             <a href="/docs" target="_blank" style={{ textDecoration: "none", color: "white" }}>
               <IconTextAtom icon={<BsJournalBookmarkFill />} text={"Docs"} openTeams={openTeams} />

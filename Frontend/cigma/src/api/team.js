@@ -27,6 +27,7 @@ export const createTeams = async (token, teamName) => {
     });
     return {
       status: response.status,
+      data: response.data,
     };
   } catch (error) {
     console.error("team creation error", error);

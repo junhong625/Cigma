@@ -16,6 +16,12 @@ function EditTeamOrganism({ closeModal, teamIdx }) {
     const { status, team } = await changeTeamName(userToken, inputValue, teamIdx);
     if (status === 200) {
       // 팀 이름 변경
+      
+      alert("팀 이름을 성공적으로 변경하였습니다.");
+      closeModal();
+    }
+    if (status === 401) { 
+      alert("팀 이름 변경은 팀장만 가능합니다.");
     }
   };
   return (
