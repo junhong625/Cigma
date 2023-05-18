@@ -50,13 +50,13 @@ function IdePage() {
               serverPort: portNum,
               state: "setting",
             },
-            `http://k8a601.p.ssafy.io:${portNum}`
+            `https://cigmacode.com/project/${modifiedPortNum}/main`
           );
         }}
         // 해당 프로젝트의 주소. Thumbnail 클릭시 받아온 portNum을 입력합니다.
         // portnum XXXX 네자리수에서 앞의 세자리만 살려서 보낸다.
-        // src={`https://cigmacode.com/project/${modifiedPortNum}/main`}
-        src={`http://k8a601.p.ssafy.io:${portNum}`}
+        src={`https://cigmacode.com/project/${modifiedPortNum}/main`}
+        // src={`https://k8a601.p.ssafy.io:${portNum}`}
       ></iframe>
     </div>
   );
