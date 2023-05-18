@@ -16,7 +16,7 @@ class DeleteModel(BaseModel):
     containerId: str
 
 
-default_image = "caffeincoding/cigma-ide:1.03"
+default_image = "caffeincoding/cigma-ide:latest"
 
 app = FastAPI()
 
@@ -49,7 +49,7 @@ def create_container(createModel: CreateModel, response: Response):
     except Exception as e:
         print(e)
         response.status_code = status.HTTP_409_CONFLICT
-        return {"msg":e,"status": 409}
+        return {"msg": e, "status": 409}
     response.status_code = status.HTTP_200_OK
     return {"containerId": container.id, "status": 200}
 
@@ -66,7 +66,7 @@ def delete_container(deleteModel: DeleteModel, response: Response):
         container = client.containers.get(resConainerId)
     except Exception as e:
         response.status_code = status.HTTP_404_NOT_FOUND
-        return {"msg":e,"status": 404}
+        return {"msg": e, "status": 404}
     container.stop()
     container.remove()
     return {"status": 200}

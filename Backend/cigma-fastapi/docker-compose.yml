@@ -1,0 +1,13 @@
+version: "3.7"
+services:
+  cigmafast:
+    build: .
+    networks:
+      - nginx_proxy_net
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+
+networks:
+  nginx_proxy_net:
+    external: true
