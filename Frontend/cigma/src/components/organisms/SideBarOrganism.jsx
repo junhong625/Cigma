@@ -57,9 +57,9 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
         setOnCreate(false);
         return;
       }
-      const { status } = await createTeams(userToken, newTeamName.current.value);
+      const { status, data } = await createTeams(userToken, newTeamName.current.value);
       if (status === 201) {
-        setTeamList([...teamList, newTeamName.current.value]);
+        setTeamList();
       }
       // 그 후 입력값 초기화
       newTeamName.current.value = "";

@@ -15,9 +15,12 @@ function DeleteTeamOrganism({ closeModal, teamIdx }) {
     const { status } = await deleteTeam(userToken, teamIdx);
     if (status === 200) {
       // 삭제
+      alert("팀이 삭제되었습니다.");
+      closeModal();
     }
     if (status === 401) { 
-      alert('팀 삭제는 팀장만 가능합니다')
+      alert('팀 삭제는 팀장만 가능합니다.');
+      closeModal();
     }
   };
   return (

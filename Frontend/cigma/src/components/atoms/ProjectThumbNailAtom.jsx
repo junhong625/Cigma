@@ -29,6 +29,7 @@ function ProjectThumbNailAtom({
     const { status } = await deleteProject(userToken, projectIdx);
     if (status === 200) {
       // 프로젝트 삭제
+      alert("성공적으로 삭제되었습니다.");
     }
   };
   const deleteAction = () => {

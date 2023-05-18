@@ -18,12 +18,15 @@ function UserSearch({ closeModal, teamIdx }) {
     const { status, team } = await addMember(userToken, teamIdx, inputValue);
     // 팀원 초대 성공
     if (status === 200) {
-      alert("초대에 성공했습니다");
+      alert("초대에 성공했습니다.");
       console.log(`team:::${team}`);
       navigate("/projects");
     }
     if (status === 401) {
-      alert("팀원 초대는 팀장만 가능합니다");
+      alert("팀원 초대는 팀장만 가능합니다.");
+    }
+    if (status === 404) { 
+      alert("존재하지 않는 회원입니다.")
     }
   };
   return (

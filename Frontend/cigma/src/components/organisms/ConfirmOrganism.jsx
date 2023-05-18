@@ -10,6 +10,7 @@ function ConfirmOrganism({ closeModal, propFunction, toDo }) {
         <ButtonAtom
           onClick={() => {
             propFunction();
+            closeModal();
           }}
           buttonName={"네"}
           style={{ color: "#fefefe", width: "30%" }}
