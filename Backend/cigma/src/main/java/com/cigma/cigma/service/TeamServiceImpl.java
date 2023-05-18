@@ -166,15 +166,17 @@ public class TeamServiceImpl implements TeamService{
         if (!members.contains(userEmail)) {
             throw new UserNotIncludeException("팀에 속해있지 않은 유저입니다.");
         }
-        members = members.replace(userEmail, "");
         String newTeamMate = "";
         for (String member: members.split(",")) {
-            if (!member.isBlank()) {
-                if (!newTeamMate.isBlank()) {
-                    newTeamMate += ",";
-                }
-                newTeamMate += member;
+            if (!member.equals(userEmail)) {
+                newTeamMate += member + ",";
             }
+        }
+        // teamMate에서 마지막 , 제거 처리
+        try {
+            newTeamMate = newTeamMate.substring(0, newTeamMate.length() - 1);
+        } catch (Exception e) {
+            newTeamMate = "";
         }
         TeamUpdateRequest teamUpdateRequest = new TeamUpdateRequest(team.get());
         teamUpdateRequest.setMembers(newTeamMate);
