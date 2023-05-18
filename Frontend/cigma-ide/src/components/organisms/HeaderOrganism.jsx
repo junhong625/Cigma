@@ -97,7 +97,7 @@ const HeaderOrganism = () => {
             if (runFile.filePath != null) {
               const runCom = runLang(runFile.fileType);
               const runString = `${runCom} .${runFile.filePath}\r`;
-              socket.send(runString);
+              socket.send(JSON.stringify({ type: "message", data: runString }));
               if (!isTermVisible) {
                 dispatch(setTermVisible());
               }
