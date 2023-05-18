@@ -20,6 +20,7 @@ services:
     command:
       - "--character-set-server=utf8mb4"
       - "--collation-server=utf8mb4_unicode_ci"
+    restart: no
 
   application:
     build: .
@@ -36,7 +37,6 @@ services:
       - database
     extra_hosts:
       - host.docker.internal:host-gateway
-      
 
   redis:
     hostname: redis
@@ -51,6 +51,7 @@ services:
       - default
     ports:
       - 6379:6379
+    restart: no
 
 networks:
   nginx_proxy_net:

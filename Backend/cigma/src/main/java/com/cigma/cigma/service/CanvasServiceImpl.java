@@ -84,6 +84,7 @@ public class CanvasServiceImpl implements CanvasService{
                 deleteRedis(containerId);
                 // 삭제 후 canvasCnt - 1
                 Object canvasCnt = getRedis(CanvasServiceImpl.this.canvasCnt);
+                setRedis(canvasCnt, Integer.parseInt((String) canvasCnt) + 1);
             } else {
                 // 오류 처리 필요
                 throw new Exception();

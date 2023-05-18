@@ -181,6 +181,7 @@ public class UserController {
         }
     }
 
+    // 프로필 이미지 변경
     @PatchMapping("/image")
     public CustomResponseEntity<?> changeUserImage(@ModelAttribute UserUpdateRequest userUpdateRequest) {
         // 이미지 변경
@@ -192,11 +193,13 @@ public class UserController {
         }
     }
 
+    // 기본 이미지로 변경
     @DeleteMapping("/image")
     public CustomResponseEntity<?> setDefaultImage() {
         return ResponseHandler.generateResponse(true, "기본 이미지로 변경", HttpStatus.OK, userService.setDefaultImage());
     }
 
+    // 내가 속한 팀 모두 조회
     @GetMapping("/team")
     public ResponseEntity<Object> getMyTeams() {
         return ResponseHandler.generateResponse(true, "내가 속한 팀 모두 조회", HttpStatus.OK, userService.getMyTeams());
