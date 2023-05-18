@@ -16,7 +16,8 @@ class DeleteModel(BaseModel):
     containerId: str
 
 
-default_image = "caffeincoding/cigma-ide:latest"
+default_image = "caffeincoding/cigma-ide"
+client.images.pull(default_image)
 
 app = FastAPI()
 
