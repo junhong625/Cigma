@@ -28,7 +28,7 @@ const TextEditior = ({ textIndex, artBoardRef, ...textEditor }) => {
 
   const [isDoubleClicked, setIsDoubleClicked] = useState(false);
   const handleBlur = (event) => {
-    if (event.target.textContent) {
+    if (event.target.textContent.trim()) {
       const newText = {
         // 택스트 내용
         text: event.target.textContent,
