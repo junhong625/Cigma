@@ -3,6 +3,13 @@ const useTermWs = (socket) => {
     input: "",
   };
 
+  const setJson = (type, data) => {
+    return JSON.stringify({
+      type: type,
+      data: data,
+    });
+  };
+
   const setTerminalState = (data) => {
     terminalState.input = data.input;
   };
@@ -11,79 +18,79 @@ const useTermWs = (socket) => {
 
     // ctrl + c
     if (code === 3) {
-      socket.send("SIGINT");
+      socket.send(setJson("message", "SIGINT"));
       return;
     }
 
     // ctrl + z
     if (code === 26) {
-      socket.send("SIGTSTP");
+      socket.send(setJson("message", "SIGTSTP"));
       return;
     }
 
     // backspace
     if (code === 127) {
-      socket.send("\b");
+      socket.send(setJson("message", "\b"));
       return;
     }
 
     // esc key
     if (code === 27 && data.length === 1) {
-      socket.send("\x1B");
+      socket.send(setJson("message", "\x1B"));
       return;
     }
 
     // up key
     if (code === 27 && data.includes("[A")) {
-      socket.send("\x1b[A");
+      socket.send(setJson("message", "\x1b[A"));
       return;
     }
 
     // down key
     if (code === 27 && data.includes("[B")) {
-      socket.send("\x1b[B");
+      socket.send(setJson("message", "\x1b[B"));
       return;
     }
 
     // right key
     if (code === 27 && data.includes("[C")) {
-      socket.send("\x1b[C");
+      socket.send(setJson("message", "\x1b[C"));
       return;
     }
 
     // left key
     if (code === 27 && data.includes("[D")) {
-      socket.send("\x1b[D");
+      socket.send(setJson("message", "\x1b[D"));
       return;
     }
 
     // vi up key
     if (code === 27 && data.includes("OA")) {
-      socket.send("\x1bOA");
+      socket.send(setJson("message", "\x1bOA"));
       return;
     }
 
     // vi down key
     if (code === 27 && data.includes("OB")) {
-      socket.send("\x1bOB");
+      socket.send(setJson("message", "\x1bOB"));
       return;
     }
 
     // vi right key
     if (code === 27 && data.includes("OC")) {
-      socket.send("\x1bOC");
+      socket.send(setJson("message", "\x1bOC"));
       return;
     }
 
     // vi left key
     if (code === 27 && data.includes("OD")) {
-      socket.send("\x1bOD");
+      socket.send(setJson("message", "\x1bOD"));
       return;
     }
 
     // tab
     if (code === 9) {
-      socket.send("\t");
+      socket.send(setJson("message", "\t"));
       return;
     }
 
@@ -94,13 +101,13 @@ const useTermWs = (socket) => {
         window.location.pathname = "/";
         return;
       }
-      socket.send("\r");
+      socket.send(setJson("message", "\r"));
 
       setTerminalState({ input: "" });
     } else if (code < 32) {
       return;
     } else {
-      socket.send(data);
+      socket.send(setJson("message", data));
     }
   };
 
