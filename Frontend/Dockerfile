@@ -11,4 +11,4 @@ RUN rm /etc/nginx/conf.d/default.conf
 
 COPY ./nginx/default-conf/nginx.conf /etc/nginx/nginx.conf
 COPY ./nginx/sites-enabled/default.conf /etc/nginx/conf.d
-COPY ./nginx/sites-enabled/subDomain.conf /etc/nginx/conf.d
+# COPY ./nginx/sites-enabled/subDomain.conf /etc/nginx/conf.d
