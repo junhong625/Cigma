@@ -1,9 +1,9 @@
 import axios from "axios";
 
 const createApi = ({ path }) => {
-  if (window.location.hostname === path) {
+  if (`${window.location.hostname}:5000` === path) {
     const apiInstance = axios.create({
-      baseURL: `http://${path}:5000/api`,
+      baseURL: `http://${path}/api`,
     });
     return apiInstance;
   } else {
