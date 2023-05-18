@@ -18,6 +18,8 @@ import {
 } from "./store/yDocSlice";
 import { bind } from "redux-yjs-bindings";
 import store from "./store/configureStore";
+import { changeTerm, createTerm, selectSocket } from "./store/termSlice";
+import { changePath } from "./store/apiSlice";
 const { VITE_WS_ROOMNAME, VITE_WS_PORT } = import.meta.env;
 
 const roomName = VITE_WS_ROOMNAME || "workspace";
@@ -28,10 +30,12 @@ function App() {
   const ydoc = useSelector(selectyDoc);
   const provider = useSelector(selectProvider);
   const awareness = useSelector(selectAwareness);
+  const socket = useSelector(selectSocket);
 
   // SET DEFAULT SETTING
   useEffect(() => {
     dispatch(createYDoc({ roomName, port }));
+    dispatch(createTerm({ port }));
     window.addEventListener("message", (e) => {
       if (e.data.state === "setting") {
         dispatch(
@@ -51,12 +55,22 @@ function App() {
             port: e.data.serverPort,
           })
         );
+        dispatch(
+          changeTerm({
+            path: e.data.serverPath,
+            port: e.data.serverPort,
+          })
+        );
+        dispatch(
+          changePath({ path: e.data.serverPath, port: e.data.serverPort })
+        );
       }
     });
 
     return () => {
       provider.destroy();
       ydoc.destroy();
+      socket.disconnect();
     };
   }, []);
 
@@ -66,7 +80,7 @@ function App() {
     }
   }, [ydoc]);
 
-  if (awareness) {
+  if (awareness && socket) {
     return (
       <div className={styles.app}>
         <header>

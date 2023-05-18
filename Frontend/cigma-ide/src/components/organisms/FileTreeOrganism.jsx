@@ -38,6 +38,7 @@ import {
   selectAllCodeEditor,
 } from "../../store/codeEditorSlice";
 import _ from "lodash";
+import { selectPath } from "../../store/apiSlice";
 
 // 마지막 파일의 Id 값을 가져옴
 const getLastId = (treeData) => {
@@ -93,11 +94,12 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
   const treeData = useSelector((state) => state.workbench.treeData);
   const handleFileBar = useSelector(selectFileBarVisible);
   const codeEditors = useSelector(selectAllCodeEditor);
+  const myPath = useSelector(selectPath);
 
   useEffect(() => {
     // 최초 렌더링 시 파일 트리 업데이트
     const UpdateFile = async () => {
-      const { status, data } = await fileTreeUpdate();
+      const { status, data } = await fileTreeUpdate(myPath);
       if (status) {
         dispatch(modifyTreeData(data));
       }
@@ -133,7 +135,7 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
       return node;
     });
     dispatch(modifyTreeData(newTree));
-    await fileTextUpdate(data);
+    await fileTextUpdate(data, myPath);
     // codeEditor 이름 변경
     if (filepath.trim() !== "") {
       filepath = "/" + filepath;
@@ -162,13 +164,13 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
     if (created != true) {
       // 폴더일 경우
       if (dir) {
-        const { status } = await deleteFolder(name, filepath, newTree);
+        const { status } = await deleteFolder(name, filepath, newTree, myPath);
         if (status) {
           dispatch(modifyTreeData(newTree));
         }
       } else {
         //파일일 경우
-        const { status } = await deleteFile(name, filepath, newTree, dispatch);
+        const { status } = await deleteFile(name, filepath, newTree, myPath);
         if (status) {
           dispatch(modifyTreeData(newTree));
           if (filepath.trim() !== "") {
@@ -288,9 +290,9 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
     const filepath = getFilepathById(id, treeData);
     console.log(filepath);
     if (dir) {
-      await expressFolder(name, filepath);
+      await expressFolder(name, filepath, myPath);
     } else {
-      await expressFile(name, filepath);
+      await expressFile(name, filepath, myPath);
     }
   };
 
@@ -316,7 +318,8 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
     const { status } = await fileMoveUpdate(
       dragSource.text,
       sourcePath,
-      destinationPath
+      destinationPath,
+      myPath
     );
     if (status) {
       dispatch(modifyTreeData(newTree));
@@ -369,7 +372,7 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
 
           console.log(file.path);
 
-          await fileUpdate(formData);
+          await fileUpdate(formData, myPath);
           console.log("File upload successful");
         })
       );
@@ -377,7 +380,7 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
       console.error("File upload failed", error);
     }
 
-    const { status, data } = await fileTreeUpdate();
+    const { status, data } = await fileTreeUpdate(myPath);
     if (status) {
       dispatch(modifyTreeData(data));
     }
@@ -428,7 +431,11 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
             }}
           >
             <div className={styles.buttonWapper}>
-              <div onClick={projectDownload}>
+              <div
+                onClick={() => {
+                  projectDownload(myPath);
+                }}
+              >
                 <BsDownload />
               </div>
               <div onClick={handleOpenAll}>

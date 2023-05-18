@@ -4,15 +4,18 @@ import { MonacoBinding } from "y-monaco";
 import { loadFileContent, saveFileContent } from "../../api/fileTree";
 import { useSelector } from "react-redux";
 import { selectAwareness, selectyDoc } from "../../store/yDocSlice";
+import { selectPath } from "../../store/apiSlice";
 
 const EditorOrganism = React.memo(
   ({ file, fileType = "text", editorPerson }) => {
     // readOnly -> 더블클릭여부에 따라 편집가능하게끔 처리
     const awareness = useSelector(selectAwareness);
     const ydoc = useSelector(selectyDoc);
+    const myPath = useSelector(selectPath);
+
     useEffect(() => {
       const contentLoad = async () => {
-        const { data } = await loadFileContent(file);
+        const { data } = await loadFileContent(file, myPath);
         const yText = ydoc.getText(file);
         if (yText.length == 0) {
           yText.insert(0, data);
@@ -33,7 +36,7 @@ const EditorOrganism = React.memo(
       // realtime save : auto save
       yText.observe(async () => {
         const data = editor.getValue();
-        const { status } = await saveFileContent(file, data);
+        const { status } = await saveFileContent(file, data, myPath);
       });
     };
     const myName = awareness.getLocalState().name;
