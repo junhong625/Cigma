@@ -185,6 +185,8 @@ public class UserController {
     @PatchMapping("/image")
     public CustomResponseEntity<?> changeUserImage(@ModelAttribute UserUpdateRequest userUpdateRequest) {
         // 이미지 변경
+        log.info(userUpdateRequest.getUserImage().getName());
+        log.info(userUpdateRequest.getUserImage().getContentType());
         if (userUpdateRequest.getUserImage() != null && userUpdateRequest.getUserImage().getContentType().startsWith("image")){
             log.info("이미지 변경");
             return ResponseHandler.generateResponse(true, "이미지 변경 성공", HttpStatus.OK, userService.changeImage(userUpdateRequest.getUserImage()));
