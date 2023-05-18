@@ -9,9 +9,9 @@ function StartPage() {
             <NavBar />
             <div className="image-container">
                 <div className="title-container">
-                    <label>Code + Figma = Cigma</label>
-                    <label className="sub-label">함께 코딩하는 즐거움</label>
-                    <ButtonAtom buttonName={'다운로드'} />
+                    <label>함께 코딩하는 즐거움, Cigma</label>
+                    {/* <label className="sub-label">함께 코딩하는 즐거움</label> */}
+                    {/* <ButtonAtom buttonName={'다운로드'} /> */}
                 </div>
             </div>
             <OnboardItem

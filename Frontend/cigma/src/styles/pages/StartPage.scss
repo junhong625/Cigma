@@ -8,8 +8,10 @@
     height: 40vh;
     position: relative;
     background-size: cover;
-    background-image: url('../../assets/startThumbnail.png');
+    background-image: url('../../assets/Frame 2.png');
+    // background-size: cover;
     z-index: -1;
+    background-position: center 100%;
 }
 
 .title-container {
@@ -24,6 +26,7 @@
     //     font-weight: 600;
     //     color: white;
     // }
+    
     .login-button {
         width: 20%;
     }
@@ -32,11 +35,22 @@
         font-weight: 700;
         font-size: 2em;
         padding: 0.3em 0;
+				animation: FadeIn 1s ease-in;
     }
 
     .sub-label {
         color: white;
         font-size: 1em;
         padding: 0.3em 0 1em 0;
+				// animation: FadeIn 0.3s ease-in;
     }
+
+    @keyframes FadeIn {
+        0% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
 }
