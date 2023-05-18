@@ -39,6 +39,7 @@ function IdePage() {
       <iframe
         ref={iframeRef}
         className={styles.ideFlame}
+        sandbox="allow-same-origin"
         onLoad={() => {
           iframeRef.current.contentWindow.postMessage(
             {
