@@ -156,7 +156,7 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
             )}
           </div>
 
-          <div
+          {/* <div
             onClick={() => {
               toTrash();
             }}
@@ -165,7 +165,7 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
             }`}
           >
             <IconTextAtom icon={<BsTrashFill />} text={"Recycle Bin"} openTeams={openTeams} />
-          </div>
+          </div> */}
           <div className={styles.menu}>
             <a href="/docs" target="_blank" style={{ textDecoration: "none", color: "white" }}>
               <IconTextAtom icon={<BsJournalBookmarkFill />} text={"Docs"} openTeams={openTeams} />
