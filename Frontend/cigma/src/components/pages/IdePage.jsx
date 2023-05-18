@@ -18,12 +18,14 @@ const IdePage = React.memo(({ teamName, projectName }) => {
         userImage: null,
         teamName: teamName,
         projectName: projectName,
-        serverPath: null,
+        serverPath: "cigmacode.com",
         serverPort: null,
         state: "setting",
       },
-      `http://${serverPath}:${serverPort}`
+      `http://cigmacode.com:${serverPort}`
     );
+    // userimage base64로 인코딩처리해서 보낼것
+    // 여기서 쓰이는 serverPort는 XXXX 네자리수 고대로 보낸다.
   }, []);
 
   return (
@@ -33,7 +35,8 @@ const IdePage = React.memo(({ teamName, projectName }) => {
         ref={iframeRef}
         className={styles.ideFlame}
         // 해당 프로젝트의 주소. Thumbnail 클릭시 받아온 portNum을 입력합니다.
-        src={`http://cigmacode.com/project:${portNum}`}
+        // portnum XXXX 네자리수에서 앞의 세자리만 살려서 보낸다.
+        src={`https://cigmacode.com/project/${portNum}/main`}
         // src="http://70.12.247.83:5173/"
       ></iframe>
     </div>
