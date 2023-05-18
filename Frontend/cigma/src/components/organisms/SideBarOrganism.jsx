@@ -107,7 +107,7 @@ function SideBar({ setTeamList, teamList, setSelectedTeam, selectedTeam }) {
           >
             <IconTextAtom
               icon={<BsFillFileEarmarkCodeFill />}
-              text={"Projects"}
+              text={"Teams"}
               openTeams={openTeams}
             />
             <div className={`${styles.dropArrow} ${openTeams ? "" : styles.noArrow}`}>
