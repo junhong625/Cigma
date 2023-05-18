@@ -33,7 +33,7 @@ export const callProjects = async (token, id) => {
     "inTrashCan": false
 }
  */
-export const createProject = async (token, projectName, teamIdx) => {
+export const addProject = async (token, projectName, teamIdx) => {
   const api = createApi({ token });
   try {
     const response = await api.post(`/project`, {
