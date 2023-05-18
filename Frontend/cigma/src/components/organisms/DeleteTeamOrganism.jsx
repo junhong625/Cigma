@@ -3,6 +3,7 @@ import styles from "../../styles/organisms/DeleteTeamOrganism.module.scss";
 import { deleteTeam } from "../../api/team";
 import ButtonAtom from "../atoms/ButtonAtom";
 import { useSelector } from "react-redux";
+import { TbAlertCircleFilled } from 'react-icons/tb';
 
 //const deleteTeam = async (token, teamIdx)
 function DeleteTeamOrganism({ closeModal, teamIdx }) {
@@ -15,10 +16,24 @@ function DeleteTeamOrganism({ closeModal, teamIdx }) {
     if (status === 200) {
       // 삭제
     }
+    if (status === 401) { 
+      alert('팀 삭제는 팀장만 가능합니다')
+    }
   };
   return (
     <div className={styles.app}>
-      <div className={styles.title}>팀 삭제 이후 복구가 불가합니다.</div>
+      <TbAlertCircleFilled />
+      <div className={styles.title}>
+        <div style={{display: "flex",padding: "0.5em", justifyContent: "center", alignItems: "center", flexDirection: "column"
+        }}>
+          <div>정말 삭제하시겠습니까?</div>
+          <div>팀 삭제 이후 복구가 불가능합니다.</div>
+          {/* <div className={styles.title}>
+            
+          </div> */}
+      </div>
+      </div>
+      
       <div className={styles.buttonWrapper}>
         <ButtonAtom
           onClick={() => {

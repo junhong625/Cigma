@@ -17,6 +17,9 @@ function EditTeamOrganism({ closeModal, teamIdx }) {
     if (status === 200) {
       // 팀 이름 변경
     }
+    if (status === 401) { 
+      alert("팀 이름 변경은 팀장만 가능합니다.");
+    }
   };
   return (
     <div className={styles.app}>
