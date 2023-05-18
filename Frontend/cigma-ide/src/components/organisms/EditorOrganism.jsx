@@ -13,23 +13,15 @@ const EditorOrganism = React.memo(
     const ydoc = useSelector(selectyDoc);
     const myPath = useSelector(selectPath);
 
-    useEffect(() => {
+    const handleEditorDidMount = (editor, monaco) => {
+      const yText = ydoc.getText(file);
       const contentLoad = async () => {
         const { data } = await loadFileContent(file, myPath);
-
-        const yText = ydoc.getText(file);
-        const preData = yText.toString();
-        if (preData !== data) {
-          const len = yText.length;
-          yText.delete(0, len);
+        if (yText.length == 0) {
           yText.insert(0, data);
         }
       };
       contentLoad();
-    }, []);
-
-    const handleEditorDidMount = (editor, monaco) => {
-      const yText = ydoc.getText(file);
 
       const monacoBinding = new MonacoBinding(
         yText,
