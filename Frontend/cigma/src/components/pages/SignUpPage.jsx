@@ -15,6 +15,10 @@ const SignUpPage = () => {
   const [password2, setPassword2] = useState("");
   const navigate = useNavigate();
   const emailRegex = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
+
+  const goStart = () => {
+    navigate("/");
+  };
   const goSecond = () => {
     if (name.trim() === "") {
       alert("이름을 입력해주세요");
@@ -69,7 +73,7 @@ const SignUpPage = () => {
   return (
     <div className="sign-container">
       <nav>
-        <NavLogo style={{ color: "#ffffff" }} />
+        <NavLogo style={{ color: "#ffffff" }} onClick={goStart} />
       </nav>
       {page === 1 && (
         <SignOrganism1

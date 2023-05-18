@@ -7,14 +7,12 @@
 .image-container {
     height: 40vh;
     position: relative;
-    width: 100vw;
     background-size: cover;
     background-image: url('../../assets/startThumbnail.png');
     z-index: -1;
 }
 
 .title-container {
-    //width: 100vw;
     display: flex;
     flex-direction: column;
     height: 100%;

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import styles from "../../styles/organisms/IdeHeaderOrganism.module.scss";
 import InviteModalOrganism from "./InviteModalOrganism";
 import { BsFillPersonPlusFill } from "react-icons/bs";
@@ -20,18 +20,9 @@ const IdeHeaderOrganism = () => {
     setInfoVisible(true);
   };
 
-  const infoRef = useRef(null);
-  useEffect(() => {
-    const closeInfo = (event) => {
-      if (infoRef.current && !infoRef.current.contains(event.target)) {
-        setInfoVisible(false);
-      }
-    };
-    document.addEventListener("mousedown", closeInfo);
-    return () => {
-      document.removeEventListener("mousedown", closeInfo);
-    };
-  }, []);
+  const closeInfo = () => {
+    setInfoVisible(false);
+  };
 
   const navigate = useNavigate();
 
@@ -54,11 +45,13 @@ const IdeHeaderOrganism = () => {
           className={styles.user_image}
           src="/img/Logo.png"
           alt="User Profile"
+          tabIndex={1}
+          onBlur={closeInfo}
         />
       </div>
       {isModalOpen ? <InviteModalOrganism closeModal={closeModal} /> : null}
       {infoVisible ? (
-        <div className={styles.menu} ref={infoRef}>
+        <div className={styles.menu}>
           <div className={styles.menu_item}>내 정보</div>
           <div className={styles.menu_item}>설정</div>
           <div className={styles.menu_item}>로그아웃</div>
