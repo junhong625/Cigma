@@ -1,9 +1,11 @@
-import axios from "axios";
 import { saveAs } from "file-saver";
+import createApi from "./instance";
 
-export const fileTreeUpdate = async () => {
+export const fileTreeUpdate = async (myPath) => {
+  const api = createApi({ path: myPath });
+  console.log("myPath", myPath);
   try {
-    const response = await axios.get("/api");
+    const response = await api.get("");
     return {
       status: response.status,
       data: response.data,
@@ -13,19 +15,19 @@ export const fileTreeUpdate = async () => {
   }
 };
 
-export const fileTextUpdate = async (data) => {
+export const fileTextUpdate = async (data, myPath) => {
+  const api = createApi({ path: myPath });
   try {
-    const response = await axios.put("/api", data);
+    const response = await api.put("", data);
   } catch (error) {
     console.error("fileTextUpdate error", error);
   }
 };
 
-export const deleteFolder = async (name, filepath) => {
+export const deleteFolder = async (name, filepath, myPath) => {
+  const api = createApi({ path: myPath });
   try {
-    const response = await axios.delete(
-      `/api/rmdir?name=${name}&path=${filepath}`
-    );
+    const response = await api.delete(`/rmdir?name=${name}&path=${filepath}`);
     return {
       status: response.status,
     };
@@ -34,9 +36,10 @@ export const deleteFolder = async (name, filepath) => {
   }
 };
 
-export const deleteFile = async (name, filepath) => {
+export const deleteFile = async (name, filepath, myPath) => {
+  const api = createApi({ path: myPath });
   try {
-    const response = await axios.delete(`/api?name=${name}&path=${filepath}`);
+    const response = await api.delete(`?name=${name}&path=${filepath}`);
     return {
       status: response.status,
     };
@@ -46,9 +49,10 @@ export const deleteFile = async (name, filepath) => {
 };
 
 // 프로젝트 파일 다운로드
-export const projectDownload = async () => {
+export const projectDownload = async (myPath) => {
+  const api = createApi({ path: myPath });
   try {
-    const response = await axios.get("/api/download", {
+    const response = await api.get("/download", {
       responseType: "blob",
     });
     const blob = new Blob([response.data]); // Blob 객체 생성
@@ -59,17 +63,19 @@ export const projectDownload = async () => {
 };
 
 // 파일 업데이트
-export const fileUpdate = async (formData) => {
+export const fileUpdate = async (formData, myPath) => {
+  const api = createApi({ path: myPath });
   try {
-    const response = await axios.post("/api/upload", formData);
+    const response = await api.post("/upload", formData);
   } catch (error) {
     console.error("fileUpdate error", error);
   }
 };
 
-export const fileMoveUpdate = async (name, path, destination) => {
+export const fileMoveUpdate = async (name, path, destination, myPath) => {
+  const api = createApi({ path: myPath });
   try {
-    const response = await axios.put("/api/move", {
+    const response = await api.put("/move", {
       name,
       path,
       destination,
@@ -83,18 +89,20 @@ export const fileMoveUpdate = async (name, path, destination) => {
 };
 
 // express 관련
-export const expressFolder = async (name, path) => {
+export const expressFolder = async (name, path, myPath) => {
+  const api = createApi({ path: myPath });
   try {
-    const response = await axios.post("/api/folder", { name, path });
+    const response = await api.post("/folder", { name, path });
     console.log(response.data.message);
   } catch (error) {
     console.error("expressFolder error", error);
   }
 };
 
-export const expressFile = async (name, path) => {
+export const expressFile = async (name, path, myPath) => {
+  const api = createApi({ path: myPath });
   try {
-    const response = await axios.post("/api/file", { name, path });
+    const response = await api.post("/file", { name, path });
     console.log(response.data.message);
   } catch (error) {
     console.error("expressFile error", error);
@@ -102,9 +110,10 @@ export const expressFile = async (name, path) => {
 };
 
 // 모나코에 넣을 내용 불러오기
-export const loadFileContent = async (path) => {
+export const loadFileContent = async (path, myPath) => {
+  const api = createApi({ path: myPath });
   try {
-    const response = await axios.post("/api/file/data", { path });
+    const response = await api.post("/file/data", { path });
     return {
       data: response.data,
     };
@@ -114,9 +123,10 @@ export const loadFileContent = async (path) => {
 };
 
 // 파일 내용 수정 저장
-export const saveFileContent = async (path, data) => {
+export const saveFileContent = async (path, data, myPath) => {
+  const api = createApi({ path: myPath });
   try {
-    const response = await axios.put("/api/file/data", {
+    const response = await api.put("/file/data", {
       path: path,
       data: data,
     });
