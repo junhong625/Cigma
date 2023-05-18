@@ -16,10 +16,11 @@ const EditorOrganism = React.memo(
     useEffect(() => {
       const contentLoad = async () => {
         const { data } = await loadFileContent(file, myPath);
+
         const yText = ydoc.getText(file);
-        if (yText.length == 0) {
-          yText.insert(0, data);
-        }
+        const len = yText.length;
+        yText.delete(0, len);
+        yText.insert(0, data);
       };
       contentLoad();
     }, []);
