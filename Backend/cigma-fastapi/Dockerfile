@@ -13,6 +13,6 @@ ADD . .
 ### GET PIP, DOCKER-SDK, FASTAPI, GUNICORN, UVICORN
 RUN apt-get update \
 && apt-get install --no-install-recommends -y python3-pip \
-&& pip install --no-cache-dir docker fastapi uvicorn gunicorn
+&& pip install --no-cache-dir docker fastapi uvicorn 
 
-CMD ["gunicorn", "-b", "0.0.0.0:3000", "--workers", "1", "main:app", "--worker-class uvicorn.workers.UvicornWorker"]
+CMD ["uvicorn", "--host","0.0.0.0","--port","3000", "main:app"]
