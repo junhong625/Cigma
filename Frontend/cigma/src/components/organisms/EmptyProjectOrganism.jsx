@@ -1,8 +1,25 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "../../styles/organisms/EmptyProjectOrganism.module.scss";
-
 import { FaFolder } from "react-icons/fa";
-function EmptyProjectOrganism() {
+import { useSelector } from "react-redux";
+function EmptyProjectOrganism({ func, teamIdx, isClicked, setIsClicked }) {
+  const [projectName, setProjectName] = useState("");
+  //유저토큰
+  const userToken = useSelector((store) => store.userToken);
+  // 프로젝트 생성 api 호출
+  const createProject = async () => {
+    const { status, projectInfo } = await createProject(userToken, projectName, teamIdx);
+    if (status == 200) {
+      console.log("프로젝트 생성 성공");
+      /* projectInfo내용
+      projectIdx : 프로젝트 번호
+      teamIdx : 팀 번호
+      projectUrl : 프로젝트 경로
+      projectName : 프로젝트 이름
+      projectImageUrl : 사진 경로
+      */
+    }
+  };
   return (
     <div className={styles.container}>
       <div className={styles["empty-container"]}>
@@ -23,7 +40,7 @@ function EmptyProjectOrganism() {
           <div
             className={styles.button}
             onClick={() => {
-              // 프로젝트 생성하는 액션넣어주기
+              func();
             }}
           >
             생성하기

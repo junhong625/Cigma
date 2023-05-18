@@ -27,6 +27,32 @@ function ProjectListOrganism() {
   // 프로젝트 리스트 호출
   const [projects, setProjects] = useState([
     // {
+    //   projectIdx: 1,
+    //   teamIdx: 1,
+    //   projectUrl: "urlpath",
+    //   projectName: "취뽀",
+    //   projectImageUrl:
+    //     "https://camo.githubusercontent.com/10e9104d2cd511e6eee744a7487fbb3603eee30b3d07f89a74fd2076797ad295/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f537072696e672d3644423333462e7376673f267374796c653d666f722d7468652d6261646765266c6f676f3d537072696e67266c6f676f436f6c6f723d7768697465",
+    // },
+    // {
+    //   projectIdx: 1,
+    //   teamIdx: 1,
+    //   projectUrl: "urlpath",
+    //   projectName: "취뽀",
+    //   projectImageUrl:
+    //     "https://camo.githubusercontent.com/35ba18158dd0251a4d17cef42209a272da8af0a80ab76c61a1a873d049715c68/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f507974686f6e2d3337373641422e7376673f267374796c653d666f722d7468652d6261646765266c6f676f3d507974686f6e266c6f676f436f6c6f723d7768697465",
+    // },
+    /**
+     * 
+     * 
+     * {projectIdx : 프로젝트 번호
+        teamIdx : 팀 번호
+        projectUrl : 프로젝트 경로
+        projectName : 프로젝트 이름
+        projectImageUrl : 사진 URL,
+…}
+     */
+    // {
     //   name: "project1",
     //   thumbnail: "https://t1.daumcdn.net/cfile/tistory/999A233F5EE64AA229?original",
     // },
@@ -43,35 +69,14 @@ function ProjectListOrganism() {
   };
 
   useEffect(() => {
+    // TODO: 커밋하기전에 다시 살려놓을것(API 통신용)
     callProjectList();
     console.log(`result ${projects}`);
   }, [team]);
 
-  // 반환 리스트 형태 참고해서 프로퍼티 이름 수정할 것.
-  // const projects = [
-  //   {
-  //     name: "project1",
-  //     thumbnail:
-  //       "https://t1.daumcdn.net/cfile/tistory/999A233F5EE64AA229?original",
-  //   },
-  //   {
-  //     name: "project2",
-  //     thumbnail:
-  //       "https://t1.daumcdn.net/cfile/tistory/999A233F5EE64AA229?original",
-  //   },
-  //   {
-  //     name: "project3",
-  //     thumbnail:
-  //       "https://t1.daumcdn.net/cfile/tistory/999A233F5EE64AA229?original",
-  //   },
-  //   {
-  //     name: "project4",
-  //     thumbnail:
-  //       "https://t1.daumcdn.net/cfile/tistory/999A233F5EE64AA229?original",
-  //   },
-  // ];
-
   const [dropMenu, setDropMenu] = useState(false);
+  // empty project 화면에서 버튼 선택 여부 처리
+  const [isClicked, setIsClicked] = useState(false);
 
   const UserSearch = () => {
     openModal();
@@ -114,7 +119,12 @@ function ProjectListOrganism() {
             // 모든 프로젝트가 삭제되었거나, 처음 들어온 경우인 페이지
             // CreateTeam 기능이 있는 버튼 추가 필요
             <>
-              <EmptyProjectOrganism></EmptyProjectOrganism>
+              <EmptyProjectOrganism
+                func={CreateProject}
+                teamIdx={team.teamIdx}
+                isClicked={isClicked}
+                setIsClicked={setIsClicked}
+              />
             </>
           ) : (
             <div>
@@ -146,21 +156,21 @@ function ProjectListOrganism() {
                       >
                         팀원 추가
                       </div>
-                      <div
+                      {/* <div
                         className={styles.menuItem}
                         onClick={() => {
                           CreateProject();
                         }}
                       >
                         프로젝트 추가
-                      </div>
+                      </div> */}
                       <div
                         onClick={() => {
                           EditTeam();
                         }}
                         className={styles.menuItem}
                       >
-                        팀명 변경
+                        팀 이름 변경
                       </div>
                       <div
                         onClick={() => {

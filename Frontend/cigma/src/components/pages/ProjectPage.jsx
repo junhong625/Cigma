@@ -34,7 +34,22 @@ function ProjectPage() {
   const userToken = useSelector((store) => store.userToken);
 
   // 유저가 갖고 있는 팀 리스트 호출 (현재는 임시데이터)
-  const [teamList, setTeamList] = useState([]);
+  const [teamList, setTeamList] = useState([
+    // {
+    //   teamIdx: 1,
+    //   teamLeader: "재히",
+    //   teamName: "재희없는재희팀",
+    //   teamImageUrl:
+    //     "https://camo.githubusercontent.com/809619bf25026aa02652a2bc41a03e58856236d3dfe73c2794a18b3fe8e29d3b/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4a6176615363726970742d4637444631452e7376673f267374796c653d666f722d7468652d6261646765266c6f676f3d4a617661536372697074266c6f676f436f6c6f723d626c61636b",
+    // },
+    // {
+    //   teamIdx: 1,
+    //   teamLeader: "찬빈",
+    //   teamName: "찬빈없는찬빈팀",
+    //   teamImageUrl:
+    //     "https://camo.githubusercontent.com/1026f577af0676ea62dd6389c6063a4888f222d8775a997dcf0236dd702b6408/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f52656163742d3631444146422e7376673f267374796c653d666f722d7468652d6261646765266c6f676f3d5265616374266c6f676f436f6c6f723d626c61636b",
+    // },
+  ]);
 
   const updateTeamList = (newTeamList) => {
     setTeamList(newTeamList);
@@ -51,6 +66,7 @@ function ProjectPage() {
   };
 
   useEffect(() => {
+    // TODO: 커밋하기전에 다시 살려놓을것(API 통신용)
     callTeamList();
     console.log(`projectlist outlet set: ${teamList[selectedTeam]}`);
   }, []);
@@ -74,12 +90,16 @@ function ProjectPage() {
       <ModalPortal>
         <Transition unmountOnExit in={modalOn} timeout={500}>
           {(state) => (
+            // project list에서 사용되는 모달
+            // 팀원추가. 프로젝트 추가
+            // 팀명 변경 . 팀 삭제
             <ModalFrameOrganism
               show={state}
               closeModal={closeModal}
               nowContent={nowContent}
               propFunction={propFunction}
               toDo={toDo}
+              teamIdx={teamList[selectedTeam].teamIdx}
             />
           )}
         </Transition>
