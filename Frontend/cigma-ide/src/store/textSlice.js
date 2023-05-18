@@ -1,13 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// const generateText = (top, left, width, height, content) => ({
-//   top,
-//   left,
-//   width,
-//   height,
-//   content,
-// });
-
 const initialState = [];
 
 const textSlice = createSlice({
@@ -21,7 +13,8 @@ const textSlice = createSlice({
     // 상태 초기화
     resetText: () => initialState,
     // 텍스트 삭제
-    deleteText: (state, { payload: textIndex }) => {
+    deleteText: (state, { payload }) => {
+      const textIndex = payload.textIndex;
       state.splice(textIndex, 1);
     },
     // 텍스트 생성

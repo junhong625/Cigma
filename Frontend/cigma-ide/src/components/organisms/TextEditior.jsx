@@ -17,57 +17,38 @@ import style from "../../styles/organisms/TextEditor.module.scss";
 import useDragText from "../../hooks/useDragText";
 
 const TextEditior = ({ textIndex, artBoardRef, ...textEditor }) => {
-  
   const dispatch = useDispatch();
 
   const defaultColor = useSelector(selectDefaultColor);
   const defaultFontSize = useSelector(selectDefaultFontSize);
   const textRef = useRef();
   const inputRef = useRef();
-  // const keys = Object.keys(textRef.current.clientHeight);
-  // console.log(keys);
-  // console.log(`${textRef.current.clientHeight}`);
-  //console.dir(`textRef::::${textRef.current}`);
+
   useDragText(textRef, artBoardRef, textIndex);
 
   const [isDoubleClicked, setIsDoubleClicked] = useState(false);
   const handleBlur = (event) => {
-    // const newText = {
-    //   // 택스트 내용
-    //   text: event.target.textContent,
-    //   // 색상
-    //   color: defaultColor,
-    //   // 폰트사이즈
-    //   fontSize: defaultFontSize,
-    //   // 높이
-    //   height: event.target.clientHeight,
-    //   // 가로
-    //   width: event.target.clientWidth,
-    //   // Text index
-    //   textIndex: textIndex,
-    // };
-    console.log(`event target ${event.target.textContent}`);
     if (event.target.textContent) {
       const newText = {
-            // 택스트 내용
-            text: event.target.textContent,
-            // 색상
-            color: defaultColor,
-            // 폰트사이즈
-            fontSize: defaultFontSize,
-            // 높이
-            height: event.target.clientHeight,
-            // 가로
-            width: event.target.clientWidth,
-            // Text index
-            textIndex: textIndex,
-          };
+        // 택스트 내용
+        text: event.target.textContent,
+        // 색상
+        color: defaultColor,
+        // 폰트사이즈
+        fontSize: defaultFontSize,
+        // 높이
+        height: event.target.clientHeight,
+        // 가로
+        width: event.target.clientWidth,
+        // Text index
+        textIndex: textIndex,
+      };
       dispatch(modifyText(newText));
-      } else {
-      dispatch(deleteText({textIndex}));
-      }
+    } else {
+      // text 없을 때 삭제
+      dispatch(deleteText({ textIndex: textIndex }));
+    }
     setIsDoubleClicked(false);
-    // dispatch(modifyText(newText));
     dispatch(activateSelector());
     dispatch(setInputFieldBlurred());
   };
@@ -84,8 +65,6 @@ const TextEditior = ({ textIndex, artBoardRef, ...textEditor }) => {
 
   useEffect(() => {
     if (!textRef.current) return;
-    console.log(`???::${textRef.current.clientHeight}`);
-    // console.log(`inputRef::$`)
     if (textEditor.height !== textRef.current.clientHeight) {
       dispatch(
         modifyText({
@@ -99,9 +78,8 @@ const TextEditior = ({ textIndex, artBoardRef, ...textEditor }) => {
 
   useEffect(() => {
     if (!inputRef.current) return;
-    console.log(`xxx::${inputRef.current.clientHeight}`);
     inputRef.current.focus();
-  }, [inputRef, isDoubleClicked])
+  }, [inputRef, isDoubleClicked]);
   // 더블클릭
   if (isDoubleClicked)
     return (
@@ -139,7 +117,6 @@ const TextEditior = ({ textIndex, artBoardRef, ...textEditor }) => {
           left: textEditor.left,
           fontSize: textEditor.fontSize,
           color: textEditor.color,
-          // borderBottom: SHAPE_TEXT_STYLES.BORDER,
         }}
         onClick={() => dispatch(setTextEditorIndex(textIndex))}
         // 더블 클릭시
