@@ -9,13 +9,15 @@ import {
   setInputFieldFocused,
 } from "../../store/toolSlice";
 import useTermWs from "../../hooks/useTermWs";
-import { fitAddon, socket } from "../../store/initTerm";
+import { selectFitAddon, selectSocket } from "../../store/termSlice";
 
 const TermOrganism = ({ widthRight, setWidthRight, defaultWidthRight }) => {
+  const socket = useSelector(selectSocket);
   const xtermRef = useRef(null);
   const handleTerm = useSelector(selectTermVisible);
   const onData = useTermWs(socket);
   const dispatch = useDispatch();
+  const fitAddon = useSelector(selectFitAddon);
 
   useEffect(() => {
     xtermRef.current.terminal.cursorBlink = true;

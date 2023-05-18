@@ -13,6 +13,7 @@ import { enhanceReducer } from "redux-yjs-bindings";
 import defaultSettingSlice from "./defaultSettingSlice";
 import runFileSlice from "./runFileSlice";
 import yDocSlice from "./yDocSlice";
+import termSlice from "./termSlice";
 // import undoable from "redux-undo";
 
 // const MAXIMUN_UNDO_COUNT = 100;
@@ -38,6 +39,7 @@ const store = configureStore({
     yDoc: yDocSlice,
     defaultSetting: defaultSettingSlice,
     runFile: runFileSlice,
+    term: termSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }),

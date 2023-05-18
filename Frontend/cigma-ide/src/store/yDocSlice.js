@@ -25,7 +25,6 @@ const yDocSlice = createSlice({
       state.awareness = awareness;
     },
     changeYDoc: (state, { payload: { roomName, path, port } }) => {
-      console.log("working");
       state.provider.disconnect();
       state.provider.destroy();
       state.ydoc.destroy();
