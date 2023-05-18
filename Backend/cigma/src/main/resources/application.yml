@@ -76,7 +76,7 @@ logging:
 jwt:
   header: Authorization
   secret: Y2lnbWEtc3ByaW5nLWJvb3Qtand0LXNlY3JldC1rZXktY2lnbWEtc3ByaW5nLWJvb3Qtand0LXNlY3JldC1rZXktYnktYWpoCg==
-  access-token-validity-in-seconds: 1800000 # accessToken 유효시간 30분
+  access-token-validity-in-seconds: 3600000 # accessToken 유효시간 1시간
   refresh-token-validity-in-seconds: 1209600000 # refreshToken 유효시간 2주
 
 # aws 관련
@@ -101,6 +101,3 @@ image:
     user: https://cigma-ajh.s3.ap-northeast-2.amazonaws.com/Users/Image/default.png
     team: https://cigma-ajh.s3.ap-northeast-2.amazonaws.com/Teams/Image/default.png
     project: https://cigma-ajh.s3.ap-northeast-2.amazonaws.com/Projects/Image/default.png
-kubernetes:
-  api:
-    server: http://localhost/0:0:0:0:0:0:0:1:80
