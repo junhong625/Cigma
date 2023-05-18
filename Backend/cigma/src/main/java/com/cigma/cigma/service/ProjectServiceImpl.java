@@ -62,10 +62,10 @@ public class ProjectServiceImpl implements ProjectService{
     }
 
     @Override
-    public ProjectGetResponse getProject(Long pjtIdx) throws TeamNotFoundException {
+    public ProjectGetResponse getProject(Long pjtIdx) throws Exception {
         ProjectGetResponse projectGetResponse = new ProjectGetResponse(projectRepository.findById(pjtIdx).get());
         // 해당 프로젝트를 조회할 권한이 있는지 체크
-        teamService.checkTeamLeaderAuthorization(projectGetResponse.getTeamIdx());
+        teamService.checkTeamMembersAuthorization(projectGetResponse.getTeamIdx());
         return projectGetResponse;
     }
 
