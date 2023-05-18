@@ -13,10 +13,6 @@ services:
       - /var/lib/letsencrypt:/var/lib/letsencrypt
     environment:
       - TZ=Asia/Seoul
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.nginx-ingress.rule=Host(`cigmacode.com`)"
-      - "traefik.http.routers.nginx-ingress.service=nginx"
     restart: always
 
 networks:
