@@ -19,6 +19,7 @@ import {
 import { bind } from "redux-yjs-bindings";
 import store from "./store/configureStore";
 import { changeTerm, createTerm, selectSocket } from "./store/termSlice";
+import { changePath } from "./store/apiSlice";
 const { VITE_WS_ROOMNAME, VITE_WS_PORT } = import.meta.env;
 
 const roomName = VITE_WS_ROOMNAME || "workspace";
@@ -59,6 +60,9 @@ function App() {
             path: e.data.serverPath,
             port: e.data.serverPort,
           })
+        );
+        dispatch(
+          changePath({ path: e.data.serverPath, port: e.data.serverPort })
         );
       }
     });

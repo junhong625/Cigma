@@ -1,9 +1,9 @@
 import express from "express";
 import path from "path";
 import { parse } from "url";
-import fs from "fs";
 import { WebSocketServer } from "ws";
 import http from "http";
+import cors from "cors";
 import router from "./fsRoute.js";
 import fileUpload from "express-fileupload";
 import { setupWSConnection } from "./socket/utils.js";
@@ -14,6 +14,8 @@ const __dirname = path.resolve();
 // file server
 
 const app = express();
+// SET CORS
+app.use(cors());
 const server = http.createServer(app);
 
 //file upload

@@ -14,6 +14,7 @@ import defaultSettingSlice from "./defaultSettingSlice";
 import runFileSlice from "./runFileSlice";
 import yDocSlice from "./yDocSlice";
 import termSlice from "./termSlice";
+import apiSlice from "./apiSlice";
 // import undoable from "redux-undo";
 
 // const MAXIMUN_UNDO_COUNT = 100;
@@ -40,6 +41,7 @@ const store = configureStore({
     defaultSetting: defaultSettingSlice,
     runFile: runFileSlice,
     term: termSlice,
+    api: apiSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }),

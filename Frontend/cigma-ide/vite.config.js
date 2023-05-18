@@ -5,9 +5,9 @@ import fs from "fs";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  server: {
-    proxy: {
-      "/api": "http://0.0.0.0:5000",
-    },
-  },
+  // server: {
+  //   proxy: {
+  //     "/api": "http://0.0.0.0:5000",
+  //   },
+  // },
 });
