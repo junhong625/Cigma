@@ -2,6 +2,7 @@ version: "3.7"
 services:
   cigmafast:
     build: .
+    container_name: cigmafast
     networks:
       - nginx_proxy_net
     volumes:
