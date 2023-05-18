@@ -6,7 +6,7 @@ import CreateProjectForm from "../atoms/CreateProjectForm";
 import { addMember } from "../../api/team";
 
 /**
- *
+ * 팀에 사용자 초대하는 모달
  * @param closeModal 모달 닫기 설정
  */
 function UserSearch({ closeModal, teamIdx }) {
