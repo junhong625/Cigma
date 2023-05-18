@@ -3,6 +3,7 @@ import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import "../../styles/organisms/DevDocs.module.scss";
 
 export const DevDocs = () => {
+
   const codeRenderer = ({ value }) => {
     return <pre>{value}</pre>;
   };
@@ -168,6 +169,91 @@ export const DevDocs = () => {
 
   ---
   ### 기술 스택  
+  Frontend-FE
+
+  \`\`\`
+"@reduxjs/toolkit": "^1.9.5",
+"axios": "^1.4.0",
+"lottie-react": "^2.4.0",
+"react": "^18.2.0",
+"react-dom": "^18.2.0",
+"react-markdown": "^8.0.7",
+"react-redux": "^8.0.5",
+"react-router-dom": "^6.10.0",
+"react-transition-group": "^4.4.5",
+"redux-persist": "^6.0.0",
+"sass": "^1.62.0"
+
+\`\`\`
+
+Frontend-IDE
+
+\`\`\`
+"@minoru/react-dnd-treeview": "^3.4.4",
+"@monaco-editor/react": "^4.5.0",
+"@reduxjs/toolkit": "^1.9.5",
+"archiver": "^5.3.1",
+"axios": "^1.4.0",
+"cors": "^2.8.5",
+"express": "^4.18.2",
+"express-fileupload": "^1.4.0",
+"fs-extra": "^11.1.1",
+"http-proxy-middleware": "^2.0.6",
+"lib0": "^0.2.74",
+"lodash": "^4.17.21",
+"multer": "^1.4.5-lts.1",
+"node-pty": "^0.10.1",
+"prop-types": "^15.8.1",
+"re-resizable": "^6.9.9",
+"react": "^18.2.0",
+"react-dnd": "^16.0.1",
+"react-dom": "^18.2.0",
+"react-dropzone": "^14.2.3",
+"react-icons": "^4.8.0",
+"react-query": "^3.39.3",
+"react-redux": "^8.0.5",
+"redux-undo": "^1.0.1",
+"redux-yjs-bindings": "^0.3.1",
+"sass": "^1.62.1",
+"socket.io-client": "^4.6.1",
+"ws": "^8.13.0",
+"xterm": "^5.1.0",
+"xterm-addon-attach": "^0.8.0",
+"xterm-addon-fit": "^0.7.0",
+"y-leveldb": "^0.1.2",
+"y-monaco": "^0.1.4",
+"y-presence": "^0.2.3",
+"y-protocols": "^1.0.5",
+"y-websocket": "^1.5.0",
+"yjs": "^13.6.0"
+\`\`\`
+Backend
+
+\`\`\`
+- java: 11
+- spring-boot: 2.7.11
+- spring-boot-devtools
+- spring-boot-starter-security
+- spring-boot-starter-data-jpa
+- spring-boot-starter-data-redis
+- spring-boot-starter-web
+- spring-boot-starter-jdbc
+- spring-boot-starter-parent: 3.0.4
+- spring-cloud-starter-aws:2.2.6.RELEASE
+- lombok
+- firebase-admin: 9.1.1
+- jjwt: 0.11.5
+- mysql: 8.0.32
+- jcraft:jsch:0.1.5
+- commons-io:commons-io:2.11.0
+- io.fabric8:kubernetes-client:6.5.0
+- io.kubernetes:client-java:18.0.0
+\`\`\`
+docker
+
+\`\`\`
+caffeincoding/cigma-ide:latest
+\`\`\`
 `;
 
   return (
