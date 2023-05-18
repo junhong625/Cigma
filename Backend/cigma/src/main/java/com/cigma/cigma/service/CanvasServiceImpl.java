@@ -29,6 +29,7 @@ public class CanvasServiceImpl implements CanvasService{
     private final RedisTemplate redisTemplate;
     private final ProjectServiceImpl projectService;
     private final TeamServiceImpl teamService;
+    private final String canvasCnt = "canvasCnt";
 
     @Override
     public void closeCanvas(Long pjtIdx) throws Exception {
@@ -81,6 +82,8 @@ public class CanvasServiceImpl implements CanvasService{
                 deleteRedis(port);
                 // containerId redis에서 삭제
                 deleteRedis(containerId);
+                // 삭제 후 canvasCnt - 1
+                Object canvasCnt = getRedis(CanvasServiceImpl.this.canvasCnt);
             } else {
                 // 오류 처리 필요
                 throw new Exception();
@@ -123,15 +126,13 @@ public class CanvasServiceImpl implements CanvasService{
             // 정상적으로 생성 됐을 경우
             if (Integer.parseInt(response.get("status").toString()) == 200) {
                 // canvas 개수 + 1
-                setRedis("canvasCnt", cnt + 1);
+                setRedis(canvasCnt, cnt + 1);
                 // canvasName : port 형식으로 저장
                 setRedis(canvasName, port);
                 // containerId 가져오기
                 containerId = response.get("containerId").toString();
                 // port : containerId 형식으로 redis에 저장해두기
                 setRedis(port, containerId);
-                // 유저 해당 캔버스에 접속 처리
-                joinCanvas(containerId, SecurityUtils.getUserPrincipal().getUserIdx());
             } else {
                 // 오류 처리 필요
                 throw new Exception();
@@ -179,7 +180,7 @@ public class CanvasServiceImpl implements CanvasService{
     // canvas 개수 세기
     public String countCanvas() throws FullCanvasException {
         log.info("canvas 개수 세기 시작!");
-        Object cnt = getRedis("canvasCnt");
+        Object cnt = getRedis(canvasCnt);
         cnt = cnt != null ? cnt : 0;
         if (Integer.parseInt(cnt.toString()) >= 10) {
             throw new FullCanvasException();
@@ -198,9 +199,7 @@ public class CanvasServiceImpl implements CanvasService{
                 break;
             }
         }
-        for (int i = 0; i < 3; i++) {
-            setRedis(port+i, "");
-        }
+        setRedis(port, "");
         return port;
     }
 
