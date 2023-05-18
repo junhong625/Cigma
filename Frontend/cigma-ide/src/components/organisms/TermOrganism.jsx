@@ -52,7 +52,8 @@ const TermOrganism = ({ widthRight, setWidthRight, defaultWidthRight }) => {
       }}
       onResize={(e, direction, ref, d) => {
         const nextWidth = defaultWidthRight.current + d.width;
-        fitAddon.fit();
+        const { cols, rows } = fitAddon.proposeDimensions();
+        xtermRef.current.terminal.resize(cols, rows);
         socket.send(
           JSON.stringify({ type: "resize", data: fitAddon.proposeDimensions() })
         );

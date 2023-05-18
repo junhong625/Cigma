@@ -18,9 +18,12 @@ const EditorOrganism = React.memo(
         const { data } = await loadFileContent(file, myPath);
 
         const yText = ydoc.getText(file);
-        const len = yText.length;
-        yText.delete(0, len);
-        yText.insert(0, data);
+        const preData = yText.toString();
+        if (preData !== data) {
+          const len = yText.length;
+          yText.delete(0, len);
+          yText.insert(0, data);
+        }
       };
       contentLoad();
     }, []);

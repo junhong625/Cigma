@@ -67,9 +67,7 @@ console.log("Signaling server running on localhost:", port);
 
 // main ide page ==========================================
 
-app.use(
-  express.static(path.join(__dirname, "../dist"), { extensions: ["js"] })
-);
+app.use(express.static(path.join(__dirname, "../dist")));
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "dist/index.html"));
