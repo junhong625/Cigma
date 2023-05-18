@@ -48,8 +48,8 @@ function ModalFrameOrganism({ show, closeModal, nowContent, propFunction, toDo, 
             {modalContent === 2 && (
               <CreateProjectOrganism closeModal={closeModal} teamIdx={teamIdx} />
             )}
-            {modalContent === 3 && <DeleteTeamOrganism closeModal={closeModal} />}
-            {modalContent === 4 && <EditTeamOrganism closeModal={closeModal} />}
+            {modalContent === 3 && <DeleteTeamOrganism closeModal={closeModal} teamIdx={teamIdx} />}
+            {modalContent === 4 && <EditTeamOrganism closeModal={closeModal} teamIdx={teamIdx} />}
           </div>
         </div>
       </div>

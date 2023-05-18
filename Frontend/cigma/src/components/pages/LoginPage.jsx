@@ -1,12 +1,14 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
 import "../../styles/pages/LoginPage.scss";
 import InputAtom from "../atoms/InputAtom";
 import ButtonAtom from "../atoms/ButtonAtom";
 import NavLogo from "../atoms/NavLogo";
 import { NavLink, useNavigate } from "react-router-dom";
-import { login } from "../../api/account";
-import { useDispatch } from "react-redux";
-import { modifyUserToken } from "../../store/userToken";
+import { getUserInfo, login } from "../../api/account";
+import { useDispatch, useSelector } from "react-redux";
+import userToken, { modifyUserToken } from "../../store/userToken";
+import { setUserID, setUserImage } from "../../store/user";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -17,6 +19,19 @@ const LoginPage = () => {
     navigate("/");
   };
 
+  // 회원정보 조회 하기
+  const getInformation = async ({ token }) => {
+    console.log(`전달되는 토큰 정보? ${token}`);
+    const { status, data } = await getUserInfo(token);
+    if (status === 200) {
+      // 회원정보조회하기
+      console.log("userdata", JSON.stringify(data));
+      dispatch(setUserID(data.userEmail));
+      dispatch(setUserImage(data.userImageUrl));
+    } else {
+      console.log("get information error");
+    }
+  };
   const loginClick = async () => {
     if (email.trim() === "") {
       alert("이메일을 입력해주세요");
@@ -29,7 +44,9 @@ const LoginPage = () => {
     const { status, token, refreshToken } = await login(email, password);
     if (status === 200) {
       alert("로그인 되었습니다");
+      // dispatch(modifyUserToken(token));
       dispatch(modifyUserToken(token));
+      getInformation({ token });
       navigate("/projects");
     } else {
       alert("유효하지 않는 정보입니다");

@@ -30,7 +30,7 @@ function App() {
             <Route path="/projects" element={<ProjectListOrganism />} />
             <Route path="/projects/trashcan" element={<TrashListOrganism />} />
           </Route>
-          <Route path="/test" element={<IdeHeaderOrganism />} />
+          <Route path="/test" element={<IdePage />} />
         </Routes>
       </BrowserRouter>
     </div>
