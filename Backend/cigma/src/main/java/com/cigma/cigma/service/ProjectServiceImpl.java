@@ -1,6 +1,5 @@
 package com.cigma.cigma.service;
 
-import com.cigma.cigma.common.SecurityUtils;
 import com.cigma.cigma.dto.request.ProjectCreateRequest;
 import com.cigma.cigma.dto.request.ProjectPatchRequest;
 import com.cigma.cigma.dto.response.ProjectGetResponse;
@@ -9,15 +8,12 @@ import com.cigma.cigma.entity.Team;
 import com.cigma.cigma.handler.customException.ProjectExistException;
 import com.cigma.cigma.handler.customException.ProjectNotFoundException;
 import com.cigma.cigma.handler.customException.TeamNotFoundException;
-import com.cigma.cigma.jwt.UserPrincipal;
 import com.cigma.cigma.properties.ImageProperties;
 import com.cigma.cigma.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +26,7 @@ public class ProjectServiceImpl implements ProjectService{
 
     @Override
     public ProjectGetResponse insertTrashCan(Long pjtIdx) throws Exception{
-        checkAuthorization(pjtIdx);
+        checkTeamLeaderAuthorization(pjtIdx);
         ProjectPatchRequest projectPatchRequest = new ProjectPatchRequest(projectRepository.findById(pjtIdx).get());
         projectPatchRequest.setInTrashCan(true);
         return new ProjectGetResponse(projectRepository.save(projectPatchRequest.toEntity()));
@@ -38,7 +34,7 @@ public class ProjectServiceImpl implements ProjectService{
 
     @Override
     public ProjectGetResponse restoreProject(Long pjtIdx) throws Exception{
-        checkAuthorization(pjtIdx);
+        checkTeamLeaderAuthorization(pjtIdx);
         ProjectPatchRequest projectPatchRequest = new ProjectPatchRequest(projectRepository.findById(pjtIdx).get());
         projectPatchRequest.setInTrashCan(false);
         return new ProjectGetResponse(projectRepository.save(projectPatchRequest.toEntity()));
@@ -47,7 +43,7 @@ public class ProjectServiceImpl implements ProjectService{
     @Override
     public ProjectGetResponse changeName(Long pjtIdx, ProjectPatchRequest projectPatchRequest) throws Exception {
         log.info("권한 체크");
-        checkAuthorization(pjtIdx);
+        checkTeamLeaderAuthorization(pjtIdx);
         log.info("이름 변경 작업");
         String projectName = projectPatchRequest.getProjectName();
         ProjectPatchRequest request = new ProjectPatchRequest(projectRepository.findById(pjtIdx).get());
@@ -58,7 +54,7 @@ public class ProjectServiceImpl implements ProjectService{
 
     @Override
     public ProjectGetResponse changeImage(Long pjtIdx, ProjectPatchRequest projectPatchRequest) throws Exception {
-        checkAuthorization(pjtIdx);
+        checkTeamLeaderAuthorization(pjtIdx);
         MultipartFile projectImage = projectPatchRequest.getProjectImage();
         ProjectPatchRequest request = new ProjectPatchRequest(projectRepository.findById(pjtIdx).get());
         request.setProjectImageUrl(s3Service.save(projectImage, "project", pjtIdx));
@@ -69,7 +65,7 @@ public class ProjectServiceImpl implements ProjectService{
     public ProjectGetResponse getProject(Long pjtIdx) throws TeamNotFoundException {
         ProjectGetResponse projectGetResponse = new ProjectGetResponse(projectRepository.findById(pjtIdx).get());
         // 해당 프로젝트를 조회할 권한이 있는지 체크
-        teamService.checkAuthorization(projectGetResponse.getTeamIdx());
+        teamService.checkTeamLeaderAuthorization(projectGetResponse.getTeamIdx());
         return projectGetResponse;
     }
 
@@ -77,7 +73,7 @@ public class ProjectServiceImpl implements ProjectService{
     public ProjectGetResponse save(ProjectCreateRequest projectCreateRequest) throws Exception {
         // 권한 체크
         Long teamIdx = projectCreateRequest.getTeamIdx();
-        teamService.checkAuthorization(teamIdx);
+        teamService.checkTeamLeaderAuthorization(teamIdx);
         // 해당 팀에서 생성한 플젝 존재 여부 체크
         checkExist(teamIdx);
         Team team = teamService.findTeam(teamIdx);
@@ -93,18 +89,28 @@ public class ProjectServiceImpl implements ProjectService{
 
     @Override
     public void deleteById(Long id) throws Exception {
-        checkAuthorization(id);
+        checkTeamLeaderAuthorization(id);
         projectRepository.deleteById(id);
     }
 
-    public void checkAuthorization(Long pjtIdx) throws Exception {
+    public void checkTeamLeaderAuthorization(Long pjtIdx) throws Exception {
         Project project;
         try {
             project = projectRepository.findById(pjtIdx).get();
         } catch (Exception e) {
             throw new ProjectNotFoundException("존재하지 않는 프로젝트입니다.");
         }
-        teamService.checkAuthorization(project.getTeam().getTeamIdx());
+        teamService.checkTeamLeaderAuthorization(project.getTeam().getTeamIdx());
+    }
+
+    public void checkTeamMemberAuthorization(Long pjtIdx) throws Exception {
+        Project project;
+        try {
+            project = projectRepository.findById(pjtIdx).get();
+        } catch (Exception e) {
+            throw new ProjectNotFoundException("존재하지 않는 프로젝트입니다.");
+        }
+        teamService.checkTeamMembersAuthorization(project.getTeam().getTeamIdx());
     }
 
     // 팀에서 생성한 프로젝트가 있는지 확인

@@ -63,7 +63,7 @@ public class TeamServiceImpl implements TeamService{
     @Override
     public TeamGetResponse changeName(Team team, String teamName) throws TeamNotFoundException {
         // 유저 수정 권한 체크
-        checkAuthorization(team.getTeamIdx());
+        checkTeamLeaderAuthorization(team.getTeamIdx());
         TeamUpdateRequest teamUpdateRequest = new TeamUpdateRequest(team);
         teamUpdateRequest.setTeamName(teamName);
         return new TeamGetResponse(teamRepository.save(teamUpdateRequest.toEntity()));
@@ -72,7 +72,7 @@ public class TeamServiceImpl implements TeamService{
     @Override
     public TeamGetResponse changeImage(Team team, MultipartFile multipartFile) throws TeamNotFoundException {
         // 유저 수정 권한 체크
-        checkAuthorization(team.getTeamIdx());
+        checkTeamLeaderAuthorization(team.getTeamIdx());
         TeamUpdateRequest teamUpdateRequest = new TeamUpdateRequest(team);
         teamUpdateRequest.setTeamImageUrl(s3Service.save(multipartFile, "team", teamUpdateRequest.getTeamIdx()));
         return new TeamGetResponse(teamRepository.save(teamUpdateRequest.toEntity()));
@@ -100,7 +100,7 @@ public class TeamServiceImpl implements TeamService{
     @Override
     public TeamGetResponse addTeamMate(Long teamIdx, TeamMateRequest teamMateRequest) throws Exception{
         // 유저 수정 권한 체크
-        checkAuthorization(teamIdx);
+        checkTeamLeaderAuthorization(teamIdx);
         // 팀원 추가를 요청한 유저
         UserPrincipal requestUser = SecurityUtils.getUserPrincipal();
         String userEmail = teamMateRequest.getUserEmail();
@@ -145,7 +145,7 @@ public class TeamServiceImpl implements TeamService{
     @Override
     public TeamGetResponse popTeamMate(Long teamIdx, TeamMateRequest teamMateRequest) throws Exception {
         // 유저 수정 권한 체크
-        checkAuthorization(teamIdx);
+        checkTeamLeaderAuthorization(teamIdx);
         // 뺄 유저
         String userEmail = teamMateRequest.getUserEmail();
         Optional<User> user = userRepository.findByUserEmail(userEmail);
@@ -181,7 +181,7 @@ public class TeamServiceImpl implements TeamService{
     }
 
     // 팀 수정 권한이 있는 팀장인지 확인
-    public void checkAuthorization(Long teamIdx) throws TeamNotFoundException {
+    public void checkTeamLeaderAuthorization(Long teamIdx) throws TeamNotFoundException {
         UserPrincipal userPrincipal = SecurityUtils.getUserPrincipal();
         Team team;
         try {
@@ -191,6 +191,28 @@ public class TeamServiceImpl implements TeamService{
         }
         if (userPrincipal.getUserIdx() != team.getTeamLeader().getUserIdx()) {
             throw new AuthorizationServiceException("권한이 없는 유저입니다");
+        }
+    }
+
+    // 팀에 속한 유저인지 확인
+    public void checkTeamMembersAuthorization(Long teamIdx) throws Exception {
+        UserPrincipal userPrincipal = SecurityUtils.getUserPrincipal();
+        Team team;
+        try {
+            team = findTeam(teamIdx);
+        } catch (Exception e) {
+            throw new TeamNotFoundException("존재하지 않는 팀입니다.");
+        }
+        boolean isInclude = false;
+        if (userPrincipal.getUserIdx() != team.getTeamLeader().getUserIdx()) {
+            for (String member : team.getMembers().replaceAll("[\\[\\] \"]", "").split(",")) {
+                if (member.equals(userPrincipal.getUserEmail())) {
+                    isInclude = true;
+                }
+            }
+            if (!isInclude) {
+                throw new UserNotIncludeException("팀에 속해있지 않은 유저입니다.");
+            }
         }
     }
 

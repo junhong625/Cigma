@@ -7,5 +7,5 @@ import com.cigma.cigma.dto.response.PodsGetResponse;
 public interface CanvasService {
     CanvasGetResponse openCanvas(CanvasJoinRequest request) throws Exception;
 
-    PodsGetResponse closeCanvas(CanvasJoinRequest request) throws Exception;
+    void closeCanvas(CanvasJoinRequest request) throws Exception;
 }
