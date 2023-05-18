@@ -60,7 +60,7 @@ public class ProjectController {
 
     // 프로젝트 조회
     @GetMapping("/{id}")
-    public CustomResponseEntity<? extends Object> getProject(@PathVariable("id") Long projectIdx) throws TeamNotFoundException {
+    public CustomResponseEntity<? extends Object> getProject(@PathVariable("id") Long projectIdx) throws Exception {
         return ResponseHandler.generateResponse(true, "프로젝트 조회", HttpStatus.OK, projectService.getProject(projectIdx));
     }
 
