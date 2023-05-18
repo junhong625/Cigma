@@ -31,9 +31,9 @@ public class CanvasServiceImpl implements CanvasService{
     private final TeamServiceImpl teamService;
 
     @Override
-    public void closeCanvas(CanvasJoinRequest request) throws Exception {
+    public void closeCanvas(Long pjtIdx) throws Exception {
         log.info("=================Close Canvas===============");
-        ProjectGetResponse project = projectService.getProject(request.getPjtIdx());
+        ProjectGetResponse project = projectService.getProject(pjtIdx);
         TeamGetResponse team = teamService.getTeam(project.getTeamIdx());
         UserPrincipal userPrincipal = SecurityUtils.getUserPrincipal();
         log.info("teamIdx : " + team.getTeamIdx());
@@ -89,11 +89,11 @@ public class CanvasServiceImpl implements CanvasService{
     }
 
     @Override
-    public CanvasGetResponse openCanvas(CanvasJoinRequest request) throws Exception {
+    public CanvasGetResponse openCanvas(Long pjtIdx) throws Exception {
         log.info("=================Open Canvas================");
         int port;
         String containerId;
-        ProjectGetResponse project = projectService.getProject(request.getPjtIdx());
+        ProjectGetResponse project = projectService.getProject(pjtIdx);
         TeamGetResponse team = teamService.getTeam(project.getTeamIdx());
         log.info("teamIdx : " + team.getTeamIdx());
         log.info("pjtIdx : " + project.getProjectIdx());

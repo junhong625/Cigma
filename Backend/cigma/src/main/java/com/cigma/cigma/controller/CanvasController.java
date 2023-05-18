@@ -17,15 +17,15 @@ public class CanvasController {
 
     private final CanvasServiceImpl canvasService;
 
-    @PostMapping()
-    public CustomResponseEntity<? extends Object> openCanvas(@RequestBody CanvasJoinRequest request) throws Exception {
+    @PostMapping("/{id}")
+    public CustomResponseEntity<? extends Object> openCanvas(@PathVariable("id") Long pjtIdx) throws Exception {
 
-        return ResponseHandler.generateResponse(true, "캔버스 접속", HttpStatus.OK, canvasService.openCanvas(request));
+        return ResponseHandler.generateResponse(true, "캔버스 접속", HttpStatus.OK, canvasService.openCanvas(pjtIdx));
     }
 
-    @DeleteMapping()
-    public CustomResponseEntity<? extends Object> closeCanvas(@RequestBody CanvasJoinRequest request) throws Exception {
-        canvasService.closeCanvas(request);
+    @DeleteMapping("/{id}")
+    public CustomResponseEntity<? extends Object> closeCanvas(@PathVariable("id") Long pjtIdx) throws Exception {
+        canvasService.closeCanvas(pjtIdx);
         return ResponseHandler.generateResponse(true, "캔버스 종료", HttpStatus.OK, null);
     }
 }
