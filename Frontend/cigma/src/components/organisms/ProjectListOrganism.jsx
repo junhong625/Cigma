@@ -156,21 +156,21 @@ function ProjectListOrganism() {
                       >
                         팀원 추가
                       </div>
-                      <div
+                      {/* <div
                         className={styles.menuItem}
                         onClick={() => {
                           CreateProject();
                         }}
                       >
                         프로젝트 추가
-                      </div>
+                      </div> */}
                       <div
                         onClick={() => {
                           EditTeam();
                         }}
                         className={styles.menuItem}
                       >
-                        팀명 변경
+                        팀 이름 변경
                       </div>
                       <div
                         onClick={() => {
