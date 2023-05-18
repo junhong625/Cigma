@@ -237,7 +237,7 @@ public class CanvasServiceImpl implements CanvasService{
         HttpEntity<HashMap<String, String>> requestEntity = new HttpEntity<>(requestBody, headers);
 
         // CURL 요청 보내기
-        ResponseEntity<String> responseEntity = restTemplate.exchange("http://172.20.0.4:3000/ide/create", HttpMethod.POST, requestEntity, String.class);
+        ResponseEntity<String> responseEntity = restTemplate.exchange("http://cigmafast:3000/ide/create", HttpMethod.POST, requestEntity, String.class);
 
         // 응답 결과 출력
         ObjectMapper objectMapper = new ObjectMapper();
@@ -263,7 +263,7 @@ public class CanvasServiceImpl implements CanvasService{
         HttpEntity<HashMap<String, String>> requestEntity = new HttpEntity<>(requestBody, headers);
 
         // CURL 요청 보내기
-        ResponseEntity<String> responseEntity = restTemplate.exchange("http://172.20.0.4:3000/ide/delete", HttpMethod.POST, requestEntity, String.class);
+        ResponseEntity<String> responseEntity = restTemplate.exchange("http://cigmafast:3000/ide/delete", HttpMethod.POST, requestEntity, String.class);
 
         // 응답 결과 출력
         ObjectMapper objectMapper = new ObjectMapper();
