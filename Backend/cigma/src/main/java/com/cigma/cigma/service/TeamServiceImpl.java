@@ -204,7 +204,10 @@ public class TeamServiceImpl implements TeamService{
             throw new TeamNotFoundException("존재하지 않는 팀입니다.");
         }
         boolean isInclude = false;
+        // 팀장인지 아닌지 체크
         if (userPrincipal.getUserIdx() != team.getTeamLeader().getUserIdx()) {
+            // 팀원에 포함됐는지 체크
+            log.info("members : " + team.getMembers());
             for (String member : team.getMembers().replaceAll("[\\[\\] \"]", "").split(",")) {
                 if (member.equals(userPrincipal.getUserEmail())) {
                     isInclude = true;

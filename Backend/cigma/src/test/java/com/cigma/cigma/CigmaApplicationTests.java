@@ -3,6 +3,7 @@ package com.cigma.cigma;
 import com.cigma.cigma.dto.request.UserCreateRequest;
 import com.cigma.cigma.dto.request.UserLoginRequest;
 import com.cigma.cigma.dto.response.UserLoginResponse;
+import com.cigma.cigma.handler.customException.UserNotIncludeException;
 import com.cigma.cigma.service.CanvasServiceImpl;
 import com.cigma.cigma.service.UserServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureGraphQlTester;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -185,18 +187,20 @@ class CigmaApplicationTests {
 		System.out.println(map.get("status"));
 		System.out.println(map.get("port"));
 	}
-//	@Test
-//	@DisplayName("connect k3s")
-//	public void connectK3s() throws IOException, ApiException {
-//		ApiClient client = Config.fromConfig(KubeConfig.loadKubeConfig(new FileReader("/Users/ahnjunhong/Downloads/k3s.yaml")));
-//		client.setBasePath("https://k8a601.p.ssafy.io");
-//		client.setVerifyingSsl(false);
-//		Configuration.setDefaultApiClient(client);
-//		CoreV1Api api = new CoreV1Api();
-//		System.out.println("connect : k3s");
-//		V1PodList v1PodList = api.listNamespacedPod("default", null, null, null, null, null, null, null, null, null, null);
-//		for (V1Pod pod : v1PodList.getItems()) {
-//			System.out.println(pod.getMetadata().getName());
-//		}
-//	}
+
+	@Test
+	@DisplayName("팀원 검증 테스트")
+	public void checkMembersTest() {
+		if (3 != 4) {
+			// 팀원에 포함됐는지 체크
+			String[] members = new String[]{"ajh1", "ajh2", "ajh3"};
+			for (String member : members) {
+				if (member.equals("ajh1")) {
+					System.out.println(true);
+				} else {
+					System.out.println(false);
+				}
+			}
+		}
+	}
 }
