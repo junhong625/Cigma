@@ -33,6 +33,7 @@ public class TeamServiceImpl implements TeamService{
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
     private final S3ServiceImpl s3Service;
+    private final UserServiceImpl userService;
     private final ImageProperties imageProperties;
 
     @Override
@@ -196,7 +197,7 @@ public class TeamServiceImpl implements TeamService{
 
     // 팀에 속한 유저인지 확인
     public void checkTeamMembersAuthorization(Long teamIdx) throws Exception {
-        UserPrincipal userPrincipal = SecurityUtils.getUserPrincipal();
+        User user = userService.getUserBySecurity();
         Team team;
         try {
             team = findTeam(teamIdx);
@@ -205,12 +206,12 @@ public class TeamServiceImpl implements TeamService{
         }
         boolean isInclude = false;
         // 팀장인지 아닌지 체크
-        if (userPrincipal.getUserIdx() != team.getTeamLeader().getUserIdx()) {
+        if (user.getUserIdx() != team.getTeamLeader().getUserIdx()) {
             // 팀원에 포함됐는지 체크
             log.info("members : " + team.getMembers());
             for (String member : team.getMembers().replaceAll("[\\[\\] \"]", "").split(",")) {
-                log.info(member + " == " + userPrincipal.getUserEmail());
-                if (member.equals(userPrincipal.getUserEmail().toString())) {
+                log.info(member + " == " + user.getUserEmail());
+                if (member.equals(user.getUserEmail().toString())) {
                     isInclude = true;
                 }
             }
