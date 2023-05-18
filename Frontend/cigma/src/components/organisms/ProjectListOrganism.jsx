@@ -74,31 +74,9 @@ function ProjectListOrganism() {
     console.log(`result ${projects}`);
   }, [team]);
 
-  // 반환 리스트 형태 참고해서 프로퍼티 이름 수정할 것.
-  // const projects = [
-  //   {
-  //     name: "project1",
-  //     thumbnail:
-  //       "https://t1.daumcdn.net/cfile/tistory/999A233F5EE64AA229?original",
-  //   },
-  //   {
-  //     name: "project2",
-  //     thumbnail:
-  //       "https://t1.daumcdn.net/cfile/tistory/999A233F5EE64AA229?original",
-  //   },
-  //   {
-  //     name: "project3",
-  //     thumbnail:
-  //       "https://t1.daumcdn.net/cfile/tistory/999A233F5EE64AA229?original",
-  //   },
-  //   {
-  //     name: "project4",
-  //     thumbnail:
-  //       "https://t1.daumcdn.net/cfile/tistory/999A233F5EE64AA229?original",
-  //   },
-  // ];
-
   const [dropMenu, setDropMenu] = useState(false);
+  // empty project 화면에서 버튼 선택 여부 처리
+  const [isClicked, setIsClicked] = useState(false);
 
   const UserSearch = () => {
     openModal();
@@ -141,7 +119,12 @@ function ProjectListOrganism() {
             // 모든 프로젝트가 삭제되었거나, 처음 들어온 경우인 페이지
             // CreateTeam 기능이 있는 버튼 추가 필요
             <>
-              <EmptyProjectOrganism teamIdx={team.teamIdx} />
+              <EmptyProjectOrganism
+                func={CreateProject}
+                teamIdx={team.teamIdx}
+                isClicked={isClicked}
+                setIsClicked={setIsClicked}
+              />
             </>
           ) : (
             <div>

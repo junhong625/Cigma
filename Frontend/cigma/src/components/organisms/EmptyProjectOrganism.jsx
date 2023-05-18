@@ -1,10 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "../../styles/organisms/EmptyProjectOrganism.module.scss";
-import { createProject } from "../../api/project";
 import { FaFolder } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import CreateProjectForm from "../atoms/CreateProjectForm";
-function EmptyProjectOrganism({ teamIdx }) {
+function EmptyProjectOrganism({ func, teamIdx, isClicked, setIsClicked }) {
   const [projectName, setProjectName] = useState("");
   //유저토큰
   const userToken = useSelector((store) => store.userToken);
@@ -22,8 +20,6 @@ function EmptyProjectOrganism({ teamIdx }) {
       */
     }
   };
-  const [isClicked, setIsClicked] = useState(false);
-  console.log(isClicked);
   return (
     <div className={styles.container}>
       <div className={styles["empty-container"]}>
@@ -44,18 +40,12 @@ function EmptyProjectOrganism({ teamIdx }) {
           <div
             className={styles.button}
             onClick={() => {
-              // 프로젝트 생성하는 액션넣어주기
-              // 입력 form 등장
-              setIsClicked(true);
+              func();
             }}
           >
             생성하기
           </div>
         </div>
-        {/* 버튼클릭되면 숨겨져있던 form div 등장? */}
-        {isClicked && (
-          <CreateProjectForm setIsClicked={setIsClicked} text={projectName} setText={setProjectName} apiFunc={createProject}/>
-        )}
       </div>
     </div>
   );
