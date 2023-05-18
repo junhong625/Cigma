@@ -71,3 +71,20 @@ export const logout = async (token) => {
     };
   }
 };
+
+// 회원정보 조회
+export const getUserInfo = async (token) => {
+  const api = createApi({ token });
+  try {
+    const response = await api.get(`/user`);
+    return {
+      status: response.status,
+      data: response.data,
+    };
+  } catch (error) {
+    console.log(`get user info error ${error}`);
+    return {
+      status: error,
+    };
+  }
+};
