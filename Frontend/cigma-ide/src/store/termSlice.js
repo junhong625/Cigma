@@ -19,7 +19,7 @@ const termSlice = createSlice({
       state.fitAddon = fitAddon;
     },
     changeTerm: (state, { payload: { path, port } }) => {
-      state.socket.disconnect();
+      state.socket.on("disconnect");
       const socket = new WebSocket(`ws://${path}:${port}/terminal`);
       state.socket = socket;
     },
