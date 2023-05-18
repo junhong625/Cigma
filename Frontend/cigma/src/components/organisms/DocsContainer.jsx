@@ -1,6 +1,7 @@
 import React from "react";
 import { DevDocs } from "./DevDocs";
 import { IntroductionDocs } from "./IntroductionDocs";
+import { ServiceDocs } from "./ServiceDocs";
 // import DevDocs from "../organisms/DevDocs.md";
 function DocsContainer({ menuText }) {
   return (
@@ -12,9 +13,9 @@ function DocsContainer({ menuText }) {
         width: "100%",
       }}
     >
-      {menuText === "intro" && <IntroductionDocs />}
+      {menuText === "intro" && <ServiceDocs />}
       {menuText === "develop" && <DevDocs />}
-      {menuText === "user" && <DevDocs />}
+      {menuText === "user" && <IntroductionDocs />}
     </div>
   );
 }
