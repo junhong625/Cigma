@@ -209,6 +209,7 @@ public class TeamServiceImpl implements TeamService{
             // 팀원에 포함됐는지 체크
             log.info("members : " + team.getMembers());
             for (String member : team.getMembers().replaceAll("[\\[\\] \"]", "").split(",")) {
+                log.info(member + " == " + userPrincipal.getUserEmail());
                 if (member.equals(userPrincipal.getUserEmail())) {
                     isInclude = true;
                 }
