@@ -164,13 +164,13 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
     if (created != true) {
       // 폴더일 경우
       if (dir) {
-        const { status } = await deleteFolder(name, filepath, newTree, myPath);
+        const { status } = await deleteFolder(name, filepath, myPath);
         if (status) {
           dispatch(modifyTreeData(newTree));
         }
       } else {
         //파일일 경우
-        const { status } = await deleteFile(name, filepath, newTree, myPath);
+        const { status } = await deleteFile(name, filepath, myPath);
         if (status) {
           dispatch(modifyTreeData(newTree));
           if (filepath.trim() !== "") {
