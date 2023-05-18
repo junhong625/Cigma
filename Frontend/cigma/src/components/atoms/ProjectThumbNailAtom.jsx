@@ -5,9 +5,9 @@ import { BsPenFill } from "react-icons/bs";
 import { BsFillCheckCircleFill } from "react-icons/bs";
 import { BsFillReplyFill } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import { getPortNumber } from "../../api/project";
+import { deleteProject, getPortNumber } from "../../api/project";
 import { useDispatch, useSelector } from "react-redux";
-import { selectProjectIndex, selectProjectName, setProjectIndex, setProjectName } from "../../store/project";
+import { setProjectIndex, setProjectName } from "../../store/project";
 
 // 프로젝트 리스트에서 프로젝트 하나에 해당하는 Atom
 function ProjectThumbNailAtom({
@@ -20,13 +20,24 @@ function ProjectThumbNailAtom({
   setPropFunction,
   projectIdx,
   projectName,
+  teamName,
 }) {
-  const deleteProject = () => {
+  console.log(`프로젝트 인덱스 ${projectIdx}`);
+  // 프로젝트 삭제 api 호출
+  const userToken = useSelector((store) => store.userToken);
+  const removeProject = async () => {
+    const { status } = await deleteProject(userToken, projectIdx);
+    if (status === 200) {
+      // 프로젝트 삭제
+    }
+  };
+  const deleteAction = () => {
     setNowContent(0);
     setToDo("프로젝트를 완전히 삭제할까요?");
     setPropFunction(() => {
       return () => {
         // 실제로 완전삭제하는 코드
+        removeProject();
         console.log("deleteProject");
       };
     });
@@ -79,29 +90,29 @@ function ProjectThumbNailAtom({
       changeName();
     }
   };
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
   // 포트번호 받아온뒤 접속시키기
-  const userToken = useSelector((store) => store.userToken);
-  const [portNum, setPortNum] = useState(-1);
+  // const [portNum, setPortNum] = useState(-1);
 
-  const callPortNumber = async () => { 
+  const callPortNumber = async () => {
     const { status, portNum } = await getPortNumber(userToken, projectIdx);
     if (status === 200) {
-      console.log(`port::${portNum}`);
-      // redux값 설정
-      /**
-       * 꺼내올 때는 set-으로
-       * TODO: 나가거나 삭제할때 초기화 처리 해주어야할듯
-       */
-      dispatch(setProjectIndex(projectIdx));
-      dispatch(setProjectName(projectName));
-      navigate("/test", { state: { portNum } });
-    } else { 
+      console.log(`port::${JSON.stringify(portNum)}`);
+      // 넘겨줄 수 있는 값
+      // portNum
+      // teamName
+      // projectName
+      const state = {
+        portNum: portNum.port,
+        teamName: teamName,
+        projectName: projectName,
+      };
+      navigate("/test", { state: state });
+    } else {
       console.log("error");
     }
-  }
+  };
   useEffect(() => {
     if (onCreate) {
       nameInput.current.focus();
@@ -145,7 +156,7 @@ function ProjectThumbNailAtom({
               <BsTrashFill
                 className={styles.button}
                 onClick={() => {
-                  deleteProject();
+                  deleteAction();
                 }}
               />
               <BsFillReplyFill
@@ -180,8 +191,7 @@ function ProjectThumbNailAtom({
         onClick={() => {
           // 프로젝트 주소 할당을 통해 포트 번호를 가져옵니다. 이하는 임시.
           // const portNum = 1;
-          callPortNumber()
-          
+          callPortNumber();
         }}
       />
     </>

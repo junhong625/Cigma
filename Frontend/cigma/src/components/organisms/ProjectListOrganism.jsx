@@ -205,6 +205,8 @@ function ProjectListOrganism() {
                       setToDo={setToDo}
                       setPropFunction={setPropFunction}
                       projectIdx={project.projectIdx}
+                      projectName={project.projectName}
+                      teamName={team.teamName}
                     />
                   </div>
                 ))}
