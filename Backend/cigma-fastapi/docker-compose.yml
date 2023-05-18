@@ -7,7 +7,6 @@ services:
       - nginx_proxy_net
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /var/lib/docker:/var/lib/docker
       - /home/ubuntu/canvas:/home/ubuntu/canvas
     restart: always
 
