@@ -14,7 +14,7 @@ import { Resizable } from "re-resizable";
 // import axios from "axios";
 import { useDropzone } from "react-dropzone";
 import { useSelector, useDispatch } from "react-redux";
-import { modifyTreeData } from "../../store/TreeData";
+import { modifyTreeData } from "../../store/treeData";
 // import { saveAs } from "file-saver";
 import {
   selectFileBarVisible,
