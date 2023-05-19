@@ -29,7 +29,7 @@ const TermOrganism = ({ widthRight, setWidthRight, defaultWidthRight }) => {
     socket.onmessage = (e) => {
       xtermRef.current.terminal.write(e.data);
     };
-  }, []);
+  }, [socket]);
   return (
     <Resizable
       onClick={() => dispatch(setInputFieldFocused())}
