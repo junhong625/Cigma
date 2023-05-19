@@ -16,10 +16,11 @@ function IdePage() {
   const userId = useSelector(selectUserId);
   const userImage = useSelector(selectUserImage);
   const iframeRef = useRef(null);
+  const userToken = useSelector((store) => store.userToken);
+
   useEffect(() => {
     // axios로 서버에서 IDE port 번호나 링크 response
     // iframe 내부로 유저, 프로젝트, 서버 정보 전송
-    const userToken = useSelector((store) => store.userToken);
     const canvasOut = async () => {
       const { status } = await outCanvas(userToken, projectIdx);
       if (status === 200) {
