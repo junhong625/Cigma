@@ -1,0 +1,15 @@
+version: "3.7"
+services:
+  cigmafast:
+    build: .
+    container_name: cigmafast
+    networks:
+      - nginx_proxy_net
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/ubuntu/canvas:/home/ubuntu/canvas
+    restart: always
+
+networks:
+  nginx_proxy_net:
+    external: true
