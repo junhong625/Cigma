@@ -31,36 +31,23 @@ function IdePage() {
     // );
     // userimage base64로 인코딩처리해서 보낼것
     // 여기서 쓰이는 serverPort는 XXXX 네자리수 고대로 보낸다.
-
-    // window.opener.postMessage(
+    // const test = window.open(
+    //   `http://cigmacode.com:${8990}`,
+    //   "cigma-ide",
+    //   "popup=yes"
+    // );
+    // test.opener.postMessage(
     //   {
     //     userId: userId,
     //     userImage: btoa(userImage),
     //     teamName: teamName,
     //     projectName: projectName,
-    //     serverPath: "k8a601.p.ssafy.io",
+    //     serverPath: "cigmacode.com",
     //     serverPort: 8990,
     //     state: "setting",
     //   },
-    //   `http://k8a601.p.ssafy.io:${8990}`
+    //   `http://cigmacode.com:${8990}`
     // );
-    const test = window.open(
-      `http://cigmacode.com:${8990}`,
-      "cigma-ide",
-      "popup=yes"
-    );
-    test.opener.postMessage(
-      {
-        userId: userId,
-        userImage: btoa(userImage),
-        teamName: teamName,
-        projectName: projectName,
-        serverPath: "cigmacode.com",
-        serverPort: 8990,
-        state: "setting",
-      },
-      `http://cigmacode.com:${8990}`
-    );
     // test.addEventListener("onload", () => {
     // });
   }, []);
@@ -68,7 +55,7 @@ function IdePage() {
   return (
     <div className={styles.ideContainer}>
       <IdeHeaderOrganism />
-      {/* <iframe
+      <iframe
         ref={iframeRef}
         className={styles.ideFlame}
         sandbox="allow-same-origin"
@@ -83,14 +70,14 @@ function IdePage() {
               serverPort: portNum,
               state: "setting",
             },
-            `http://k8a601.p.ssafy.io:${portNum}`
+            `http://cigmacode.com/project/${modifiedPortNum}/main`
           );
         }}
         // 해당 프로젝트의 주소. Thumbnail 클릭시 받아온 portNum을 입력합니다.
         // portnum XXXX 네자리수에서 앞의 세자리만 살려서 보낸다.
         // src={`https://cigmacode.com/project/${modifiedPortNum}/main`}
-        src={`http://k8a601.p.ssafy.io:${portNum}`}
-      ></iframe> */}
+        src={`http://k8a601.p.ssafy.io:${modifiedPortNum}/main`}
+      ></iframe>
     </div>
   );
 }

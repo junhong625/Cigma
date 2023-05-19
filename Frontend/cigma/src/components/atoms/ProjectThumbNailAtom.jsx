@@ -114,24 +114,24 @@ function ProjectThumbNailAtom({
         teamName: teamName,
         projectName: projectName,
       };
-      const test = window.open(
-        `http://cigmacode.com:${8990}`,
-        "cigma-ide",
-        "popup=yes"
-      );
-      test.opener.postMessage(
-        {
-          userId: userId,
-          userImage: btoa(userImage),
-          teamName: teamName,
-          projectName: projectName,
-          serverPath: "cigmacode.com",
-          serverPort: 8990,
-          state: "setting",
-        },
-        `http://cigmacode.com:${8990}`
-      );
-      // navigate("/test", { state: state });
+      // const test = window.open(
+      //   `http://cigmacode.com/project/${899}/main`,
+      //   "cigma-ide",
+      //   "popup=yes"
+      // );
+      // test.opener.postMessage(
+      //   {
+      //     userId: userId,
+      //     userImage: btoa(userImage),
+      //     teamName: teamName,
+      //     projectName: projectName,
+      //     serverPath: "cigmacode.com",
+      //     serverPort: 8990,
+      //     state: "setting",
+      //   },
+      //   `http://cigmacode.com/project/${899}/main`
+      // );
+      navigate("/test", { state: state });
     } else {
       console.log("error");
     }

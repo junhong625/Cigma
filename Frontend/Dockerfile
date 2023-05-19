@@ -1,5 +1,7 @@
 FROM nginx:latest
 
+ARG DISABLE_CACHE
+
 RUN mkdir /app
 WORKDIR /app
 

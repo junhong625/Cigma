@@ -7,10 +7,10 @@ services:
       - nginx_proxy_net
     ports:
       - 80:80
-      - 443:443
-    volumes:
-      - /etc/letsencrypt:/etc/letsencrypt
-      - /var/lib/letsencrypt:/var/lib/letsencrypt
+      # - 443:443
+    # volumes:
+    #   - /etc/letsencrypt:/etc/letsencrypt
+    #   - /var/lib/letsencrypt:/var/lib/letsencrypt
     environment:
       - TZ=Asia/Seoul
     restart: always
