@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { deleteProject, getPortNumber } from "../../api/project";
 import { useDispatch, useSelector } from "react-redux";
 import { setProjectIndex, setProjectName } from "../../store/project";
+import { selectUserId, selectUserImage } from "../../store/user";
 
 // 프로젝트 리스트에서 프로젝트 하나에 해당하는 Atom
 function ProjectThumbNailAtom({
@@ -23,6 +24,9 @@ function ProjectThumbNailAtom({
   teamName,
 }) {
   console.log(`프로젝트 인덱스 ${projectIdx}`);
+
+  const userId = useSelector(selectUserId);
+  const userImage = useSelector(selectUserImage);
   // 프로젝트 삭제 api 호출
   const userToken = useSelector((store) => store.userToken);
   const removeProject = async () => {
@@ -32,6 +36,7 @@ function ProjectThumbNailAtom({
       alert("성공적으로 삭제되었습니다.");
     }
   };
+
   const deleteAction = () => {
     setNowContent(0);
     setToDo("프로젝트를 완전히 삭제할까요?");
@@ -109,7 +114,24 @@ function ProjectThumbNailAtom({
         teamName: teamName,
         projectName: projectName,
       };
-      navigate("/test", { state: state });
+      const test = window.open(
+        `http://cigmacode.com:${8990}`,
+        "cigma-ide",
+        "popup=yes"
+      );
+      test.opener.postMessage(
+        {
+          userId: userId,
+          userImage: btoa(userImage),
+          teamName: teamName,
+          projectName: projectName,
+          serverPath: "cigmacode.com",
+          serverPort: 8990,
+          state: "setting",
+        },
+        `http://cigmacode.com:${8990}`
+      );
+      // navigate("/test", { state: state });
     } else {
       console.log("error");
     }
