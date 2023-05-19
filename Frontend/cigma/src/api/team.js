@@ -113,3 +113,20 @@ export const deleteMember = async (token, teamIdx, userEmail) => {
     };
   }
 };
+
+// 팀 정보 조회
+export const getAllTeamInfo = async (token, teamIdx) => {
+  const api = createApi({ token });
+  try {
+    const response = await api.get(`/team/${teamIdx}`);
+    return {
+      status: response.status,
+      data: response.data,
+    };
+  } catch (error) {
+    console.log("select error", error);
+    return {
+      status: error.response.status,
+    };
+  }
+};

@@ -7,7 +7,7 @@ import { selectUserId, selectUserImage } from "../../store/user";
 
 function IdePage() {
   const location = useLocation();
-  const { portNum, teamName, projectName } = location.state;
+  const { portNum, teamName, projectName, teamIdx } = location.state;
   // const portNum = location.state?.portNum;
   // portNum 3자리수 변환
   const modifiedPortNum = Math.floor(portNum / 10);
@@ -54,7 +54,7 @@ function IdePage() {
 
   return (
     <div className={styles.ideContainer}>
-      <IdeHeaderOrganism />
+      <IdeHeaderOrganism teamIdx={teamIdx} />
       <iframe
         ref={iframeRef}
         className={styles.ideFlame}
