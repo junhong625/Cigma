@@ -114,7 +114,8 @@ function ProjectThumbNailAtom({
         portNum: portNum.port,
         teamName: teamName,
         projectName: projectName,
-        teamIdx: teamIdx
+        teamIdx: teamIdx,
+        projectIdx: projectIdx,
       };
       // const test = window.open(
       //   `http://cigmacode.com/project/${899}/main`,

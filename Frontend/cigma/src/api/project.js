@@ -106,3 +106,20 @@ export const getPortNumber = async (token, projectIdx) => {
     };
   }
 };
+
+// 캔버스 나가기 요청
+// api/canvas/{id} (delete)
+export const outCanvas = async (token, projectIdx) => {
+  const api = createApi({ token });
+  try {
+    const response = await api.delete(`/canvas/${projectIdx}`);
+    return {
+      status: response.status,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      status: error,
+    };
+  }
+};
