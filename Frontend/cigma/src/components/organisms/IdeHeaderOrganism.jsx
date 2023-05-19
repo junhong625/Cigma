@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import styles from "../../styles/organisms/IdeHeaderOrganism.module.scss";
 import InviteModalOrganism from "./InviteModalOrganism";
-import { BsFillPersonPlusFill } from "react-icons/bs";
+import { BsFillPersonPlusFill, BsFillPersonFill  } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 
-const IdeHeaderOrganism = () => {
+const IdeHeaderOrganism = ({teamIdx}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => {
     setIsModalOpen(true);
@@ -39,7 +39,7 @@ const IdeHeaderOrganism = () => {
         />
       </div>
       <div className={styles.headerRightDiv}>
-        <BsFillPersonPlusFill onClick={openModal} color="white" size={20} />
+        <BsFillPersonFill onClick={openModal} color="white" size={20} />
         <img
           onClick={openInfo}
           className={styles.user_image}
@@ -49,7 +49,7 @@ const IdeHeaderOrganism = () => {
           onBlur={closeInfo}
         />
       </div>
-      {isModalOpen ? <InviteModalOrganism closeModal={closeModal} /> : null}
+      {isModalOpen ? <InviteModalOrganism closeModal={closeModal} teamIdx={teamIdx}/> : null}
       {infoVisible ? (
         <div className={styles.menu}>
           <div className={styles.menu_item}>내 정보</div>

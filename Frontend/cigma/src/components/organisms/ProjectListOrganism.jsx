@@ -207,6 +207,7 @@ function ProjectListOrganism() {
                       projectIdx={project.projectIdx}
                       projectName={project.projectName}
                       teamName={team.teamName}
+                      teamIdx = {team.teamIdx}
                     />
                   </div>
                 ))}
