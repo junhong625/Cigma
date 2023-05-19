@@ -22,6 +22,7 @@ function ProjectThumbNailAtom({
   projectIdx,
   projectName,
   teamName,
+  teamIdx,
 }) {
   console.log(`프로젝트 인덱스 ${projectIdx}`);
 
@@ -113,6 +114,7 @@ function ProjectThumbNailAtom({
         portNum: portNum.port,
         teamName: teamName,
         projectName: projectName,
+        teamIdx: teamIdx
       };
       // const test = window.open(
       //   `http://cigmacode.com/project/${899}/main`,
