@@ -71,6 +71,7 @@ public class CanvasServiceImpl implements CanvasService{
             // connectors에 아무도 포함되지 않을 경우 오류가 발생
             connectors = connectors.substring(0, connectors.length() - 1);
         } catch (Exception e) {
+            log.info("캔버스 삭제");
             // canvas에 남은 팀원이 없다는 의미
             // container 삭제
             Map<String, Object> response = deleteContainer(String.valueOf(containerId));
@@ -81,10 +82,12 @@ public class CanvasServiceImpl implements CanvasService{
                 // port 삭제
                 deleteRedis(port);
                 // containerId redis에서 삭제
+                log.info(containerId + " 삭제");
                 deleteRedis(containerId);
                 // 삭제 후 canvasCnt - 1
-                Object cnt = getRedis(canvasCnt);
-                setRedis(canvasCnt, Integer.parseInt((String) cnt) + 1);
+                Integer cnt = Integer.parseInt((String)getRedis(canvasCnt)) - 1;
+                log.info("현재 남은 캔버스 개수 : " + cnt);
+                setRedis(canvasCnt, cnt);
             } else {
                 // 오류 처리 필요
                 throw new Exception();
