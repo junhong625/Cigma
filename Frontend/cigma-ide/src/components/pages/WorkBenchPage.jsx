@@ -8,6 +8,7 @@ import TermOrganism from "../organisms/TermOrganism";
 import { USER_COLORS, USER_NAMES } from "../../constants";
 import { useSelector } from "react-redux";
 import { selectAwareness } from "../../store/yDocSlice";
+import { selectUserId } from "../../store/defaultSettingSlice";
 
 const random = (arr) => {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -28,11 +29,19 @@ const WorkBenchPage = () => {
   const defaultWidthLeft = useRef(0);
   // widthRight의 d.width값을 적용하기 위한 기본값
   const defaultWidthRight = useRef(0);
+
+  const userId = useSelector(selectUserId);
+
   const awareness = useSelector(selectAwareness);
 
   useEffect(() => {
     if (awareness !== null) {
-      awareness.setLocalState({ name, color, isActive: false, avatar });
+      awareness.setLocalState({
+        name: userId !== null ? userId : name,
+        color,
+        isActive: false,
+        avatar,
+      });
     }
   }, [awareness]);
   return (
