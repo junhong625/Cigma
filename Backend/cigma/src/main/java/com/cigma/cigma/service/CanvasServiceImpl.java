@@ -183,9 +183,10 @@ public class CanvasServiceImpl implements CanvasService{
         log.info("canvas 개수 세기 시작!");
         Object cnt = getRedis(canvasCnt);
         cnt = cnt != null ? cnt : 0;
-        if (Integer.parseInt(cnt.toString()) >= 10) {
-            throw new FullCanvasException();
-        }
+//         캔버스 총 개수가 10개 되면 더 이상 생성 X
+//        if (Integer.parseInt(cnt.toString()) >= 10) {
+//            throw new FullCanvasException();
+//        }
         log.info("canvas 개수 : " + cnt.toString());
         return cnt.toString();
     }
