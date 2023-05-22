@@ -28,8 +28,10 @@ function IdePage() {
       }
     };
 
+    window.addEventListener("beforeunload", canvasOut);
+
     return () => {
-      canvasOut();
+      window.removeEventListener("beforeunload", canvasOut);
     };
   }, []);
 
