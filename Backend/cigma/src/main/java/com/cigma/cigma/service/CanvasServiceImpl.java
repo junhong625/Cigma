@@ -68,8 +68,11 @@ public class CanvasServiceImpl implements CanvasService{
         }
         try {
             log.info(connectors);
-            // connectors에 아무도 포함되지 않을 경우 오류가 발생
+            // 마지막에 추가된 , 제거
             connectors = connectors.substring(0, connectors.length() - 1);
+            // 팀원을 삭제하고도 팀원이 남아있다면
+            setRedis(containerId, connectors);
+        // connectors에 아무도 포함되지 않을 경우 오류가 발생
         } catch (Exception e) {
             log.info("캔버스 삭제");
             // canvas에 남은 팀원이 없다는 의미
@@ -92,8 +95,7 @@ public class CanvasServiceImpl implements CanvasService{
                 // 오류 처리 필요
                 throw new Exception();
             }
-            // 팀원을 삭제하고도 팀원이 남아있다면
-        } setRedis(containerId, connectors);
+        }
     }
 
     @Override
