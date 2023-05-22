@@ -161,7 +161,7 @@ public class CanvasServiceImpl implements CanvasService{
         } else {
             boolean flag = true;
             for (String connector : connectors.split(",")) {
-                if (!connector.equals(userIdx.toString())) {
+                if (connector.equals(userIdx.toString())) {
                     flag = false;
                 }
             }
