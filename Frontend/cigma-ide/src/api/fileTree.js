@@ -113,7 +113,14 @@ export const expressFile = async (name, path, myPath) => {
 export const loadFileContent = async (path, myPath) => {
   const api = createApi({ path: myPath });
   try {
+    const ext = path.split(".").pop().toLowerCase();
     const response = await api.post("/file/data", { path });
+
+    if (ext == "json") {
+      return {
+        data: JSON.stringify(response.data, null, "\t"),
+      };
+    }
     return {
       data: response.data,
     };

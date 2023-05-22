@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  path: window.location.hostname,
+  path: `${window.location.hostname}:5000`,
 };
 
 const apiSlice = createSlice({

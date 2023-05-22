@@ -21,10 +21,15 @@ const TermOrganism = ({ widthRight, setWidthRight, defaultWidthRight }) => {
 
   useEffect(() => {
     xtermRef.current.terminal.cursorBlink = true;
+    const { cols, rows } = fitAddon.proposeDimensions();
+    xtermRef.current.terminal.resize(cols, rows);
+    // socket.send(
+    //   JSON.stringify({ type: "resize", data: fitAddon.proposeDimensions() })
+    // );
     socket.onmessage = (e) => {
       xtermRef.current.terminal.write(e.data);
     };
-  }, []);
+  }, [socket]);
   return (
     <Resizable
       onClick={() => dispatch(setInputFieldFocused())}
@@ -47,7 +52,11 @@ const TermOrganism = ({ widthRight, setWidthRight, defaultWidthRight }) => {
       }}
       onResize={(e, direction, ref, d) => {
         const nextWidth = defaultWidthRight.current + d.width;
-        fitAddon.fit();
+        const { cols, rows } = fitAddon.proposeDimensions();
+        xtermRef.current.terminal.resize(cols, rows);
+        socket.send(
+          JSON.stringify({ type: "resize", data: fitAddon.proposeDimensions() })
+        );
         setWidthRight(nextWidth);
       }}
       className={handleTerm ? "" : styles.hidden}
@@ -58,7 +67,6 @@ const TermOrganism = ({ widthRight, setWidthRight, defaultWidthRight }) => {
         onData={onData}
         addons={[fitAddon]}
         className={styles.xterm}
-        onResize={() => {}}
       />
     </Resizable>
   );
