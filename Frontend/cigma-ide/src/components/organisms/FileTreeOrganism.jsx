@@ -14,7 +14,7 @@ import { Resizable } from "re-resizable";
 // import axios from "axios";
 import { useDropzone } from "react-dropzone";
 import { useSelector, useDispatch } from "react-redux";
-import { modifyTreeData } from "../../store/TreeData";
+import { modifyTreeData } from "../../store/treeData";
 // import { saveAs } from "file-saver";
 import {
   selectFileBarVisible,
@@ -39,7 +39,7 @@ import {
 } from "../../store/codeEditorSlice";
 import _ from "lodash";
 import { selectPath } from "../../store/apiSlice";
-import { initTreeData } from "../../store/TreeData";
+import { initTreeData } from "../../store/treeData";
 
 // 마지막 파일의 Id 값을 가져옴
 const getLastId = (treeData) => {

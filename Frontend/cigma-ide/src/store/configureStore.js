@@ -7,7 +7,7 @@ import defaultTextSlice from "./defaultTextSlice";
 import codeEditorSlice from "./codeEditorSlice";
 import toolSlice from "./toolSlice";
 import textSlice from "./textSlice";
-import treeData from "./TreeData";
+import treeData from "./treeData";
 
 import { enhanceReducer } from "redux-yjs-bindings";
 import defaultSettingSlice from "./defaultSettingSlice";
