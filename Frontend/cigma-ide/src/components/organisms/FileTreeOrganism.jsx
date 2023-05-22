@@ -39,7 +39,7 @@ import {
 } from "../../store/codeEditorSlice";
 import _ from "lodash";
 import { selectPath } from "../../store/apiSlice";
-import { initTreeData } from "../../store/TreeData";
+import { initTreeData } from "../../store/treeData";
 
 // 마지막 파일의 Id 값을 가져옴
 const getLastId = (treeData) => {
