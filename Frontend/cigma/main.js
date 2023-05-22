@@ -14,7 +14,7 @@ function createWindow() {
   Menu.setApplicationMenu(null);
 
   //로딩할 Url
-  win.loadURL("http://localhost:5174/login");
+  win.loadURL("http://cigmacode.com/login");
 
   // 개발자 도구 열기
   // win.webContents.openDevTools();
