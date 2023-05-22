@@ -15,9 +15,18 @@ const defaultSettingSlice = createSlice({
   reducers: {
     setDefaultSetting: (
       state,
-      { payload: { userId, userImage, teamName, projectName, serverPath, serverPort } }
+      {
+        payload: {
+          userId,
+          userImage,
+          teamName,
+          projectName,
+          serverPath,
+          serverPort,
+        },
+      }
     ) => {
-      state.userId = "cigmaAdmin";
+      state.userId = userId;
       state.userImage = userImage;
       state.teamName = teamName;
       state.projectName = projectName;
