@@ -39,6 +39,7 @@ import {
 } from "../../store/codeEditorSlice";
 import _ from "lodash";
 import { selectPath } from "../../store/apiSlice";
+import { initTreeData } from "../../store/TreeData";
 
 // 마지막 파일의 Id 값을 가져옴
 const getLastId = (treeData) => {
@@ -99,13 +100,14 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
   useEffect(() => {
     // 최초 렌더링 시 파일 트리 업데이트
     const UpdateFile = async () => {
+      dispatch(initTreeData());
       const { status, data } = await fileTreeUpdate(myPath);
       if (status) {
         dispatch(modifyTreeData(data));
       }
     };
     UpdateFile();
-  }, []);
+  }, [myPath]);
 
   //=========================== 파일 이름 바꾸기=============================== //
   const handleTextChange = async (id, value, type) => {
