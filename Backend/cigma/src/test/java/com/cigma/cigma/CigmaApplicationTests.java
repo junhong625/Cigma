@@ -8,10 +8,6 @@ import com.cigma.cigma.service.CanvasServiceImpl;
 import com.cigma.cigma.service.UserServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -126,44 +122,6 @@ class CigmaApplicationTests {
 	}
 
 	@Test
-	@DisplayName("connect EC2 Test")
-	void connectEC2() {
-		String host = "k8a601.p.ssafy.io";
-		String username = "ubuntu";
-		String privateKeyPath = "~/Downloads/K8A601T.pem";
-		int port = 22;
-		try {
-			JSch jSch = new JSch();
-			// SSH private key 로드
-			jSch.addIdentity(privateKeyPath);
-			System.out.println("SSH private key 로드 : " + privateKeyPath);
-
-			// 세션 생성 및 접속
-			Session session = jSch.getSession(username, host, port);
-			session.setConfig("StrictHostKeyChecking", "no"); // 호스트 키 검증 비활성화
-			session.connect();
-			System.out.println("세션 생성 및 접속");
-
-			// 명령 실행
-			ChannelExec channel = (ChannelExec) session.openChannel("exec");
-			channel.setCommand("sudo mkdir -p /k3s/project/" + "test");
-			channel.connect();
-			System.out.println("명령 실행");
-
-			// 명령어 실행 결과 출력
-			// 예를 들어, command = "cd /; mkdir test_test"의 경우, 해당 디렉토리가 생성됩니다.
-			System.out.println("Command executed successfully.");
-
-			// 연결 종료
-			channel.disconnect();
-			session.disconnect();
-			System.out.println("/k3s/project/" + "test");
-		} catch (JSchException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@Test
 	@DisplayName("check Response fastAPI")
 	public void check() throws JsonProcessingException {
 		RestTemplate restTemplate = new RestTemplate();
@@ -202,5 +160,12 @@ class CigmaApplicationTests {
 				}
 			}
 		}
+	}
+
+	@Test
+	@DisplayName("문자열 테스트")
+	public void charTest() {
+		String connectors = "";
+		connectors = connectors.substring(0, connectors.length() - 1);
 	}
 }

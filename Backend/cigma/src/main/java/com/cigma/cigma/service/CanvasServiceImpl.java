@@ -58,18 +58,18 @@ public class CanvasServiceImpl implements CanvasService{
         // canvas에 남은 팀원이 존재하는지 확인
         String[] members = String.valueOf(getRedis(containerId)).split(",");
         log.info("==============현재 접속 유저============");
-        String newMembers = "";
+        String connectors = "";
         for (String member : members) {
             log.info("유저 : " + member);
             // 현재 접속 중인 유저 중 closeCanvas를 요청한 유저 삭제
             if (!member.equals(userPrincipal.getUserIdx().toString())) {
-                newMembers += member + ",";
+                connectors += member + ",";
             }
         }
         try {
-            log.info(newMembers);
-            // newMebers에 아무도 포함되지 않을 경우 오류가 발생
-            newMembers = newMembers.substring(0, newMembers.length() - 1);
+            log.info(connectors);
+            // connectors에 아무도 포함되지 않을 경우 오류가 발생
+            connectors = connectors.substring(0, connectors.length() - 1);
         } catch (Exception e) {
             // canvas에 남은 팀원이 없다는 의미
             // container 삭제
@@ -89,7 +89,8 @@ public class CanvasServiceImpl implements CanvasService{
                 // 오류 처리 필요
                 throw new Exception();
             }
-        }
+            // 팀원을 삭제하고도 팀원이 남아있다면
+        } setRedis(containerId, connectors);
     }
 
     @Override
