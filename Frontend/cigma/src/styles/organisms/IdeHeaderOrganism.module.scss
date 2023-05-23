@@ -1,0 +1,82 @@
+@import "../commonColor.scss";
+
+header {
+  height: 35px;
+  width: 100vw;
+  background-color: $black-800;
+  max-height: fit-content;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  margin: 0.25rem 0.5rem;
+}
+
+.headerLeftDiv {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 6px 0;
+  margin-left: 10px;
+}
+
+.headerRightDiv {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+}
+
+.user_image {
+  border-radius: 50%;
+  margin-left: 15px;
+}
+
+.menu {
+  position: absolute; 
+  background-color: $black-800;
+  top: 35px;
+  right: 10px;
+  width: 150px;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  padding: 10px;
+  padding-bottom: 5px;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16); // 드랍다운 메뉴에 그림자 효과를 추가합니다.
+}
+
+.menu_item {
+  cursor: pointer;
+  font-size: 13px;
+  margin-bottom: 5px;
+  color: #ffffff;
+  &:hover {
+    background-color: $black-400;
+  }
+}
+
+.shareBtn {
+  background-color: $primary-400;
+  border-radius: 15px;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  border: none;
+  outline: none;
+  &:hover {
+    background-color: $primary-200;
+    cursor: pointer;
+  }
+  &:active {
+    background-color: $primary-300;
+    outline: none;
+  }
+  &:focus {
+    outline: none;
+  }
+}

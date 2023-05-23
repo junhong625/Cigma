@@ -2,31 +2,70 @@
   "main": "./dist/main.cjs",
   "name": "cigma",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host 0.0.0.0 --port 5174",
     "build": "vite build",
     "preview": "vite preview",
     "esbuild-cjs": "esbuild main.js --format=cjs --outfile=./dist/main.cjs",
     "electron": "npm run esbuild-cjs && electron .",
-    "electron:build": "npm run esbuild-cjs && electron-packager --out=release ."
+    "electron:build": "npm run esbuild-cjs && electron-builder --out=release .",
+    "deploy": "electron-builder --windows nsis:ia32"
+  },
+  "build": {
+    "productName": "cigma",
+    "appId": "kr.co.productTest.www",
+    "asar": true,
+    "protocols": {
+      "name": "cigma",
+      "schemes": [
+        "cigma"
+      ]
+    },
+    "win": {
+      "target": [
+        "zip",
+        "nsis"
+      ],
+      "icon": "public/img/1024x1024.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerLanguages": [
+        "en_US",
+        "ko_KR"
+      ],
+      "language": "1042"
+    },
+    "directories": {
+      "buildResources": "resources/installer/",
+      "output": "build/",
+      "app": "."
+    }
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.9.5",
+    "axios": "^1.4.0",
+    "lottie-react": "^2.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "sass": "^1.62.0",
-    "y-monaco": "^0.1.4",
-    "y-webrtc": "^10.2.5",
-    "yjs": "^13.5.52",
-    "zustand": "^4.3.7"
+    "react-markdown": "^8.0.7",
+    "react-redux": "^8.0.5",
+    "react-router-dom": "^6.10.0",
+    "react-transition-group": "^4.4.5",
+    "redux-persist": "^6.0.0",
+    "sass": "^1.62.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "@vitejs/plugin-react": "^3.1.0",
     "electron": "^24.1.2",
+    "electron-builder": "^23.6.0",
     "electron-packager": "^17.1.1",
+    "react-icons": "^4.8.0",
     "vite": "^4.2.0"
   }
 }

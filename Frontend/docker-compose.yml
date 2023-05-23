@@ -1,0 +1,20 @@
+version: "3.7"
+services:
+  nginx:
+    build: .
+    container_name: nginx-proxy
+    networks:
+      - nginx_proxy_net
+    ports:
+      - 80:80
+      # - 443:443
+    # volumes:
+    #   - /etc/letsencrypt:/etc/letsencrypt
+    #   - /var/lib/letsencrypt:/var/lib/letsencrypt
+    environment:
+      - TZ=Asia/Seoul
+    restart: always
+
+networks:
+  nginx_proxy_net:
+    external: true
