@@ -71,7 +71,7 @@ const HeaderOrganism = () => {
         </HeaderBtnAtom>
       </div>
       <div className={styles.headerMiddleDiv}>
-        {teamName ? teamName + "/" + projectName : "untitled"}
+        {teamName ? teamName + "/" + projectName : "PlayGround"}
       </div>
       <div className={styles.headerRightDiv}>
         {users
