@@ -2,6 +2,7 @@ import express from "express";
 import fs from "fs";
 import path from "path";
 import archiver from "archiver";
+import { wss } from "./server.js";
 
 const router = express.Router();
 const __dirname = path.resolve();
@@ -107,6 +108,11 @@ router.post("/file", (req, res) => {
       console.error(err);
       res.status(500).send("Internal Server Error");
     } else {
+      wss.clients.forEach((client) => {
+        console.log("send treeRefresh");
+        client.emit("treeRefresh", { hello: "world" });
+      });
+      // wss.emit("treeRefresh", { hello: "world" });
       res.json({ message: "File created successfully" });
     }
   });
@@ -125,6 +131,7 @@ router.post("/folder", (req, res) => {
       res.json({ message: "Folder created successfully" });
     }
   });
+  wss.emit("treeRefresh");
 });
 
 // 파일 삭제
@@ -140,6 +147,7 @@ router.delete("/", (req, res) => {
       res.json({ message: "File deleted successfully" });
     }
   });
+  wss.emit("treeRefresh");
 });
 
 // 폴더 삭제
@@ -168,6 +176,7 @@ router.delete("/rmdir", (req, res) => {
     console.error(err);
     res.status(500).send("Internal Server Error");
   }
+  wss.emit("treeRefresh");
 });
 
 // 파일/폴더 이름 변경
@@ -184,6 +193,7 @@ router.put("/", (req, res) => {
       res.json({ message: "File/Folder name changed successfully" });
     }
   });
+  wss.emit("treeRefresh");
 });
 
 // 파일/폴더 위치 이동
@@ -200,6 +210,7 @@ router.put("/move", (req, res) => {
       res.json({ message: "File/Folder moved successfully" });
     }
   });
+  wss.emit("treeRefresh");
 });
 
 //업로드
@@ -226,6 +237,7 @@ router.post("/upload", (req, res) => {
       res.json({ message: "File uploaded successfully" });
     }
   });
+  wss.emit("treeRefresh");
 });
 
 //압축 후 반환

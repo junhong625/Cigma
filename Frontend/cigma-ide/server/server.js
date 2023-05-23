@@ -25,7 +25,7 @@ app.use(fileUpload());
 // webSocket server
 const port = process.env.PORT || 5000;
 // @ts-ignore
-const wss = new WebSocketServer({ noServer: true });
+export const wss = new WebSocketServer({ noServer: true });
 
 wss.on("connection", setupWSConnection);
 

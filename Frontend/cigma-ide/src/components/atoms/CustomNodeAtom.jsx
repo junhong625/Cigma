@@ -27,7 +27,7 @@ export const CustomNodeAtom = (props) => {
   const indent = props.depth * 24;
   const inputRef = useRef();
   const newRef = useRef();
-  const treeData = useSelector((state) => state.workbench.treeData);
+  const treeData = useSelector((state) => state.treeData);
   const getFilepathById = props.getFilepathById;
   const dispatch = useDispatch();
   const codeEditors = useSelector(selectAllCodeEditor);

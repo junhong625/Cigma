@@ -24,7 +24,6 @@ const workbench = combineReducers({
   defaultText: defaultTextSlice,
   codeEditor: codeEditorSlice,
   textEditor: textSlice,
-  treeData,
 });
 
 // 뒤로가기
@@ -42,6 +41,7 @@ const store = configureStore({
     runFile: runFileSlice,
     term: termSlice,
     api: apiSlice,
+    treeData,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }),

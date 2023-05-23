@@ -40,6 +40,7 @@ import {
 import _ from "lodash";
 import { selectPath } from "../../store/apiSlice";
 import { initTreeData } from "../../store/treeData";
+import { selectProvider } from "../../store/yDocSlice";
 
 // 마지막 파일의 Id 값을 가져옴
 const getLastId = (treeData) => {
@@ -92,10 +93,11 @@ const getFilepathById = (id, nodes) => {
 function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
   // ============================ 트리용 데이터 리스트 생성=====================//
   const dispatch = useDispatch();
-  const treeData = useSelector((state) => state.workbench.treeData);
+  const treeData = useSelector((state) => state.treeData);
   const handleFileBar = useSelector(selectFileBarVisible);
   const codeEditors = useSelector(selectAllCodeEditor);
   const myPath = useSelector(selectPath);
+  const provider = useSelector(selectProvider);
 
   useEffect(() => {
     // 최초 렌더링 시 파일 트리 업데이트
@@ -106,6 +108,7 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
         dispatch(modifyTreeData(data));
       }
     };
+    console.log("provider", provider.ws);
     UpdateFile();
   }, [myPath]);
 
