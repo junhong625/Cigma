@@ -1,0 +1,173 @@
+.blockContainer {
+  display: flex;
+  background-color: #24282e;
+  padding: 0.5rem;
+}
+
+.sideBarContainer {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  overflow: hidden;
+  justify-content: space-between;
+}
+@media (max-width: 958px) {
+  .topContainer {
+    display: flex;
+    flex-direction: column;
+    width: 50px;
+    max-height: 75%;
+    transition: all 0.35s ease-out;
+  }
+  .noTitle,
+  .noArrow {
+    opacity: 0;
+    transition: opacity 0.35s ease-out;
+  }
+  .activate,
+  .teamButton:hover,
+  .menu:hover {
+    background-color: #414141;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+}
+
+@media (min-width: 959px) {
+  .topContainer {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    max-height: 75%;
+    transition: all 0.35s ease-out;
+  }
+  .activate,
+  .teamButton:hover,
+  .menu:hover {
+    background-color: #414141;
+    border-radius: 10px;
+    padding-left: 1rem !important;
+    cursor: pointer;
+  }
+}
+
+.bottomContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 10%;
+  font-size: 20px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.openTeams {
+  animation: dropup 0.35s ease-out;
+  animation-fill-mode: forwards;
+}
+
+.closeTeams {
+  animation: dropdown 0.2s ease-out;
+  animation-fill-mode: forwards;
+}
+
+@keyframes dropdown {
+  0% {
+    height: 100%;
+  }
+
+  100% {
+    height: 0;
+  }
+}
+
+@keyframes dropup {
+  0% {
+    height: 0;
+  }
+
+  100% {
+    height: 100%;
+  }
+}
+
+.dropDown {
+  height: 0;
+  overflow-y: scroll;
+  margin-left: 16px;
+  &::-webkit-scrollbar {
+    width: 5px;
+    height: 1rem;
+  }
+
+  &::-webkit-scrollbar-corner {
+    display: none;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #d9d9d9;
+    border-radius: 1rem;
+    opacity: 0.3;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #222222;
+  }
+}
+
+.menu {
+  transition: all 0.35s ease;
+  text-decoration: none;
+  color: white;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 5px;
+}
+
+.menuActivate {
+  background-color: #414141;
+  border-radius: 10px;
+}
+
+.teamButton {
+  display: block;
+  text-align: start;
+  border-radius: 10px;
+  transition: all 0.35s ease;
+  width: calc(100% - 24px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 5px;
+
+  &:hover {
+    padding-left: 15px;
+  }
+}
+
+.openContainer {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  max-height: 75%;
+  transition: all 0.35s ease-out;
+}
+
+.newTeam {
+  width: calc(100% - 24px);
+  border-radius: 10px;
+  border: 0;
+  height: 24px;
+  font-size: 16px;
+  float: left;
+  padding: 5px;
+}

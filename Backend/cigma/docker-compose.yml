@@ -1,0 +1,56 @@
+version: "3.7"
+#volumes:
+#  cigma:
+#    external: true
+#    name: cigma
+services:
+  database:
+    image: mysql:8.0.30
+    environment:
+      MYSQL_DATABASE: cigma
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_ROOT_PASSWORD: ssafy
+      TZ: Asia/Seoul
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+    networks:
+      - default
+    ports:
+      - 3306:3306
+    command:
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
+
+  application:
+    build: .
+    networks:
+      - default
+      - nginx_proxy_net
+    volumes:
+      - ~/canvas:/canvas
+      - ~/k3s/config:/k3s/config
+    ports:
+      - 9090:9090
+    restart: always
+    depends_on:
+      - database
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
+  redis:
+    hostname: redis
+    container_name: redis
+    image: redis:latest
+    command: redis-server /usr/local/etc/redis/redis.conf --requirepass ssafy8cigmapass
+    volumes:
+      - ./redis/data:/data
+      - ./redis/conf/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./redis/acl/users.acl:/etc/redis/users.acl
+    networks:
+      - default
+    ports:
+      - 6379:6379
+
+networks:
+  nginx_proxy_net:
+    external: true

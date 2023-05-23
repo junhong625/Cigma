@@ -1,0 +1,19 @@
+.item {
+  display: flex;
+  align-items: center;
+  margin: 1em;
+  color: #ffffff
+}
+
+.logo {
+  .item {
+    margin: 0;
+  }
+}
+
+.login {
+  display: flex;
+  align-items: center;
+  margin: 0.5em;
+  color: #ffffff
+}

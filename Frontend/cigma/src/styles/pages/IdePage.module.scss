@@ -1,0 +1,9 @@
+.ideContainer {
+  display: flex;
+  flex-direction: column;
+  .ideFlame {
+    flex: 1;
+    border: none;
+    background-color: white;
+  }
+}

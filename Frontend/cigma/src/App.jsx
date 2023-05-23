@@ -1,35 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+//import { useState } from 'react';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import "./App.css";
+import ProjectPage from "./components/pages/ProjectPage";
+import ProjectListOrganism from "./components/organisms/ProjectListOrganism";
+import TrashListOrganism from "./components/organisms/TrashListOrganism";
+import StartPage from "./components/pages/StartPage";
+import DocsPage from "./components/pages/DocsPage";
+import DocsContainer from "./components/organisms/DocsContainer";
+import LoadingAtom from "./components/atoms/LoadingAtom";
+import LoginPage from "./components/pages/LoginPage";
+import SignUpPage from "./components/pages/SignUpPage";
+import IdePage from "./components/pages/IdePage";
+import IdeHeaderOrganism from "./components/organisms/IdeHeaderOrganism";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <BrowserRouter>
+        <Routes>
+          <Route path="" element={<StartPage />}></Route>
+          <Route path="/docs" element={<DocsPage />}>
+            <Route path="/docs/intro" element={<DocsContainer menuText={"intro"} />} />
+            <Route path="/docs/tutorial" element={<DocsContainer menuText={"user"} />} />
+            <Route path="/docs/developer" element={<DocsContainer menuText={"develop"} />} />
+          </Route>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/projects" element={<ProjectPage />}>
+            <Route path="/projects" element={<ProjectListOrganism />} />
+            <Route path="/projects/trashcan" element={<TrashListOrganism />} />
+          </Route>
+          <Route path="/test" element={<IdePage />} />
+        </Routes>
+      </BrowserRouter>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
