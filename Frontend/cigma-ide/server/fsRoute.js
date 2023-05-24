@@ -3,11 +3,21 @@ import fs from "fs";
 import path from "path";
 import archiver from "archiver";
 import { fileWs } from "./server.js";
+import * as chokidar from "chokidar";
 
 const router = express.Router();
 const __dirname = path.resolve();
 const ROOT_FOLDER = "../../workspace/project";
 
+const watcher = chokidar.watch(ROOT_FOLDER, {
+  persistent: true,
+  awaitWriteFinish: true,
+});
+watcher.on("all", () => {
+  fileWs.clients.forEach((client) => {
+    client.send("treeRefresh");
+  });
+});
 //루트폴더가 없을경우 생성
 function createRootFolderIfNotExists() {
   const currentDir = decodeURIComponent(
@@ -108,9 +118,6 @@ router.post("/file", (req, res) => {
       console.error(err);
       res.status(500).send("Internal Server Error");
     } else {
-      fileWs.clients.forEach((client) => {
-        client.send("treeRefresh");
-      });
       res.json({ message: "File created successfully" });
     }
   });
@@ -126,9 +133,6 @@ router.post("/folder", (req, res) => {
       console.error(err);
       res.status(500).send("Internal Server Error");
     } else {
-      fileWs.clients.forEach((client) => {
-        client.send("treeRefresh");
-      });
       res.json({ message: "Folder created successfully" });
     }
   });
@@ -144,9 +148,6 @@ router.delete("/", (req, res) => {
       console.error(err);
       res.status(500).send("Internal Server Error");
     } else {
-      fileWs.clients.forEach((client) => {
-        client.send("treeRefresh");
-      });
       res.json({ message: "File deleted successfully" });
     }
   });
@@ -173,9 +174,6 @@ router.delete("/rmdir", (req, res) => {
 
   try {
     removeDir(fullPath);
-    fileWs.clients.forEach((client) => {
-      client.send("treeRefresh");
-    });
     res.json({ message: "Folder deleted successfully" });
   } catch (err) {
     console.error(err);
@@ -194,9 +192,6 @@ router.put("/", (req, res) => {
       console.error(err);
       res.status(500).send("Internal Server Error");
     } else {
-      fileWs.clients.forEach((client) => {
-        client.send("treeRefresh");
-      });
       res.json({ message: "File/Folder name changed successfully" });
     }
   });
@@ -213,9 +208,6 @@ router.put("/move", (req, res) => {
       console.error(err);
       res.status(500).send("Internal Server Error");
     } else {
-      fileWs.clients.forEach((client) => {
-        client.send("treeRefresh");
-      });
       res.json({ message: "File/Folder moved successfully" });
     }
   });
@@ -242,9 +234,6 @@ router.post("/upload", (req, res) => {
       console.error(err);
       res.status(500).send("File upload failed");
     } else {
-      fileWs.clients.forEach((client) => {
-        client.send("treeRefresh");
-      });
       res.json({ message: "File uploaded successfully" });
     }
   });

@@ -37,7 +37,7 @@ import {
   deleteCodeEditor,
   selectAllCodeEditor,
 } from "../../store/codeEditorSlice";
-import _ from "lodash";
+import _, { debounce } from "lodash";
 import { selectPath } from "../../store/apiSlice";
 import { initTreeData } from "../../store/treeData";
 import { selectFileWs } from "../../store/fileWsSlice";
@@ -109,17 +109,20 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
       }
     };
 
-    const treeUpdateHandler = (e) => {
-      if (e.data === "treeRefresh") {
-        console.log("update fileTree!!!");
-        UpdateFile();
-      }
-    };
-    fileWs.addEventListener("message", treeUpdateHandler);
-    // fileWs.on("treeRefresh", () => {
-    //   console.log("파일 트리 갱신");
-    // });
     UpdateFile();
+
+    // 서버 project 폴더 안의 수정사항 발생 시 호출
+    const treeUpdateHandler = debounce(async (e) => {
+      if (e.data === "treeRefresh") {
+        const { status, data } = await fileTreeUpdate(myPath);
+        if (status) {
+          console.log("tree update complete!!!!!!");
+          dispatch(modifyTreeData(data));
+        }
+      }
+    }, 300);
+
+    fileWs.addEventListener("message", treeUpdateHandler);
 
     return () => {
       fileWs.removeEventListener("message", treeUpdateHandler);
