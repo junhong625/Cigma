@@ -40,7 +40,7 @@ import {
 import _ from "lodash";
 import { selectPath } from "../../store/apiSlice";
 import { initTreeData } from "../../store/treeData";
-import { selectProvider } from "../../store/yDocSlice";
+import { selectFileWs } from "../../store/fileWsSlice";
 
 // 마지막 파일의 Id 값을 가져옴
 const getLastId = (treeData) => {
@@ -97,7 +97,7 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
   const handleFileBar = useSelector(selectFileBarVisible);
   const codeEditors = useSelector(selectAllCodeEditor);
   const myPath = useSelector(selectPath);
-  const provider = useSelector(selectProvider);
+  const fileWs = useSelector(selectFileWs);
 
   useEffect(() => {
     // 최초 렌더링 시 파일 트리 업데이트
@@ -108,8 +108,22 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
         dispatch(modifyTreeData(data));
       }
     };
-    console.log("provider", provider.ws);
+
+    const treeUpdateHandler = (e) => {
+      if (e.data === "treeRefresh") {
+        console.log("update fileTree!!!");
+        UpdateFile();
+      }
+    };
+    fileWs.addEventListener("message", treeUpdateHandler);
+    // fileWs.on("treeRefresh", () => {
+    //   console.log("파일 트리 갱신");
+    // });
     UpdateFile();
+
+    return () => {
+      fileWs.removeEventListener("message", treeUpdateHandler);
+    };
   }, [myPath]);
 
   //=========================== 파일 이름 바꾸기=============================== //

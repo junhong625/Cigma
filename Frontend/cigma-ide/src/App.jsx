@@ -20,6 +20,7 @@ import { bind } from "redux-yjs-bindings";
 import store from "./store/configureStore";
 import { changeTerm, createTerm, selectSocket } from "./store/termSlice";
 import { changePath } from "./store/apiSlice";
+import { changeFileWs, createFileWs, selectFileWs } from "./store/fileWsSlice";
 const { VITE_WS_ROOMNAME, VITE_WS_PORT } = import.meta.env;
 
 const roomName = VITE_WS_ROOMNAME || "workspace";
@@ -31,11 +32,13 @@ function App() {
   const provider = useSelector(selectProvider);
   const awareness = useSelector(selectAwareness);
   const socket = useSelector(selectSocket);
+  const fileWs = useSelector(selectFileWs);
 
   // SET DEFAULT SETTING
   useEffect(() => {
     dispatch(createYDoc({ roomName, port }));
     dispatch(createTerm({ port }));
+    dispatch(createFileWs({ port }));
     window.addEventListener("message", (e) => {
       if (e.data.state === "setting") {
         dispatch(
@@ -62,7 +65,16 @@ function App() {
           })
         );
         dispatch(
-          changePath({ path: e.data.serverPath, port: e.data.serverPort })
+          changePath({
+            path: e.data.serverPath,
+            port: e.data.serverPort,
+          })
+        );
+        dispatch(
+          changeFileWs({
+            path: e.data.serverPath,
+            port: e.data.serverPort,
+          })
         );
       }
     });
@@ -71,6 +83,7 @@ function App() {
       provider.destroy();
       ydoc.destroy();
       socket.disconnect();
+      fileWs.disconnect();
     };
   }, []);
 
@@ -80,7 +93,7 @@ function App() {
     }
   }, [ydoc]);
 
-  if (awareness && socket) {
+  if (awareness && socket && fileWs) {
     return (
       <div className={styles.app}>
         <header>
