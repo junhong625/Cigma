@@ -2,11 +2,22 @@ import express from "express";
 import fs from "fs";
 import path from "path";
 import archiver from "archiver";
+import { fileWs } from "./server.js";
+import * as chokidar from "chokidar";
 
 const router = express.Router();
 const __dirname = path.resolve();
 const ROOT_FOLDER = "../../workspace/project";
 
+const watcher = chokidar.watch(ROOT_FOLDER, {
+  persistent: true,
+  awaitWriteFinish: true,
+});
+watcher.on("all", () => {
+  fileWs.clients.forEach((client) => {
+    client.send("treeRefresh");
+  });
+});
 //루트폴더가 없을경우 생성
 function createRootFolderIfNotExists() {
   const currentDir = decodeURIComponent(

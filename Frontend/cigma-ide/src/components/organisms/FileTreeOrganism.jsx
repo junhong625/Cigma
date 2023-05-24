@@ -37,9 +37,10 @@ import {
   deleteCodeEditor,
   selectAllCodeEditor,
 } from "../../store/codeEditorSlice";
-import _ from "lodash";
+import _, { debounce } from "lodash";
 import { selectPath } from "../../store/apiSlice";
 import { initTreeData } from "../../store/treeData";
+import { selectFileWs } from "../../store/fileWsSlice";
 
 // 마지막 파일의 Id 값을 가져옴
 const getLastId = (treeData) => {
@@ -92,10 +93,11 @@ const getFilepathById = (id, nodes) => {
 function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
   // ============================ 트리용 데이터 리스트 생성=====================//
   const dispatch = useDispatch();
-  const treeData = useSelector((state) => state.workbench.treeData);
+  const treeData = useSelector((state) => state.treeData);
   const handleFileBar = useSelector(selectFileBarVisible);
   const codeEditors = useSelector(selectAllCodeEditor);
   const myPath = useSelector(selectPath);
+  const fileWs = useSelector(selectFileWs);
 
   useEffect(() => {
     // 최초 렌더링 시 파일 트리 업데이트
@@ -106,7 +108,25 @@ function FileTreeOrganism({ widthLeft, setWidthLeft, defaultWidthLeft }) {
         dispatch(modifyTreeData(data));
       }
     };
+
     UpdateFile();
+
+    // 서버 project 폴더 안의 수정사항 발생 시 호출
+    const treeUpdateHandler = debounce(async (e) => {
+      if (e.data === "treeRefresh") {
+        const { status, data } = await fileTreeUpdate(myPath);
+        if (status) {
+          console.log("tree update complete!!!!!!");
+          dispatch(modifyTreeData(data));
+        }
+      }
+    }, 300);
+
+    fileWs.addEventListener("message", treeUpdateHandler);
+
+    return () => {
+      fileWs.removeEventListener("message", treeUpdateHandler);
+    };
   }, [myPath]);
 
   //=========================== 파일 이름 바꾸기=============================== //

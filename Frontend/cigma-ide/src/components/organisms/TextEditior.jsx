@@ -72,8 +72,8 @@ const TextEditior = ({ textIndex, artBoardRef, ...textEditor }) => {
       dispatch(
         modifyText({
           textIndex: textIndex,
-          height: textEditor.current.clientHeight,
-          width: textEditor.current.clientWidth,
+          height: textRef.current.clientHeight,
+          width: textRef.current.clientWidth,
         })
       );
     }

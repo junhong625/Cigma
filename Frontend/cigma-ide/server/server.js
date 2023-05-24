@@ -38,6 +38,14 @@ termWs.on("connection", setupPty);
 
 // term websocket server end =============================
 
+// file websocket server =================================
+export const fileWs = new WebSocketServer({ noServer: true });
+fileWs.on("connection", (conn) => {
+  conn.on("disconnect", () => {
+    console.log("fileWs stopped");
+  });
+});
+
 server.on("upgrade", (request, socket, head) => {
   const { pathname } = parse(request.url);
 
@@ -48,6 +56,10 @@ server.on("upgrade", (request, socket, head) => {
   } else if (pathname === "/terminal") {
     termWs.handleUpgrade(request, socket, head, (ws) => {
       termWs.emit("connection", ws, request);
+    });
+  } else if (pathname === "/fileExplorer") {
+    fileWs.handleUpgrade(request, socket, head, (ws) => {
+      fileWs.emit("connection", ws, request);
     });
   } else {
     socket.destroy();

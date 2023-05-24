@@ -15,6 +15,7 @@ import runFileSlice from "./runFileSlice";
 import yDocSlice from "./yDocSlice";
 import termSlice from "./termSlice";
 import apiSlice from "./apiSlice";
+import fileWsSlice from "./fileWsSlice";
 // import undoable from "redux-undo";
 
 // const MAXIMUN_UNDO_COUNT = 100;
@@ -24,7 +25,6 @@ const workbench = combineReducers({
   defaultText: defaultTextSlice,
   codeEditor: codeEditorSlice,
   textEditor: textSlice,
-  treeData,
 });
 
 // 뒤로가기
@@ -41,7 +41,9 @@ const store = configureStore({
     defaultSetting: defaultSettingSlice,
     runFile: runFileSlice,
     term: termSlice,
+    fileWs: fileWsSlice,
     api: apiSlice,
+    treeData,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }),
