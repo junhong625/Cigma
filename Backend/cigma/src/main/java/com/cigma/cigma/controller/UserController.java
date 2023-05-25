@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -205,5 +206,10 @@ public class UserController {
     @GetMapping("/team")
     public ResponseEntity<Object> getMyTeams() {
         return ResponseHandler.generateResponse(true, "내가 속한 팀 모두 조회", HttpStatus.OK, userService.getMyTeams());
+    }
+
+    // access Token 만료 시 refresh Token 을 이용하여 access Token 재발급
+    @PostMapping("/refresh")
+    public void validateRefreshToken() {
     }
 }

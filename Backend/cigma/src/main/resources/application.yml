@@ -6,12 +6,6 @@ server:
 
 # DB
 spring:
-#  mvc:
-#    pathmatch:
-#      matching-strategy: ant_path_matcher
-#  profiles:
-#    include:
-#      - redis
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     # server
@@ -24,12 +18,11 @@ spring:
       idle-timeout: 10000
       maximum-pool-size: 10
       minimum-idle: 5
-#      pool-name: fined&youHikariPool
   jpa:
     defer-datasource-initialization: true
     database: mysql
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     generate-ddl: false
     properties:
       hibernate:
@@ -59,14 +52,14 @@ logging:
       # security log level ??
       springframework:
         security: DEBUG
-#      # hibernate log level ??
+      # hibernate log level ??
       hibernate:
         SQL: DEBUG
         type:
           descriptor:
             sql: trace
-#      # ???? ???? ??.
-#      # AWS
+    # ???? ???? ??.
+    # AWS
     com:
       amazonaws:
         util:
@@ -76,7 +69,8 @@ logging:
 jwt:
   header: Authorization
   secret: Y2lnbWEtc3ByaW5nLWJvb3Qtand0LXNlY3JldC1rZXktY2lnbWEtc3ByaW5nLWJvb3Qtand0LXNlY3JldC1rZXktYnktYWpoCg==
-  access-token-validity-in-seconds: 3600000 # accessToken 유효시간 1시간
+  access-token-validity-in-seconds: 1800000 # accessToken 유효시간 30분
+#  access-token-validity-in-seconds: 10000 # accessToken 유효시간 10초
   refresh-token-validity-in-seconds: 1209600000 # refreshToken 유효시간 2주
 
 # aws 관련

@@ -3,6 +3,8 @@ package com.cigma.cigma.jwt;
 import com.cigma.cigma.handler.JwtResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -19,6 +21,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.SignatureException;
 import java.util.Date;
 import java.util.stream.Collectors;
 
@@ -37,6 +40,8 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.info("jwtFilter 진입 : =============================");
         String jwt = resolveAccessToken(request);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String type = "access";
         log.info("jwt 확인 : " + jwt);
         try {
             // 토큰이 있고 유효한 경우
@@ -55,11 +60,15 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
             filterChain.doFilter(request, response);
+
         } catch (ExpiredJwtException e) {
-            log.info("만료된 access jwt 토큰입니다.");
+            log.info("refresh Token을 통한 access Token 갱신이 필요합니다.");
+            type = "refresh";
+//            response.setStatus(452);
+//            String msg = objectMapper.writeValueAsString(new JwtResponse(HttpStatus.UNAUTHORIZED, "Expired accessToken. Plz send Refresh Token."));
+//            response.getWriter().print(msg);
             String refreshJwt = resolveRefreshToken(request);
             log.info("refresh 토큰 : " + refreshJwt);
-            ObjectMapper objectMapper = new ObjectMapper();
             // refresh 토큰이 있고
             // 기존에 발급한 refresh 토큰이 맞다면
             response.setContentType("application/json");
@@ -67,7 +76,7 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
             if (StringUtils.hasText(refreshJwt)) {
                 try {
                     // refresh 토큰의 유효성 검사
-                    if (tokenProvider.validateToken(refreshJwt, "refresh") && tokenProvider.checkRedisToken(refreshJwt)) {
+                    if (tokenProvider.validateToken(refreshJwt, "refresh")) {
                         Authentication authentication = tokenProvider.getAuthentication(refreshJwt); // 인증정보
                         Long date = System.currentTimeMillis();
                         String authorities = authentication.getAuthorities().stream()
@@ -82,15 +91,24 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
                     // refresh 토큰이 만료/잘못된 경우
                 } catch (ExpiredJwtException ex) {
                     response.setStatus(452);
-                    String msg = objectMapper.writeValueAsString(new JwtResponse("fail", "RefreshToken is valid. But expire. Plz login again."));
+                    String msg = objectMapper.writeValueAsString(new JwtResponse(HttpStatus.UNAUTHORIZED, "RefreshToken is valid. But expire. Plz login again."));
                     response.getWriter().print(msg);
                 }
                 // refresh 토큰이 없는 경우
             } else {
                 response.setStatus(HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS.value());
-                String msg = objectMapper.writeValueAsString(new JwtResponse("fail", "Expired accessToken. And refreshToken not exists"));
+                String msg = objectMapper.writeValueAsString(new JwtResponse(HttpStatus.UNAUTHORIZED, "Expired accessToken. And refreshToken not exists"));
                 response.getWriter().print(msg);
             }
+        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+            logger.info("잘못된 " + type + " JWT 서명입니다.");
+            response.setStatus(452);
+            String msg = objectMapper.writeValueAsString(new JwtResponse(HttpStatus.UNAUTHORIZED, "RefreshToken is valid. But expire. Plz login again."));
+            response.getWriter().print(msg);
+        } catch (UnsupportedJwtException e) {
+            logger.info("지원되지 않는 " + type + " JWT 토큰입니다.");
+        } catch (IllegalArgumentException e) {
+            logger.info(type + "JWT 토큰이 잘못되었습니다.");
         }
     }
 

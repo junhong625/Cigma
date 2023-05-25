@@ -4,6 +4,7 @@ import com.cigma.cigma.common.CustomResponseEntity;
 import com.cigma.cigma.handler.customException.FullCanvasException;
 import com.cigma.cigma.handler.customException.ProjectNotFoundException;
 import com.cigma.cigma.handler.customException.TeamMateNullException;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AuthorizationServiceException;
@@ -26,7 +27,7 @@ public class AllExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseHandler.generateResponse(false, e.getMessage(), HttpStatus.NOT_FOUND, null);
     }
 
-    @ExceptionHandler({AuthorizationServiceException.class, AuthenticationException.class, JwtException.class})
+    @ExceptionHandler({AuthorizationServiceException.class, AuthenticationException.class, JwtException.class, ExpiredJwtException.class})
     public final CustomResponseEntity<Object> handleAuthorizationServiceExceptions(AuthorizationServiceException e) {
         return ResponseHandler.generateResponse(false, e.getMessage(), HttpStatus.UNAUTHORIZED, null);
     }
@@ -35,11 +36,6 @@ public class AllExceptionHandler extends ResponseEntityExceptionHandler {
     public final CustomResponseEntity<Object> handleConflictExceptions(Exception e) {
         return ResponseHandler.generateResponse(false, e.getMessage(), HttpStatus.CONFLICT, null);
     }
-
-//    @ExceptionHandler({JwtException.class})
-//    public final CustomResponseEntity<Object> handleJwtExceptions(JwtException e) {
-//        return ResponseHandler.generateResponse(false, e.getMessage(), HttpStatus.UNAUTHORIZED, null);
-//    }
 
     @ExceptionHandler(Exception.class)
     public final CustomResponseEntity<Object> handleAllElementExceptions(Exception e) {

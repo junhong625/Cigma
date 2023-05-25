@@ -130,8 +130,8 @@ public class TokenProvider implements InitializingBean {
     // Token 파싱해보고 발생하는 Exception을 확인
     // 정상적인 Token인지 확인
     public boolean validateToken(String token, String type) {
-        try {
-            log.info("accessToken : " + token);
+//        try {
+            log.info(type + " Token : " + token);
             JwtParser jwtParser = Jwts.parserBuilder().setSigningKey(key).build();
             log.info(String.valueOf(jwtParser.parseClaimsJws(token).getBody().getExpiration()));
             jwtParser.parseClaimsJws(token);
@@ -142,16 +142,17 @@ public class TokenProvider implements InitializingBean {
                 return false;}
             log.info("토큰 유효함");
             return true;
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            logger.info("잘못된 " + type + " JWT 서명입니다.");
-        } catch (ExpiredJwtException e) {
-            logger.info("만료된 " + type + " JWT 토큰입니다.");
-        } catch (UnsupportedJwtException e) {
-            logger.info("지원되지 않는 " + type + " JWT 토큰입니다.");
-        } catch (IllegalArgumentException e) {
-            logger.info(type + "JWT 토큰이 잘못되었습니다.");
-        }
-        return false;
+//        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+//            logger.info("잘못된 " + type + " JWT 서명입니다.");
+//        } catch (ExpiredJwtException e) {
+//            logger.info("만료된 " + type + " JWT 토큰입니다.");
+////            throw new JwtException("만료된 " + type + " JWT 토큰입니다.");
+//        } catch (UnsupportedJwtException e) {
+//            logger.info("지원되지 않는 " + type + " JWT 토큰입니다.");
+//        } catch (IllegalArgumentException e) {
+//            logger.info(type + "JWT 토큰이 잘못되었습니다.");
+//        }
+//        return false;
     }
 
     // JWT 토큰 복호화해서 가져오기
